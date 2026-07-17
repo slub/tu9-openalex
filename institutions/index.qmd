@@ -1,0 +1,14 @@
+---
+title: "Institutions"
+---
+
+```{r}
+source("scripts/site_helpers.R")
+meta <- read_meta()
+```
+
+Select an institution to see its metric history and works-by-year breakdown.
+
+```{r}
+institutions_table(meta$institutions, path_prefix = "")
+```

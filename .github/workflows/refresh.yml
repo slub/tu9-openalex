@@ -1,0 +1,86 @@
+name: Refresh OpenAlex metrics
+
+# Monthly snapshot of the OpenAlex institution metrics + website. OpenAlex
+# refreshes roughly monthly, so a monthly cadence matches the upstream data.
+# Can also be run on demand from the Actions tab (use "force" to bypass the
+# guard rail if a legitimate, large change has occurred upstream).
+on:
+  schedule:
+    - cron: "0 5 5 * *"   # 05:00 UTC on the 5th of each month
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Bypass the guard rail (publish even after a large drop)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write   # commit refreshed data back to main
+  pages: write      # deploy the website
+  id-token: write   # required by actions/deploy-pages
+
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          # Match the R version recorded in renv.lock so renv::status() stays
+          # in sync (it compares major.minor); bump both together on upgrade.
+          r-version: '4.5.2'
+          use-public-rspm: true
+
+      - name: Restore R packages (renv)
+        uses: r-lib/actions/setup-renv@v2
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Fetch OpenAlex institution metrics
+        env:
+          FORCE: ${{ inputs.force && '1' || '' }}
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
+          OPENALEX_MAILTO: ${{ vars.OPENALEX_MAILTO }}
+        run: Rscript scripts/fetch.R
+
+      - name: Commit refreshed data
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data
+          if git diff --staged --quiet; then
+            echo "No data changes to commit."
+          else
+            git commit -m "data: monthly refresh ($(date -u +%Y-%m-%d))"
+            git push
+          fi
+
+      - name: Generate institution pages
+        run: Rscript scripts/gen_pages.R
+
+      - name: Render website
+        run: quarto render
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

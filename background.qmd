@@ -1,0 +1,70 @@
+---
+title: "Background"
+---
+
+This site records the aggregated metrics that [OpenAlex](https://openalex.org/)
+publishes for each institution, and tracks how they change over time. It does
+not recompute anything from individual works — every figure is read straight
+from the institution's OpenAlex entity.
+
+## Which institutions
+
+The starting point is the [TU9](https://www.tu9.de/) alliance of nine German
+universities of technology. In OpenAlex, an institution can have associated
+institutions with a relationship of `parent`, `child`, or `related`. To avoid
+double-counting the same output, the tracked set includes only institutions
+that are **not linked to one another as `parent`/`child`** — a `related` link is
+allowed. Concretely:
+
+- the nine TU9 universities;
+- two libraries that OpenAlex models as separate institutions with their own
+  output — the [TIB](https://openalex.org/I2802635041) and the
+  [SLUB Dresden](https://openalex.org/I3132420320);
+- two university hospitals that OpenAlex links to their university only as
+  `related`, not `child` — [Universitätsklinikum Aachen](https://openalex.org/I4210120689)
+  and the [University Hospital Carl Gustav Carus](https://openalex.org/I4210162051)
+  in Dresden.
+
+A `child` institution is deliberately excluded when its parent is already
+tracked (for example, TUM Klinikum, a `child` of the Technical University of
+Munich). The full list, with OpenAlex and [ROR](https://ror.org/) IDs, is in
+[`data-raw/institutions.csv`](https://github.com/slub/tu9-openalex/blob/main/data-raw/institutions.csv)
+and can be edited to change the selection.
+
+## What is tracked
+
+For each institution and each snapshot, the pipeline stores:
+
+- **works_count** — the number of works OpenAlex attributes to the institution;
+- **cited_by_count** — total citations those works have received;
+- **h-index**, **i10-index**, **2-year mean citedness** — from the entity's
+  `summary_stats`;
+- **works and citations by publication year** — from the entity's
+  `counts_by_year`.
+
+The complete OpenAlex entity is also archived as raw JSON per snapshot
+(`data/snapshots/<slug>/<date>.json`), so any field not surfaced in the CSV
+views can still be recovered later.
+
+## How it is assembled
+
+1. For every institution in `data-raw/institutions.csv`, the pipeline requests
+   the OpenAlex institution entity
+   ([`/institutions/<id>`](https://docs.openalex.org/api-entities/institutions)),
+   using the polite pool and, where configured, a premium API key.
+2. The tracked metrics are appended to `data/metrics.csv` as a new dated row
+   per institution; re-running on the same day replaces that day's rows rather
+   than duplicating them.
+3. The yearly counts and per-institution views are rewritten, and `meta.json`
+   is regenerated for the site.
+4. A guard rail aborts the run if the total works count drops sharply against
+   the previous snapshot, which usually signals a bad fetch rather than a real
+   change.
+
+## Caveats
+
+OpenAlex coverage and attribution evolve continuously — affiliation strings are
+disambiguated over time, and works are added or reassigned. A change between two
+snapshots therefore reflects both real publishing activity and improvements in
+OpenAlex's own data. Figures are best read as a consistent, reproducible series
+rather than as an authoritative count.

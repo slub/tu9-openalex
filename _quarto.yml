@@ -1,0 +1,49 @@
+project:
+  type: website
+  output-dir: _site
+  execute-dir: project
+  # Expose data/meta.json's last-updated date as {{< var updated >}} for the
+  # footer, before any page renders. See scripts/gen_variables.R.
+  pre-render:
+    - scripts/gen_variables.R
+  # Publish the data files into the site at clean, prefix-free URLs (no /data/
+  # or /data-raw/). See scripts/publish_data.R for the source -> URL mapping.
+  post-render:
+    - scripts/publish_data.R
+
+execute:
+  echo: false
+  warning: false
+  message: false
+
+website:
+  title: "TU9 OpenAlex Metrics"
+  description: >-
+    Aggregated OpenAlex metrics for the TU9 universities and related
+    institutions, snapshotted over time.
+  repo-url: https://github.com/slub/tu9-openalex
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: institutions/index.qmd
+        text: Institutions
+      - href: background.qmd
+        text: Background
+      - href: downloads.qmd
+        text: Downloads
+    right:
+      - icon: github
+        href: https://github.com/slub/tu9-openalex
+        text: GitHub
+        aria-label: GitHub repository
+  page-footer:
+    left: "Data: OpenAlex (CC0) · Code: MIT"
+    center: "Last updated {{< var updated >}}"
+    right: "Built with Quarto"
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    page-layout: full

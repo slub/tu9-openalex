@@ -1,0 +1,14 @@
+snapshot_date,slug,name,type,openalex_id,ror_id,works_count,cited_by_count,h_index,i10_index,two_yr_mean_citedness
+2026-07-18,kit,Karlsruhe Institute of Technology,university,I102335020,04t3en479,167420,11308830,751,179481,2.88159773573359
+2026-07-18,leibniz-hannover,Leibniz University Hannover,university,I114112103,0304hq317,75966,6287800,945,63964,3.62888234710416
+2026-07-18,rwth-aachen,RWTH Aachen University,university,I887968799,04xfq0f34,192619,17447497,893,250328,2.44060559958776
+2026-07-18,slub-dresden,SLUB Dresden,library,I3132420320,03wf51b65,1263,485,9,8,0.0499468650371945
+2026-07-18,tib,Technische Informationsbibliothek (TIB),library,I2802635041,04aj4c181,5074,19310,59,448,0.596442185514612
+2026-07-18,tu-berlin,Technische Universität Berlin,university,I4577782,03v4gjf40,111753,5495943,631,90664,3.05616803574002
+2026-07-18,tu-braunschweig,Technische Universität Braunschweig,university,I94509681,010nsgg66,63146,2820036,421,51697,2.26324237560193
+2026-07-18,tu-darmstadt,Technische Universität Darmstadt,university,I31512782,05n911h24,80095,3987351,491,70447,2.97970788704966
+2026-07-18,tu-dresden,Technische Universität Dresden,university,I78650965,042aqky30,139003,10147794,767,146667,3.58749790452065
+2026-07-18,tu-munich,Technical University of Munich,university,I62916508,02kkvpp62,227328,18806330,1021,261419,3.90348815665012
+2026-07-18,uk-aachen,Universitätsklinikum Aachen,hospital,I4210120689,02gm5zw39,21737,1241644,347,18119,2.98640483383686
+2026-07-18,uk-dresden,University Hospital Carl Gustav Carus,hospital,I4210162051,04za5zm41,25127,1870751,390,28949,4.51402737350591
+2026-07-18,uni-stuttgart,University of Stuttgart,university,I100066346,04vnq7t77,158748,5323453,613,85737,1.82175525339926

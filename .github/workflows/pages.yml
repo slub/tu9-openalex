@@ -1,0 +1,75 @@
+name: Render & deploy site
+
+# Lightweight companion to refresh.yml. Rebuilds the website from the data that
+# is ALREADY committed in the repository and deploys it to GitHub Pages.
+# It does NOT fetch anything from OpenAlex, so it is fast and ideal after a
+# change to the site layout, helpers or pages.
+#
+# Runs automatically when site code is pushed to main, and can be started
+# manually from the Actions tab. The monthly data refresh stays in refresh.yml.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "**/*.qmd"
+      - "_quarto.yml"
+      - "scripts/gen_pages.R"
+      - "scripts/site_helpers.R"
+      - "scripts/openalex.R"
+      - "scripts/gen_variables.R"
+      - "scripts/publish_data.R"
+      - ".github/workflows/pages.yml"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Serialise with any other Pages deployment so the two workflows never clash.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          # Match the R version recorded in renv.lock so renv::status() stays
+          # in sync (it compares major.minor); bump both together on upgrade.
+          r-version: '4.5.2'
+          use-public-rspm: true
+
+      - name: Restore R packages (renv)
+        uses: r-lib/actions/setup-renv@v2
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Generate institution pages
+        run: Rscript scripts/gen_pages.R
+
+      - name: Render website
+        run: quarto render
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

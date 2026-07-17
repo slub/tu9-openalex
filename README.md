@@ -1,0 +1,72 @@
+# TU9 OpenAlex Metrics
+
+Aggregated bibliometric indicators for the [TU9](https://www.tu9.de/)
+universities and closely related institutions, taken directly from their
+[OpenAlex](https://openalex.org/) institution records and **snapshotted over
+time**. Nothing is recomputed from individual works — every figure is the value
+OpenAlex already publishes for the institution; this repo records how those
+values evolve.
+
+The pipeline and website mirror the setup of the sibling
+[`slub/tu9-jct-data`](https://github.com/slub/tu9-jct-data) repository (R +
+`renv` + Quarto, refreshed by GitHub Actions and deployed to GitHub Pages).
+
+## Institutions tracked
+
+The nine TU9 universities plus institutions OpenAlex models separately and that
+are **not** linked to a tracked university as `parent`/`child` (a `related` link
+is allowed): the libraries TIB and SLUB Dresden, and the university hospitals in
+Aachen and Dresden. A `child` of an already-tracked institution (e.g. TUM
+Klinikum) is excluded to avoid double-counting. Edit
+[`data-raw/institutions.csv`](data-raw/institutions.csv) to change the set.
+
+## What is stored
+
+- `data/metrics.csv` — one row per institution **per snapshot**: works,
+  citations, h-index, i10-index, 2-year mean citedness.
+- `data/counts_by_year.csv` — works and citations by publication year (most
+  recent snapshot).
+- `data/<slug>/metrics.csv`, `data/<slug>/counts_by_year.csv` — per-institution
+  views.
+- `data/snapshots/<slug>/<date>.json` — the full raw OpenAlex entity, archived
+  per snapshot.
+- `data/meta.json` — summary counts and last-updated date for the site.
+
+## Running locally
+
+```bash
+Rscript -e 'renv::restore()'      # once, to materialise the R library
+
+# The OpenAlex premium API key is read from OPENALEX_API_KEY. Keep it in the
+# git-ignored `secret` file locally (see below) and source it before a run:
+source ./secret
+export OPENALEX_MAILTO="you@example.org"   # polite pool (optional)
+
+Rscript scripts/fetch.R           # fetch + append a snapshot
+Rscript scripts/gen_pages.R       # regenerate per-institution pages
+quarto render                     # build the site into _site/
+```
+
+`scripts/render.sh <page.qmd>` rebuilds individual pages without a full render.
+
+## Credentials
+
+The OpenAlex **premium API key** is optional (the pipeline works on the free API
+via the polite pool) and is read from the `OPENALEX_API_KEY` environment
+variable. It must **not** be committed:
+
+- **Locally:** keep it in the git-ignored `secret` file
+  (`export OPENALEX_API_KEY=...`) and `source ./secret` before running.
+- **In CI:** store it as the `OPENALEX_API_KEY` GitHub Actions secret; the
+  refresh workflow reads it from there.
+
+## Automation
+
+- `.github/workflows/refresh.yml` — monthly: fetches a fresh snapshot, commits
+  the new data, rebuilds and deploys the site. Can be run on demand.
+- `.github/workflows/pages.yml` — rebuilds and deploys the site from data
+  already in the repo whenever site code changes.
+
+## Licence
+
+Code: MIT (`LICENSE`). Data: CC0 1.0 (`data/LICENSE`), following OpenAlex.

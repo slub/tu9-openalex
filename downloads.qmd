@@ -1,0 +1,49 @@
+---
+title: "Downloads"
+---
+
+```{r}
+#| echo: false
+source("scripts/site_helpers.R")
+meta <- read_meta()
+```
+
+All data is hosted on this site and mirrored in the
+[GitHub repository](https://github.com/slub/tu9-openalex) — outputs under
+[`data/`](https://github.com/slub/tu9-openalex/tree/main/data), the pipeline
+input under
+[`data-raw/`](https://github.com/slub/tu9-openalex/tree/main/data-raw).
+
+## Files
+
+Alliance-wide views:
+
+- [`metrics.csv`](metrics.csv) — one row per institution per snapshot (works,
+  citations, h-index, i10-index, 2-year mean citedness)
+- [`counts_by_year.csv`](counts_by_year.csv) — works and citations by
+  publication year, for the most recent snapshot
+
+Per institution (metric history + yearly counts, plus every raw snapshot):
+
+```{r}
+#| echo: false
+#| output: asis
+for (x in meta$institutions) {
+  cat(sprintf(
+    "- `institutions/%s/` — [metrics.csv](institutions/%s/metrics.csv) · [counts_by_year.csv](institutions/%s/counts_by_year.csv)\n",
+    x$slug, x$slug, x$slug))
+}
+```
+
+Each institution's raw OpenAlex entity is archived per snapshot under
+`institutions/<slug>/snapshots/<date>.json`.
+
+Pipeline input:
+
+- [`institutions.csv`](institutions.csv) — the tracked institutions with their
+  OpenAlex and ROR IDs
+
+Other:
+
+- [`meta.json`](meta.json) — summary counts and last-updated date
+- [`DATA-LICENSE`](DATA-LICENSE) — the data licence (CC0 1.0)

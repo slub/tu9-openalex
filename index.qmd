@@ -1,0 +1,38 @@
+---
+title: "TU9 OpenAlex Metrics"
+---
+
+```{r}
+#| echo: false
+source("scripts/site_helpers.R")
+meta <- read_meta()
+```
+
+Aggregated bibliometric indicators for the [TU9](https://www.tu9.de/)
+universities and closely related institutions, taken directly from their
+[OpenAlex](https://openalex.org/) institution records and snapshotted over
+time. Each figure — works, citations, h-index, works per year — is the value
+OpenAlex already reports for the institution; this site records how those
+values evolve.
+
+The data is refreshed on a schedule and released under CC0. See
+[Background](background.qmd) for how institutions are selected and what each
+metric means, and [Downloads](downloads.qmd) for the raw files.
+
+```{r}
+#| echo: false
+#| output: asis
+cat(sprintf(
+  "*Last updated: **%s**. Covers **%s** institutions across **%s** snapshot(s).*\n",
+  meta$updated, meta$n_institutions, meta$n_snapshots))
+```
+
+## Institutions
+
+```{r}
+#| echo: false
+institutions_table(meta$institutions)
+```
+
+Figures reflect the most recent snapshot. Select an institution for its metric
+history and a works-by-year breakdown.
