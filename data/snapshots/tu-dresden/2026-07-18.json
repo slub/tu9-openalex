@@ -20,12 +20,12 @@
     "Technische Universität Dresden"
   ],
   "repositories": [],
-  "works_count": 139003,
-  "cited_by_count": 10147794,
+  "works_count": 139032,
+  "cited_by_count": 10151009,
   "summary_stats": {
-    "2yr_mean_citedness": 3.5875,
+    "2yr_mean_citedness": 3.5934,
     "h_index": 767,
-    "i10_index": 146667
+    "i10_index": 146710
   },
   "ids": {
     "openalex": "https://openalex.org/I78650965",
@@ -265,117 +265,117 @@
   "counts_by_year": [
     {
       "year": 2026,
-      "works_count": 4254,
-      "oa_works_count": 3494,
-      "cited_by_count": 1284
+      "works_count": 4287,
+      "oa_works_count": 3517,
+      "cited_by_count": 1298
     },
     {
       "year": 2025,
-      "works_count": 8297,
-      "oa_works_count": 6487,
-      "cited_by_count": 19402
+      "works_count": 8294,
+      "oa_works_count": 6484,
+      "cited_by_count": 19519
     },
     {
       "year": 2024,
       "works_count": 8718,
       "oa_works_count": 6929,
-      "cited_by_count": 51060
+      "cited_by_count": 51157
     },
     {
       "year": 2023,
       "works_count": 8363,
       "oa_works_count": 6172,
-      "cited_by_count": 81366
+      "cited_by_count": 81459
     },
     {
       "year": 2022,
       "works_count": 8333,
       "oa_works_count": 5975,
-      "cited_by_count": 123138
+      "cited_by_count": 123243
     },
     {
       "year": 2021,
       "works_count": 8368,
       "oa_works_count": 6121,
-      "cited_by_count": 163411
+      "cited_by_count": 163508
     },
     {
       "year": 2020,
       "works_count": 7370,
-      "oa_works_count": 4924,
-      "cited_by_count": 216866
+      "oa_works_count": 4923,
+      "cited_by_count": 216978
     },
     {
       "year": 2019,
       "works_count": 6292,
       "oa_works_count": 3449,
-      "cited_by_count": 196803
+      "cited_by_count": 196875
     },
     {
       "year": 2018,
       "works_count": 5921,
       "oa_works_count": 3050,
-      "cited_by_count": 204554
+      "cited_by_count": 204620
     },
     {
       "year": 2017,
       "works_count": 5650,
       "oa_works_count": 2613,
-      "cited_by_count": 203186
+      "cited_by_count": 203252
     },
     {
       "year": 2016,
       "works_count": 5509,
       "oa_works_count": 2550,
-      "cited_by_count": 213601
+      "cited_by_count": 213651
     },
     {
       "year": 2015,
       "works_count": 5342,
       "oa_works_count": 2291,
-      "cited_by_count": 204104
+      "cited_by_count": 204163
     },
     {
       "year": 2014,
       "works_count": 5243,
       "oa_works_count": 1918,
-      "cited_by_count": 194626
+      "cited_by_count": 194667
     },
     {
       "year": 2013,
       "works_count": 4713,
       "oa_works_count": 1583,
-      "cited_by_count": 169603
+      "cited_by_count": 169625
     },
     {
       "year": 2012,
       "works_count": 4104,
       "oa_works_count": 1322,
-      "cited_by_count": 172139
+      "cited_by_count": 172164
     },
     {
       "year": 2011,
       "works_count": 3549,
-      "oa_works_count": 1050,
-      "cited_by_count": 145319
+      "oa_works_count": 1051,
+      "cited_by_count": 145340
     },
     {
       "year": 2010,
       "works_count": 3263,
       "oa_works_count": 933,
-      "cited_by_count": 142112
+      "cited_by_count": 142133
     }
   ],
   "roles": [
     {
       "role": "funder",
       "id": "https://openalex.org/F4320321613",
-      "works_count": 9467
+      "works_count": 9468
     },
     {
       "role": "institution",
       "id": "https://openalex.org/I78650965",
-      "works_count": 139003
+      "works_count": 139032
     },
     {
       "role": "publisher",
@@ -1265,6 +1265,6 @@
   "is_super_system": false,
   "status": "active",
   "works_api_url": "https://api.openalex.org/works?filter=institutions.id:I78650965",
-  "updated_date": "2026-07-17T05:59:11",
+  "updated_date": "2026-07-18T05:59:12",
   "created_date": "2016-06-24T00:00:00"
 }

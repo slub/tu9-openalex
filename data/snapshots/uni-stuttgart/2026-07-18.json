@@ -36,12 +36,12 @@
       ]
     }
   ],
-  "works_count": 158748,
-  "cited_by_count": 5323453,
+  "works_count": 158778,
+  "cited_by_count": 5324561,
   "summary_stats": {
-    "2yr_mean_citedness": 1.8218,
+    "2yr_mean_citedness": 1.8225,
     "h_index": 613,
-    "i10_index": 85737
+    "i10_index": 85746
   },
   "ids": {
     "openalex": "https://openalex.org/I100066346",
@@ -81,117 +81,117 @@
   "counts_by_year": [
     {
       "year": 2026,
-      "works_count": 2873,
-      "oa_works_count": 2276,
-      "cited_by_count": 418
+      "works_count": 2901,
+      "oa_works_count": 2292,
+      "cited_by_count": 422
     },
     {
       "year": 2025,
       "works_count": 4507,
       "oa_works_count": 3158,
-      "cited_by_count": 7548
+      "cited_by_count": 7581
     },
     {
       "year": 2024,
-      "works_count": 7771,
-      "oa_works_count": 6357,
-      "cited_by_count": 19777
+      "works_count": 7772,
+      "oa_works_count": 6358,
+      "cited_by_count": 19814
     },
     {
       "year": 2023,
       "works_count": 6881,
       "oa_works_count": 5284,
-      "cited_by_count": 29662
+      "cited_by_count": 29707
     },
     {
       "year": 2022,
       "works_count": 9496,
       "oa_works_count": 7862,
-      "cited_by_count": 38829
+      "cited_by_count": 38870
     },
     {
       "year": 2021,
       "works_count": 49316,
       "oa_works_count": 47561,
-      "cited_by_count": 60147
+      "cited_by_count": 60181
     },
     {
       "year": 2020,
       "works_count": 7252,
       "oa_works_count": 5681,
-      "cited_by_count": 103502
+      "cited_by_count": 103571
     },
     {
       "year": 2019,
       "works_count": 3687,
       "oa_works_count": 1783,
-      "cited_by_count": 77168
+      "cited_by_count": 77188
     },
     {
       "year": 2018,
       "works_count": 3394,
-      "oa_works_count": 1313,
-      "cited_by_count": 75599
+      "oa_works_count": 1314,
+      "cited_by_count": 75625
     },
     {
       "year": 2017,
       "works_count": 3380,
       "oa_works_count": 1135,
-      "cited_by_count": 70570
+      "cited_by_count": 70581
     },
     {
       "year": 2016,
       "works_count": 3243,
       "oa_works_count": 1209,
-      "cited_by_count": 80791
+      "cited_by_count": 80810
     },
     {
       "year": 2015,
       "works_count": 2793,
-      "oa_works_count": 939,
-      "cited_by_count": 68882
+      "oa_works_count": 938,
+      "cited_by_count": 68897
     },
     {
       "year": 2014,
       "works_count": 2913,
-      "oa_works_count": 810,
-      "cited_by_count": 77782
+      "oa_works_count": 809,
+      "cited_by_count": 77798
     },
     {
       "year": 2013,
       "works_count": 2695,
       "oa_works_count": 699,
-      "cited_by_count": 73518
+      "cited_by_count": 73526
     },
     {
       "year": 2012,
-      "works_count": 2592,
-      "oa_works_count": 758,
-      "cited_by_count": 73781
+      "works_count": 2591,
+      "oa_works_count": 757,
+      "cited_by_count": 73794
     },
     {
       "year": 2011,
       "works_count": 2663,
-      "oa_works_count": 683,
-      "cited_by_count": 86039
+      "oa_works_count": 682,
+      "cited_by_count": 86054
     },
     {
       "year": 2010,
       "works_count": 2558,
       "oa_works_count": 638,
-      "cited_by_count": 86679
+      "cited_by_count": 86692
     }
   ],
   "roles": [
     {
       "role": "funder",
       "id": "https://openalex.org/F4320325850",
-      "works_count": 5129
+      "works_count": 5130
     },
     {
       "role": "institution",
       "id": "https://openalex.org/I100066346",
-      "works_count": 158748
+      "works_count": 158778
     }
   ],
   "topics": [
@@ -288,7 +288,7 @@
     {
       "id": "https://openalex.org/T10181",
       "display_name": "Natural Language Processing Techniques",
-      "count": 1213,
+      "count": 1214,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/1702",
@@ -1076,6 +1076,6 @@
   "is_super_system": false,
   "status": "active",
   "works_api_url": "https://api.openalex.org/works?filter=institutions.id:I100066346",
-  "updated_date": "2026-07-17T05:59:11",
+  "updated_date": "2026-07-18T05:59:12",
   "created_date": "2016-06-24T00:00:00"
 }

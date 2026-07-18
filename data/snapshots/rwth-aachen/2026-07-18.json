@@ -39,12 +39,12 @@
       ]
     }
   ],
-  "works_count": 192619,
-  "cited_by_count": 17447497,
+  "works_count": 192704,
+  "cited_by_count": 17451279,
   "summary_stats": {
-    "2yr_mean_citedness": 2.4406,
+    "2yr_mean_citedness": 2.4442,
     "h_index": 893,
-    "i10_index": 250328
+    "i10_index": 250348
   },
   "ids": {
     "openalex": "https://openalex.org/I887968799",
@@ -151,125 +151,131 @@
       "cited_by_count": 0
     },
     {
+      "year": 2027,
+      "works_count": 1,
+      "oa_works_count": 1,
+      "cited_by_count": 0
+    },
+    {
       "year": 2026,
-      "works_count": 7634,
-      "oa_works_count": 6771,
-      "cited_by_count": 1539
+      "works_count": 7708,
+      "oa_works_count": 6823,
+      "cited_by_count": 1562
     },
     {
       "year": 2025,
-      "works_count": 15018,
-      "oa_works_count": 12927,
-      "cited_by_count": 21168
+      "works_count": 15024,
+      "oa_works_count": 12935,
+      "cited_by_count": 21307
     },
     {
       "year": 2024,
       "works_count": 13912,
       "oa_works_count": 11738,
-      "cited_by_count": 61727
+      "cited_by_count": 61881
     },
     {
       "year": 2023,
       "works_count": 14521,
       "oa_works_count": 11785,
-      "cited_by_count": 93618
+      "cited_by_count": 93735
     },
     {
       "year": 2022,
       "works_count": 12097,
       "oa_works_count": 9265,
-      "cited_by_count": 133017
+      "cited_by_count": 133144
     },
     {
       "year": 2021,
       "works_count": 12914,
-      "oa_works_count": 10088,
-      "cited_by_count": 176497
+      "oa_works_count": 10087,
+      "cited_by_count": 176619
     },
     {
       "year": 2020,
       "works_count": 10576,
       "oa_works_count": 7617,
-      "cited_by_count": 219841
+      "cited_by_count": 219800
     },
     {
       "year": 2019,
-      "works_count": 9093,
-      "oa_works_count": 5699,
-      "cited_by_count": 209146
+      "works_count": 9094,
+      "oa_works_count": 5700,
+      "cited_by_count": 209385
     },
     {
       "year": 2018,
       "works_count": 8453,
       "oa_works_count": 4844,
-      "cited_by_count": 240518
+      "cited_by_count": 240611
     },
     {
       "year": 2017,
       "works_count": 7360,
       "oa_works_count": 3729,
-      "cited_by_count": 208317
+      "cited_by_count": 208376
     },
     {
       "year": 2016,
       "works_count": 6785,
       "oa_works_count": 2896,
-      "cited_by_count": 235213
+      "cited_by_count": 235274
     },
     {
       "year": 2015,
       "works_count": 5881,
       "oa_works_count": 2241,
-      "cited_by_count": 193957
+      "cited_by_count": 193987
     },
     {
       "year": 2014,
       "works_count": 5661,
       "oa_works_count": 1944,
-      "cited_by_count": 252710
+      "cited_by_count": 252772
     },
     {
       "year": 2013,
       "works_count": 5035,
       "oa_works_count": 1643,
-      "cited_by_count": 186853
+      "cited_by_count": 186891
     },
     {
       "year": 2012,
       "works_count": 5174,
-      "oa_works_count": 1574,
-      "cited_by_count": 193832
+      "oa_works_count": 1575,
+      "cited_by_count": 193846
     },
     {
       "year": 2011,
       "works_count": 4693,
       "oa_works_count": 1318,
-      "cited_by_count": 193342
+      "cited_by_count": 193372
     },
     {
       "year": 2010,
       "works_count": 4507,
       "oa_works_count": 1189,
-      "cited_by_count": 164705
+      "cited_by_count": 164727
     }
   ],
   "roles": [
     {
       "role": "funder",
       "id": "https://openalex.org/F4320324232",
-      "works_count": 12470
+      "works_count": 12474
     },
     {
       "role": "institution",
       "id": "https://openalex.org/I887968799",
-      "works_count": 192619
+      "works_count": 192704
     }
   ],
   "topics": [
     {
       "id": "https://openalex.org/T10048",
       "display_name": "Particle physics theoretical and experimental studies",
-      "count": 6829,
+      "count": 6830,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3106",
@@ -305,7 +311,7 @@
     {
       "id": "https://openalex.org/T10224",
       "display_name": "Quantum Chromodynamics and Particle Interactions",
-      "count": 4150,
+      "count": 4151,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3106",
@@ -323,7 +329,7 @@
     {
       "id": "https://openalex.org/T11741",
       "display_name": "Flexible and Reconfigurable Manufacturing Systems",
-      "count": 2610,
+      "count": 2613,
       "score": 0.9999,
       "subfield": {
         "id": "https://openalex.org/subfields/2209",
@@ -341,7 +347,7 @@
     {
       "id": "https://openalex.org/T11159",
       "display_name": "Manufacturing Process and Optimization",
-      "count": 1928,
+      "count": 1929,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2209",
@@ -377,7 +383,7 @@
     {
       "id": "https://openalex.org/T10921",
       "display_name": "Neutrino Physics Research",
-      "count": 1690,
+      "count": 1691,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3106",
@@ -411,6 +417,24 @@
       }
     },
     {
+      "id": "https://openalex.org/T10663",
+      "display_name": "Advanced Battery Technologies Research",
+      "count": 1589,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2203",
+        "display_name": "Automotive Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
       "id": "https://openalex.org/T10117",
       "display_name": "Advanced Combustion Engine Technologies",
       "count": 1588,
@@ -422,24 +446,6 @@
       "field": {
         "id": "https://openalex.org/fields/15",
         "display_name": "Chemical Engineering"
-      },
-      "domain": {
-        "id": "https://openalex.org/domains/3",
-        "display_name": "Physical Sciences"
-      }
-    },
-    {
-      "id": "https://openalex.org/T10663",
-      "display_name": "Advanced Battery Technologies Research",
-      "count": 1588,
-      "score": 1,
-      "subfield": {
-        "id": "https://openalex.org/subfields/2203",
-        "display_name": "Automotive Engineering"
-      },
-      "field": {
-        "id": "https://openalex.org/fields/22",
-        "display_name": "Engineering"
       },
       "domain": {
         "id": "https://openalex.org/domains/3",
@@ -521,7 +527,7 @@
     {
       "id": "https://openalex.org/T10377",
       "display_name": "Metal and Thin Film Mechanics",
-      "count": 1498,
+      "count": 1499,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2211",
@@ -701,7 +707,7 @@
     {
       "id": "https://openalex.org/T12959",
       "display_name": "Engineering and Materials Science Studies",
-      "count": 1200,
+      "count": 1201,
       "score": 0.9997,
       "subfield": {
         "id": "https://openalex.org/subfields/2210",
@@ -1147,6 +1153,6 @@
   "is_super_system": false,
   "status": "active",
   "works_api_url": "https://api.openalex.org/works?filter=institutions.id:I887968799",
-  "updated_date": "2026-07-17T05:59:11",
+  "updated_date": "2026-07-18T05:59:12",
   "created_date": "2016-06-24T00:00:00"
 }

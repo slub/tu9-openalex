@@ -1,2 +1,2 @@
-snapshot_date,slug,name,type,openalex_id,ror_id,works_count,cited_by_count,h_index,i10_index,two_yr_mean_citedness
-2026-07-18,tu-braunschweig,Technische Universität Braunschweig,university,I94509681,010nsgg66,63146,2820036,421,51697,2.26324237560193
+snapshot_date,slug,name,type,openalex_id,ror_id,works_count,cited_by_count,h_index,i10_index,two_yr_mean_citedness,ref_year,ca_works_ref,ca_oa_works_ref,ca_oa_share_ref,period_start,period_end,ca_works_period,ca_oa_works_period,ca_oa_share_period
+2026-07-18,tu-braunschweig,Technische Universität Braunschweig,university,I94509681,010nsgg66,59602,2820209,421,51718,2.26690182245738,2025,1211,860,0.7102,2020,2025,7545,4936,0.6542

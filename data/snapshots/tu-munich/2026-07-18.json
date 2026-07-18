@@ -48,12 +48,12 @@
       ]
     }
   ],
-  "works_count": 227328,
-  "cited_by_count": 18806330,
+  "works_count": 227413,
+  "cited_by_count": 18812377,
   "summary_stats": {
-    "2yr_mean_citedness": 3.9035,
+    "2yr_mean_citedness": 3.909,
     "h_index": 1021,
-    "i10_index": 261419
+    "i10_index": 261496
   },
   "ids": {
     "openalex": "https://openalex.org/I62916508",
@@ -171,117 +171,117 @@
     },
     {
       "year": 2026,
-      "works_count": 9346,
-      "oa_works_count": 8026,
-      "cited_by_count": 1945
+      "works_count": 9431,
+      "oa_works_count": 8084,
+      "cited_by_count": 1970
     },
     {
       "year": 2025,
       "works_count": 14401,
       "oa_works_count": 11403,
-      "cited_by_count": 38232
+      "cited_by_count": 38435
     },
     {
       "year": 2024,
-      "works_count": 15060,
-      "oa_works_count": 11995,
-      "cited_by_count": 104781
+      "works_count": 15059,
+      "oa_works_count": 11994,
+      "cited_by_count": 105040
     },
     {
       "year": 2023,
-      "works_count": 14245,
-      "oa_works_count": 10398,
-      "cited_by_count": 168206
+      "works_count": 14246,
+      "oa_works_count": 10399,
+      "cited_by_count": 168454
     },
     {
       "year": 2022,
       "works_count": 12666,
       "oa_works_count": 8942,
-      "cited_by_count": 216996
+      "cited_by_count": 217178
     },
     {
       "year": 2021,
       "works_count": 12581,
       "oa_works_count": 9072,
-      "cited_by_count": 277303
+      "cited_by_count": 277491
     },
     {
       "year": 2020,
-      "works_count": 11381,
-      "oa_works_count": 8070,
-      "cited_by_count": 358668
+      "works_count": 11380,
+      "oa_works_count": 8069,
+      "cited_by_count": 358689
     },
     {
       "year": 2019,
-      "works_count": 11126,
-      "oa_works_count": 6649,
-      "cited_by_count": 344818
+      "works_count": 11127,
+      "oa_works_count": 6650,
+      "cited_by_count": 345093
     },
     {
       "year": 2018,
       "works_count": 9009,
       "oa_works_count": 5271,
-      "cited_by_count": 376717
+      "cited_by_count": 376863
     },
     {
       "year": 2017,
       "works_count": 8703,
       "oa_works_count": 4462,
-      "cited_by_count": 369316
+      "cited_by_count": 369458
     },
     {
       "year": 2016,
       "works_count": 8079,
-      "oa_works_count": 3996,
-      "cited_by_count": 356039
+      "oa_works_count": 3995,
+      "cited_by_count": 356134
     },
     {
       "year": 2015,
       "works_count": 7338,
-      "oa_works_count": 3243,
-      "cited_by_count": 318053
+      "oa_works_count": 3244,
+      "cited_by_count": 318125
     },
     {
       "year": 2014,
       "works_count": 7109,
-      "oa_works_count": 2800,
-      "cited_by_count": 284806
+      "oa_works_count": 2801,
+      "cited_by_count": 284871
     },
     {
       "year": 2013,
       "works_count": 6658,
       "oa_works_count": 2576,
-      "cited_by_count": 273122
+      "cited_by_count": 273175
     },
     {
       "year": 2012,
       "works_count": 5859,
       "oa_works_count": 2297,
-      "cited_by_count": 282344
+      "cited_by_count": 282388
     },
     {
       "year": 2011,
       "works_count": 5725,
       "oa_works_count": 2089,
-      "cited_by_count": 276881
+      "cited_by_count": 276924
     },
     {
       "year": 2010,
       "works_count": 5401,
       "oa_works_count": 1980,
-      "cited_by_count": 258849
+      "cited_by_count": 258879
     }
   ],
   "roles": [
     {
       "role": "funder",
       "id": "https://openalex.org/F4320323383",
-      "works_count": 12333
+      "works_count": 12337
     },
     {
       "role": "institution",
       "id": "https://openalex.org/I62916508",
-      "works_count": 227328
+      "works_count": 227413
     },
     {
       "role": "publisher",
@@ -1171,6 +1171,6 @@
   "is_super_system": false,
   "status": "active",
   "works_api_url": "https://api.openalex.org/works?filter=institutions.id:I62916508",
-  "updated_date": "2026-07-17T05:59:11",
+  "updated_date": "2026-07-18T05:59:12",
   "created_date": "2016-06-24T00:00:00"
 }

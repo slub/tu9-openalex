@@ -49,12 +49,12 @@
       ]
     }
   ],
-  "works_count": 75966,
-  "cited_by_count": 6287800,
+  "works_count": 75980,
+  "cited_by_count": 6290427,
   "summary_stats": {
-    "2yr_mean_citedness": 3.6289,
+    "2yr_mean_citedness": 3.645,
     "h_index": 945,
-    "i10_index": 63964
+    "i10_index": 64028
   },
   "ids": {
     "openalex": "https://openalex.org/I114112103",
@@ -102,117 +102,117 @@
   "counts_by_year": [
     {
       "year": 2026,
-      "works_count": 2386,
-      "oa_works_count": 1976,
-      "cited_by_count": 478
+      "works_count": 2402,
+      "oa_works_count": 1985,
+      "cited_by_count": 489
     },
     {
       "year": 2025,
-      "works_count": 4475,
-      "oa_works_count": 3431,
-      "cited_by_count": 8331
+      "works_count": 4476,
+      "oa_works_count": 3432,
+      "cited_by_count": 8369
     },
     {
       "year": 2024,
-      "works_count": 6122,
-      "oa_works_count": 5071,
-      "cited_by_count": 21038
+      "works_count": 6121,
+      "oa_works_count": 5070,
+      "cited_by_count": 21080
     },
     {
       "year": 2023,
       "works_count": 3831,
       "oa_works_count": 2753,
-      "cited_by_count": 35147
+      "cited_by_count": 35196
     },
     {
       "year": 2022,
       "works_count": 3646,
       "oa_works_count": 2395,
-      "cited_by_count": 41026
+      "cited_by_count": 41070
     },
     {
       "year": 2021,
       "works_count": 3538,
       "oa_works_count": 2366,
-      "cited_by_count": 56737
+      "cited_by_count": 56775
     },
     {
       "year": 2020,
       "works_count": 3592,
       "oa_works_count": 2403,
-      "cited_by_count": 70203
+      "cited_by_count": 70237
     },
     {
       "year": 2019,
       "works_count": 2779,
       "oa_works_count": 1352,
-      "cited_by_count": 75973
+      "cited_by_count": 75992
     },
     {
       "year": 2018,
       "works_count": 2591,
       "oa_works_count": 1224,
-      "cited_by_count": 79525
+      "cited_by_count": 79544
     },
     {
       "year": 2017,
       "works_count": 2586,
       "oa_works_count": 1080,
-      "cited_by_count": 84462
+      "cited_by_count": 84494
     },
     {
       "year": 2016,
       "works_count": 2458,
       "oa_works_count": 1034,
-      "cited_by_count": 83635
+      "cited_by_count": 83658
     },
     {
       "year": 2015,
       "works_count": 2130,
       "oa_works_count": 873,
-      "cited_by_count": 62046
+      "cited_by_count": 62061
     },
     {
       "year": 2014,
       "works_count": 2005,
       "oa_works_count": 714,
-      "cited_by_count": 54168
+      "cited_by_count": 54178
     },
     {
       "year": 2013,
       "works_count": 1976,
       "oa_works_count": 688,
-      "cited_by_count": 53386
+      "cited_by_count": 53398
     },
     {
       "year": 2012,
       "works_count": 1892,
       "oa_works_count": 645,
-      "cited_by_count": 50112
+      "cited_by_count": 50119
     },
     {
       "year": 2011,
       "works_count": 1717,
       "oa_works_count": 545,
-      "cited_by_count": 65463
+      "cited_by_count": 65477
     },
     {
       "year": 2010,
       "works_count": 1662,
       "oa_works_count": 542,
-      "cited_by_count": 55339
+      "cited_by_count": 55351
     }
   ],
   "roles": [
     {
       "role": "funder",
       "id": "https://openalex.org/F4320322379",
-      "works_count": 3623
+      "works_count": 3624
     },
     {
       "role": "institution",
       "id": "https://openalex.org/I114112103",
-      "works_count": 75966
+      "works_count": 75980
     }
   ],
   "topics": [
@@ -309,7 +309,7 @@
     {
       "id": "https://openalex.org/T10463",
       "display_name": "Pulsars and Gravitational Waves Research",
-      "count": 1175,
+      "count": 1176,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3103",
@@ -489,7 +489,7 @@
     {
       "id": "https://openalex.org/T10020",
       "display_name": "Quantum Information and Cryptography",
-      "count": 756,
+      "count": 757,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/1702",
@@ -561,7 +561,7 @@
     {
       "id": "https://openalex.org/T12004",
       "display_name": "Advanced Frequency and Time Standards",
-      "count": 710,
+      "count": 711,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3107",
@@ -633,7 +633,7 @@
     {
       "id": "https://openalex.org/T11993",
       "display_name": "Atomic and Subatomic Physics Research",
-      "count": 648,
+      "count": 649,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3107",
@@ -1097,6 +1097,6 @@
   "is_super_system": false,
   "status": "active",
   "works_api_url": "https://api.openalex.org/works?filter=institutions.id:I114112103",
-  "updated_date": "2026-07-17T05:59:11",
+  "updated_date": "2026-07-18T05:59:12",
   "created_date": "2016-06-24T00:00:00"
 }

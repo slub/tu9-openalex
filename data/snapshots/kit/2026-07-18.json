@@ -34,12 +34,12 @@
       ]
     }
   ],
-  "works_count": 167420,
-  "cited_by_count": 11308830,
+  "works_count": 167483,
+  "cited_by_count": 11311715,
   "summary_stats": {
-    "2yr_mean_citedness": 2.8816,
+    "2yr_mean_citedness": 2.884,
     "h_index": 751,
-    "i10_index": 179481
+    "i10_index": 179496
   },
   "ids": {
     "openalex": "https://openalex.org/I102335020",
@@ -109,117 +109,117 @@
     },
     {
       "year": 2026,
-      "works_count": 6460,
-      "oa_works_count": 5735,
-      "cited_by_count": 1000
+      "works_count": 6520,
+      "oa_works_count": 5766,
+      "cited_by_count": 1017
     },
     {
       "year": 2025,
-      "works_count": 14014,
-      "oa_works_count": 12315,
-      "cited_by_count": 17023
+      "works_count": 14012,
+      "oa_works_count": 12313,
+      "cited_by_count": 17100
     },
     {
       "year": 2024,
-      "works_count": 13473,
-      "oa_works_count": 11560,
-      "cited_by_count": 49969
+      "works_count": 13474,
+      "oa_works_count": 11561,
+      "cited_by_count": 50086
     },
     {
       "year": 2023,
-      "works_count": 11410,
-      "oa_works_count": 9362,
-      "cited_by_count": 74974
+      "works_count": 11411,
+      "oa_works_count": 9363,
+      "cited_by_count": 75066
     },
     {
       "year": 2022,
       "works_count": 11049,
       "oa_works_count": 8885,
-      "cited_by_count": 108485
+      "cited_by_count": 108573
     },
     {
       "year": 2021,
       "works_count": 9483,
       "oa_works_count": 7506,
-      "cited_by_count": 133643
+      "cited_by_count": 133720
     },
     {
       "year": 2020,
       "works_count": 10108,
       "oa_works_count": 8024,
-      "cited_by_count": 188098
+      "cited_by_count": 188200
     },
     {
       "year": 2019,
-      "works_count": 9634,
-      "oa_works_count": 7056,
-      "cited_by_count": 187548
+      "works_count": 9635,
+      "oa_works_count": 7057,
+      "cited_by_count": 187624
     },
     {
       "year": 2018,
       "works_count": 6523,
       "oa_works_count": 3561,
-      "cited_by_count": 174075
+      "cited_by_count": 174128
     },
     {
       "year": 2017,
       "works_count": 5642,
       "oa_works_count": 2572,
-      "cited_by_count": 187680
+      "cited_by_count": 187727
     },
     {
       "year": 2016,
       "works_count": 5801,
       "oa_works_count": 2564,
-      "cited_by_count": 190781
+      "cited_by_count": 190827
     },
     {
       "year": 2015,
       "works_count": 5208,
       "oa_works_count": 2017,
-      "cited_by_count": 168288
+      "cited_by_count": 168325
     },
     {
       "year": 2014,
       "works_count": 5095,
       "oa_works_count": 1887,
-      "cited_by_count": 202563
+      "cited_by_count": 202603
     },
     {
       "year": 2013,
-      "works_count": 4971,
+      "works_count": 4972,
       "oa_works_count": 1727,
-      "cited_by_count": 187810
+      "cited_by_count": 187871
     },
     {
       "year": 2012,
       "works_count": 4588,
       "oa_works_count": 1596,
-      "cited_by_count": 168559
+      "cited_by_count": 168575
     },
     {
       "year": 2011,
       "works_count": 4502,
-      "oa_works_count": 1356,
-      "cited_by_count": 164022
+      "oa_works_count": 1357,
+      "cited_by_count": 164036
     },
     {
       "year": 2010,
       "works_count": 3928,
-      "oa_works_count": 1282,
-      "cited_by_count": 131484
+      "oa_works_count": 1283,
+      "cited_by_count": 131497
     }
   ],
   "roles": [
     {
       "role": "funder",
       "id": "https://openalex.org/F4320311048",
-      "works_count": 5472
+      "works_count": 5475
     },
     {
       "role": "institution",
       "id": "https://openalex.org/I102335020",
-      "works_count": 167420
+      "works_count": 167483
     }
   ],
   "topics": [
@@ -1104,6 +1104,6 @@
   "is_super_system": false,
   "status": "active",
   "works_api_url": "https://api.openalex.org/works?filter=institutions.id:I102335020",
-  "updated_date": "2026-07-17T05:59:11",
+  "updated_date": "2026-07-18T05:59:12",
   "created_date": "2016-06-24T00:00:00"
 }

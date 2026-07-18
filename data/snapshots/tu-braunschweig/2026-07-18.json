@@ -17,12 +17,12 @@
     "Technische Universität Braunschweig"
   ],
   "repositories": [],
-  "works_count": 63146,
-  "cited_by_count": 2820036,
+  "works_count": 63153,
+  "cited_by_count": 2820209,
   "summary_stats": {
-    "2yr_mean_citedness": 2.2632,
+    "2yr_mean_citedness": 2.2669,
     "h_index": 421,
-    "i10_index": 51697
+    "i10_index": 51718
   },
   "ids": {
     "openalex": "https://openalex.org/I94509681",
@@ -76,105 +76,105 @@
     },
     {
       "year": 2026,
-      "works_count": 1711,
-      "oa_works_count": 1388,
-      "cited_by_count": 335
+      "works_count": 1719,
+      "oa_works_count": 1393,
+      "cited_by_count": 343
     },
     {
       "year": 2025,
       "works_count": 3318,
       "oa_works_count": 2578,
-      "cited_by_count": 4784
+      "cited_by_count": 4799
     },
     {
       "year": 2024,
       "works_count": 3099,
       "oa_works_count": 2357,
-      "cited_by_count": 12596
+      "cited_by_count": 12620
     },
     {
       "year": 2023,
       "works_count": 2995,
       "oa_works_count": 2209,
-      "cited_by_count": 21543
+      "cited_by_count": 21564
     },
     {
       "year": 2022,
       "works_count": 2939,
       "oa_works_count": 2032,
-      "cited_by_count": 32326
+      "cited_by_count": 32352
     },
     {
       "year": 2021,
       "works_count": 2740,
       "oa_works_count": 1871,
-      "cited_by_count": 38848
+      "cited_by_count": 38865
     },
     {
       "year": 2020,
       "works_count": 2565,
       "oa_works_count": 1603,
-      "cited_by_count": 86246
+      "cited_by_count": 86307
     },
     {
       "year": 2019,
       "works_count": 2215,
       "oa_works_count": 1130,
-      "cited_by_count": 56645
+      "cited_by_count": 56660
     },
     {
       "year": 2018,
       "works_count": 2319,
       "oa_works_count": 1012,
-      "cited_by_count": 50460
+      "cited_by_count": 50480
     },
     {
       "year": 2017,
       "works_count": 2024,
-      "oa_works_count": 769,
-      "cited_by_count": 50730
+      "oa_works_count": 770,
+      "cited_by_count": 50744
     },
     {
       "year": 2016,
       "works_count": 1980,
       "oa_works_count": 724,
-      "cited_by_count": 55723
+      "cited_by_count": 55736
     },
     {
       "year": 2015,
       "works_count": 1732,
       "oa_works_count": 610,
-      "cited_by_count": 50340
+      "cited_by_count": 50348
     },
     {
       "year": 2014,
       "works_count": 1835,
       "oa_works_count": 559,
-      "cited_by_count": 53183
+      "cited_by_count": 53202
     },
     {
       "year": 2013,
       "works_count": 1897,
       "oa_works_count": 409,
-      "cited_by_count": 40715
+      "cited_by_count": 40726
     },
     {
       "year": 2012,
       "works_count": 1613,
       "oa_works_count": 482,
-      "cited_by_count": 53334
+      "cited_by_count": 53342
     },
     {
       "year": 2011,
       "works_count": 1616,
       "oa_works_count": 408,
-      "cited_by_count": 48189
+      "cited_by_count": 48192
     },
     {
       "year": 2010,
       "works_count": 1651,
       "oa_works_count": 420,
-      "cited_by_count": 45962
+      "cited_by_count": 45966
     }
   ],
   "roles": [
@@ -186,7 +186,7 @@
     {
       "role": "institution",
       "id": "https://openalex.org/I94509681",
-      "works_count": 63146
+      "works_count": 63153
     }
   ],
   "topics": [
@@ -730,7 +730,7 @@
     {
       "id": "https://openalex.org/T12653",
       "display_name": "Cyclization and Aryne Chemistry",
-      "value": 0.0088,
+      "value": 0.0087,
       "subfield": {
         "id": "https://openalex.org/subfields/1605",
         "display_name": "Organic Chemistry"
@@ -1071,6 +1071,6 @@
   "is_super_system": false,
   "status": "active",
   "works_api_url": "https://api.openalex.org/works?filter=institutions.id:I94509681",
-  "updated_date": "2026-07-17T05:59:11",
+  "updated_date": "2026-07-18T05:59:12",
   "created_date": "2016-06-24T00:00:00"
 }

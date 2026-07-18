@@ -1,2 +1,2 @@
-snapshot_date,slug,name,type,openalex_id,ror_id,works_count,cited_by_count,h_index,i10_index,two_yr_mean_citedness
-2026-07-18,tu-dresden,Technische Universität Dresden,university,I78650965,042aqky30,139003,10147794,767,146667,3.58749790452065
+snapshot_date,slug,name,type,openalex_id,ror_id,works_count,cited_by_count,h_index,i10_index,two_yr_mean_citedness,ref_year,ca_works_ref,ca_oa_works_ref,ca_oa_share_ref,period_start,period_end,ca_works_period,ca_oa_works_period,ca_oa_share_period
+2026-07-18,tu-dresden,Technische Universität Dresden,university,I78650965,042aqky30,129281,10151009,767,146710,3.59341640319881,2025,2492,1903,0.7636,2020,2025,17848,12340,0.6914

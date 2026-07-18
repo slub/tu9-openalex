@@ -31,12 +31,12 @@
       ]
     }
   ],
-  "works_count": 111753,
-  "cited_by_count": 5495943,
+  "works_count": 111779,
+  "cited_by_count": 5497206,
   "summary_stats": {
-    "2yr_mean_citedness": 3.0562,
-    "h_index": 631,
-    "i10_index": 90664
+    "2yr_mean_citedness": 3.0602,
+    "h_index": 632,
+    "i10_index": 90673
   },
   "ids": {
     "openalex": "https://openalex.org/I4577782",
@@ -108,117 +108,117 @@
   "counts_by_year": [
     {
       "year": 2026,
-      "works_count": 3125,
-      "oa_works_count": 2596,
-      "cited_by_count": 666
+      "works_count": 3153,
+      "oa_works_count": 2617,
+      "cited_by_count": 674
     },
     {
       "year": 2025,
-      "works_count": 5755,
-      "oa_works_count": 4517,
-      "cited_by_count": 11020
+      "works_count": 5754,
+      "oa_works_count": 4516,
+      "cited_by_count": 11088
     },
     {
       "year": 2024,
       "works_count": 5643,
       "oa_works_count": 4431,
-      "cited_by_count": 28550
+      "cited_by_count": 28608
     },
     {
       "year": 2023,
-      "works_count": 5337,
+      "works_count": 5338,
       "oa_works_count": 3765,
-      "cited_by_count": 46638
+      "cited_by_count": 46696
     },
     {
       "year": 2022,
       "works_count": 5360,
       "oa_works_count": 3699,
-      "cited_by_count": 65247
+      "cited_by_count": 65300
     },
     {
       "year": 2021,
       "works_count": 5606,
       "oa_works_count": 3979,
-      "cited_by_count": 93203
+      "cited_by_count": 93264
     },
     {
       "year": 2020,
       "works_count": 5015,
       "oa_works_count": 3267,
-      "cited_by_count": 125982
+      "cited_by_count": 126039
     },
     {
       "year": 2019,
       "works_count": 4023,
-      "oa_works_count": 2073,
-      "cited_by_count": 108558
+      "oa_works_count": 2074,
+      "cited_by_count": 108603
     },
     {
       "year": 2018,
       "works_count": 3827,
       "oa_works_count": 1657,
-      "cited_by_count": 105636
+      "cited_by_count": 105658
     },
     {
       "year": 2017,
       "works_count": 3593,
       "oa_works_count": 1465,
-      "cited_by_count": 107794
+      "cited_by_count": 107823
     },
     {
       "year": 2016,
       "works_count": 3721,
       "oa_works_count": 1465,
-      "cited_by_count": 116720
+      "cited_by_count": 116755
     },
     {
       "year": 2015,
       "works_count": 3506,
-      "oa_works_count": 1160,
-      "cited_by_count": 96143
+      "oa_works_count": 1159,
+      "cited_by_count": 96160
     },
     {
       "year": 2014,
       "works_count": 3140,
       "oa_works_count": 999,
-      "cited_by_count": 90024
+      "cited_by_count": 90033
     },
     {
       "year": 2013,
       "works_count": 3052,
       "oa_works_count": 886,
-      "cited_by_count": 92950
+      "cited_by_count": 92959
     },
     {
       "year": 2012,
       "works_count": 3037,
       "oa_works_count": 840,
-      "cited_by_count": 104441
+      "cited_by_count": 104460
     },
     {
       "year": 2011,
       "works_count": 2729,
       "oa_works_count": 694,
-      "cited_by_count": 90936
+      "cited_by_count": 90948
     },
     {
       "year": 2010,
       "works_count": 2852,
       "oa_works_count": 687,
-      "cited_by_count": 101583
+      "cited_by_count": 101600
     }
   ],
   "roles": [
     {
       "role": "funder",
       "id": "https://openalex.org/F4320324094",
-      "works_count": 6335
+      "works_count": 6336
     },
     {
       "role": "institution",
       "id": "https://openalex.org/I4577782",
-      "works_count": 111753
+      "works_count": 111779
     }
   ],
   "topics": [
@@ -243,7 +243,7 @@
     {
       "id": "https://openalex.org/T12565",
       "display_name": "Physics and Engineering Research Articles",
-      "count": 2287,
+      "count": 2286,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2206",
@@ -477,7 +477,7 @@
     {
       "id": "https://openalex.org/T10232",
       "display_name": "Optical Network Technologies",
-      "count": 936,
+      "count": 937,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2208",
@@ -898,7 +898,7 @@
     {
       "id": "https://openalex.org/T14167",
       "display_name": "Consumer behavior in food and health",
-      "value": 0.0083,
+      "value": 0.0084,
       "subfield": {
         "id": "https://openalex.org/subfields/3312",
         "display_name": "Sociology and Political Science"
@@ -1103,6 +1103,6 @@
   "is_super_system": false,
   "status": "active",
   "works_api_url": "https://api.openalex.org/works?filter=institutions.id:I4577782",
-  "updated_date": "2026-07-17T05:59:11",
+  "updated_date": "2026-07-18T05:59:12",
   "created_date": "2016-06-24T00:00:00"
 }
