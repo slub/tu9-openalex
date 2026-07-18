@@ -14,7 +14,8 @@
 # because a leftover file would otherwise be mistaken for a current product.
 validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
                               prev_metrics = NULL, guard_threshold = 0.20,
-                              force = FALSE) {
+                              force = FALSE, period_start = NULL) {
+  if (is.null(period_start)) period_start <- 2020
   issues <- character()
   add <- function(...) issues <<- c(issues, sprintf(...))
 
@@ -39,9 +40,12 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   # --- 2. mandatory products per institution -------------------------------
   need <- list(counts_by_year = snap$counts_by_year,
                ca_oa_by_year  = snap$ca_oa_by_year,
-               ca_oa_status   = snap$ca_oa_status)
+               ca_oa_status   = snap$ca_oa_status,
+               core           = snap$core)
   for (nm in names(need)) {
-    have <- unique(need[[nm]]$slug)
+    d <- need[[nm]]
+    if (is.null(d) || nrow(d) == 0) next
+    have <- if (nm == "core") unique(d$tu9_slug) else unique(d$slug)
     gone <- setdiff(expected, have)
     if (length(gone) > 0)
       add("%s missing for: %s", nm, paste(gone, collapse = ", "))
@@ -59,9 +63,37 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
         paste(cons_expected, collapse = ", "), paste(cons_got, collapse = ", "))
   }
 
-  # --- 4. one consistent snapshot_date everywhere --------------------------
+  # --- 4. core view is present for every university -------------------------
+  core_got <- if (nrow(snap$core) > 0) sort(unique(snap$core$tu9_slug)) else character()
+  missing_core <- setdiff(expected, core_got)
+  unexpected_core <- setdiff(core_got, expected)
+  if (length(missing_core) > 0)
+    add("core view missing for: %s", paste(missing_core, collapse = ", "))
+  if (length(unexpected_core) > 0)
+    add("unexpected universities in core view: %s", paste(unexpected_core, collapse = ", "))
+
+  # --- 5. core member set equals consolidated member set where applicable -----
+  for (slug in expected) {
+    core_mem <- snap$core_members[[slug]]$members
+    cons_mem <- snap$cons_members[[slug]]$members
+    if (is.null(core_mem)) {
+      add("core member list missing for: %s", slug)
+      next
+    }
+    if (!is.null(cons_mem)) {
+      if (!identical(sort(core_mem), sort(cons_mem)))
+        add("core/cons member mismatch for %s", slug)
+    } else {
+      # Without Leiden components the consolidated view is not produced, but the
+      # core view must still use the university id alone.
+      if (length(core_mem) != 1L || core_mem[1] != openalex_bare(inst$openalex_id[inst$slug == slug]))
+        add("core member set for %s differs from single institution id", slug)
+    }
+  }
+
+  # --- 6. one consistent snapshot_date everywhere --------------------------
   for (nm in c("metrics", "counts_by_year", "ca_oa_by_year", "ca_oa_status",
-               "consolidated")) {
+               "consolidated", "core")) {
     d <- snap[[nm]]
     if (is.null(d) || nrow(d) == 0) next
     bad <- setdiff(unique(as.character(d$snapshot_date)), snapshot_date)
@@ -69,7 +101,7 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
       add("%s carries foreign snapshot_date(s): %s", nm, paste(bad, collapse = ", "))
   }
 
-  # --- 5. numeric invariants ----------------------------------------------
+  # --- 7. numeric invariants ----------------------------------------------
   m <- snap$metrics
   n <- function(x) suppressWarnings(as.numeric(x))
   if (any(n(m$works_count) <= 0, na.rm = TRUE))
@@ -87,7 +119,7 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
     add("ca_works_period < ca_works_ref for: %s",
         paste(m$slug[bad_period], collapse = ", "))
 
-  # OA numerator/denominator and share arithmetic, in both OA tables.
+  # OA numerator/denominator and share arithmetic, in all OA tables.
   check_oa <- function(d, label) {
     if (is.null(d) || nrow(d) == 0) return(invisible(NULL))
     w <- n(d$ca_works); o <- n(d$ca_oa_works); s <- n(d$ca_oa_share)
@@ -103,6 +135,44 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   }
   check_oa(snap$ca_oa_by_year, "ca_oa_by_year")
   check_oa(snap$consolidated, "consolidated_ca_oa_by_year")
+  check_oa(snap$core, "leiden_core_ca_oa_by_year")
+
+  # Core is a subset of consolidated (where consolidated exists) for every
+  # university and year. It is also a subset of the single-institution view,
+  # but the stronger check against consolidated catches the member-set logic.
+  if (nrow(snap$core) > 0 && nrow(snap$consolidated) > 0) {
+    core_by_slug_year <- setNames(
+      n(snap$core$ca_works),
+      paste(snap$core$tu9_slug, snap$core$year, sep = "|"))
+    cons_rows <- snap$consolidated
+    for (i in seq_len(nrow(cons_rows))) {
+      key <- paste(cons_rows$tu9_slug[i], cons_rows$year[i], sep = "|")
+      core_w <- core_by_slug_year[key]
+      if (!is.na(core_w) && core_w > n(cons_rows$ca_works[i]))
+        add("core ca_works exceeds consolidated for %s year %s", cons_rows$tu9_slug[i], cons_rows$year[i])
+    }
+  }
+
+  # Core headline-period totals must equal the sum of their yearly Core values.
+  ref_year <- as.integer(format(as.Date(snapshot_date), "%Y")) - 1L
+  period_years <- seq(period_start, ref_year)
+  for (slug in expected) {
+    core_slug <- snap$core[snap$core$tu9_slug == slug, ]
+    if (nrow(core_slug) == 0) next
+    p <- core_slug[core_slug$year %in% period_years, ]
+    if (nrow(p) > 0) {
+      cm <- snap$core_members[[slug]]
+      if (!is.null(cm)) {
+        expected_works <- sum(n(p$ca_works), na.rm = TRUE)
+        expected_share <- if (expected_works > 0)
+          round(sum(n(p$ca_oa_works), na.rm = TRUE) / expected_works, 4) else NA_real_
+        if (!isTRUE(all.equal(expected_works, n(cm$ca_works_period))))
+          add("core period works (%s) do not sum yearly values for %s", n(cm$ca_works_period), slug)
+        if (!isTRUE(all.equal(expected_share, n(cm$ca_oa_share_period), na.rm = TRUE)))
+          add("core period share does not match summed values for %s", slug)
+      }
+    }
+  }
 
   # OA-status categories must add up to the reference-year CA works.
   if (nrow(snap$ca_oa_status) > 0) {
@@ -118,7 +188,7 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
     }
   }
 
-  # --- 6. guard rail against a collapse in coverage ------------------------
+  # --- 8. guard rail against a collapse in coverage ------------------------
   if (!is.null(prev_metrics) && nrow(prev_metrics) > 0 && !force) {
     prev <- prev_metrics[prev_metrics$snapshot_date != snapshot_date, , drop = FALSE]
     if (nrow(prev) > 0) {

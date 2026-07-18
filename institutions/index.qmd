@@ -9,8 +9,9 @@ meta <- read_meta()
 ```
 
 The TU9 universities. Shares are the corresponding-author OA share over the
-period shown — as the single OpenAlex institution (ROR/OpenAlex) and grouped with
-its Leiden `component` affiliates (OpenAlex/Leiden). Select a university for its
+period shown — as the single OpenAlex institution (ROR/OpenAlex), grouped with
+its Leiden `component` affiliates (OpenAlex/Leiden), and that same Leiden member
+set restricted to CWTS Core sources (Leiden/Core). Select a university for its
 OA share by year, OA-status composition, and snapshot history.
 
 ```{r}

@@ -5,10 +5,12 @@ built from [OpenAlex](https://openalex.org/) and **snapshotted over time**. The
 headline is the open-access share of each university's **corresponding-author**
 output (`corresponding_institution_ids`) — the lens that matches OpenAPC and
 transformative-agreement accounting. A few entity-level indicators (works,
-citations, h-index) are kept as context. Every university is also shown
-**consolidated** with its affiliated organisations the way the
-[Leiden Ranking](https://open.leidenranking.com/) defines (e.g. with its
-university hospital).
+citations, h-index) are kept as context. Every university is shown three ways:
+as the single OpenAlex institution, **consolidated** with its affiliated
+organisations the way the [Leiden Ranking](https://open.leidenranking.com/)
+defines (e.g. with its university hospital), and that same Leiden member set
+restricted to CWTS Core sources via
+`primary_location.source.is_core:true`.
 
 The pipeline and website mirror the setup of the sibling
 [`slub/tu9-jct-data`](https://github.com/slub/tu9-jct-data) repository (R +
@@ -29,7 +31,9 @@ only through the Leiden-consolidated view (see below). Edit
   indicators (works, citations, h-index, i10-index, 2-year mean citedness).
 - `data/ca_oa_by_year.csv` — corresponding-author works and OA share by
   publication year; `data/ca_oa_status.csv` — OA-status split for the reference
-  year; `data/consolidated_ca_oa_by_year.csv` — the Leiden-consolidated variant.
+  year; `data/consolidated_ca_oa_by_year.csv` — the Leiden-consolidated variant;
+  `data/leiden_core_ca_oa_by_year.csv` — the Leiden-consolidated member set
+  restricted to CWTS Core sources (`primary_location.source.is_core:true`).
 - `data/counts_by_year.csv` — works and citations by publication year (most
   recent snapshot).
 - `data/<slug>/…` — the same views per university.

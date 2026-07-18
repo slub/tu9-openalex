@@ -218,13 +218,21 @@ openalex_works_by_year <- function(inst_ids) {
 # view: university + its component affiliates). All figures are on the
 # corresponding-author lens, hence the `ca_` prefix. Returns
 # (year, ca_works, ca_oa_works, ca_oa_share) or NULL if either query fails.
-openalex_ca_oa_by_year <- function(inst_ids, start_year) {
+#
+# `extra_filter` is appended to both denominator and numerator filters. It lets
+# the same CA/OA calculation be reused for the CWTS Core-source view without
+# duplicating the arithmetic:
+#   openalex_ca_oa_by_year(ids, start_year,
+#                          extra_filter = "primary_location.source.is_core:true")
+openalex_ca_oa_by_year <- function(inst_ids, start_year, extra_filter = NULL) {
   ids <- paste(openalex_bare(inst_ids), collapse = "|")
-  denom <- openalex_group_reader(
-    paste0("corresponding_institution_ids:", ids, ",", XPAC_EXCLUDE),
-    "publication_year")
+  base_filter <- paste0("corresponding_institution_ids:", ids, ",", XPAC_EXCLUDE)
+  if (!is.null(extra_filter) && nzchar(extra_filter)) {
+    base_filter <- paste0(base_filter, ",", extra_filter)
+  }
+  denom <- openalex_group_reader(base_filter, "publication_year")
   numer <- openalex_group_reader(
-    paste0("corresponding_institution_ids:", ids, ",is_oa:true,", XPAC_EXCLUDE),
+    paste0(base_filter, ",is_oa:true"),
     "publication_year")
   if (is.null(denom) || is.null(numer)) return(NULL)
 
@@ -244,6 +252,15 @@ openalex_ca_oa_by_year <- function(inst_ids, start_year) {
   df$ca_oa_share <- ifelse(df$ca_works > 0,
                            round(df$ca_oa_works / df$ca_works, 4), NA_real_)
   df[order(-df$year), , drop = FALSE]
+}
+
+# CWTS Core-source-filtered corresponding-author OA share by publication year.
+# Uses the same member set as the Leiden-consolidated view but restricts works
+# to sources on the CWTS Core sources allow-list via OpenAlex's
+# primary_location.source.is_core:true filter.
+openalex_ca_oa_by_year_core <- function(inst_ids, start_year) {
+  openalex_ca_oa_by_year(inst_ids, start_year,
+                         extra_filter = "primary_location.source.is_core:true")
 }
 
 # Open-access status composition (gold/hybrid/green/bronze/diamond/closed) of an

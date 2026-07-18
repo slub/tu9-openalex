@@ -92,17 +92,20 @@ share_bar_cell <- function(colour = "#2a9d4a") {
 # Overview table for the landing page, built from meta.json's institution list.
 institutions_table <- function(inst, path_prefix = "institutions/") {
   ca_num <- function(x) if (is.null(x)) NA_real_ else as.numeric(x)
-  # Two side-by-side readings, each with its own CA-works denominator and OA
-  # share: the single OpenAlex institution (ROR), and the same university
-  # grouped with its Leiden `component` affiliates.
+  # Three side-by-side readings, each with its own CA-works denominator and OA
+  # share: the single OpenAlex institution (ROR), the same university grouped
+  # with its Leiden `component` affiliates, and that same member set restricted
+  # to CWTS Core sources.
   df <- data.frame(
-    Institution  = vapply(inst, function(x) x$name, character(1)),
-    CA_works     = vapply(inst, function(x) as.integer(x$ca_works_period %||% NA), integer(1)),
-    CA_OA_ror    = vapply(inst, function(x) ca_num(x$ca_oa_share_period), numeric(1)),
+    Institution     = vapply(inst, function(x) x$name, character(1)),
+    CA_works        = vapply(inst, function(x) as.integer(x$ca_works_period %||% NA), integer(1)),
+    CA_OA_ror       = vapply(inst, function(x) ca_num(x$ca_oa_share_period), numeric(1)),
     CA_works_leiden = vapply(inst, function(x) as.integer(x$cons_ca_works_period %||% NA), integer(1)),
-    CA_OA_leiden = vapply(inst, function(x) ca_num(x$cons_ca_oa_share_period), numeric(1)),
-    slug         = vapply(inst, function(x) x$slug, character(1)),
-    openalex     = vapply(inst, function(x) x$openalex_id, character(1)),
+    CA_OA_leiden    = vapply(inst, function(x) ca_num(x$cons_ca_oa_share_period), numeric(1)),
+    CA_works_core   = vapply(inst, function(x) as.integer(x$core_ca_works_period %||% NA), integer(1)),
+    CA_OA_core      = vapply(inst, function(x) ca_num(x$core_ca_oa_share_period), numeric(1)),
+    slug            = vapply(inst, function(x) x$slug, character(1)),
+    openalex        = vapply(inst, function(x) x$openalex_id, character(1)),
     stringsAsFactors = FALSE
   )
   reactable(
@@ -113,23 +116,29 @@ institutions_table <- function(inst, path_prefix = "institutions/") {
       colGroup(name = "Single institution (ROR/OpenAlex)",
                columns = c("CA_works", "CA_OA_ror")),
       colGroup(name = "Consolidated (OpenAlex/Leiden)",
-               columns = c("CA_works_leiden", "CA_OA_leiden"))
+               columns = c("CA_works_leiden", "CA_OA_leiden")),
+      colGroup(name = "Core sources (Leiden/Core)",
+               columns = c("CA_works_core", "CA_OA_core"))
     ),
     columns = list(
-      Institution = colDef(minWidth = 210, cell = function(value, index) {
+      Institution = colDef(minWidth = 200, cell = function(value, index) {
         tags$a(href = sprintf("%s%s.html", path_prefix, df$slug[index]), value)
       }),
-      CA_works  = colDef(name = "CA works", minWidth = 100,
+      CA_works  = colDef(name = "CA works", minWidth = 90,
                          format = colFormat(separators = TRUE, locales = "en-US")),
-      CA_OA_ror = colDef(name = "CA OA share", minWidth = 150,
+      CA_OA_ror = colDef(name = "CA OA share", minWidth = 130,
                          cell = share_bar_cell(), html = TRUE),
-      CA_works_leiden = colDef(name = "CA works", minWidth = 100,
+      CA_works_leiden = colDef(name = "CA works", minWidth = 90,
                                format = colFormat(separators = TRUE, locales = "en-US")),
-      CA_OA_leiden = colDef(name = "CA OA share", minWidth = 150,
+      CA_OA_leiden = colDef(name = "CA OA share", minWidth = 130,
                             cell = share_bar_cell("#7059b8"), html = TRUE),
+      CA_works_core = colDef(name = "CA works", minWidth = 90,
+                             format = colFormat(separators = TRUE, locales = "en-US")),
+      CA_OA_core = colDef(name = "CA OA share", minWidth = 130,
+                          cell = share_bar_cell("#d95f02"), html = TRUE),
       slug      = colDef(show = FALSE),
       openalex  = colDef(name = "OpenAlex", cell = openalex_cell, html = TRUE,
-                         minWidth = 100)
+                         minWidth = 95)
     )
   )
 }
@@ -216,6 +225,55 @@ inst_page <- function(slug) {
       ca_oa_by_year_table(cons))
   }
 
+  # CWTS Core-source-filtered view: same member set as consolidated, restricted
+  # to primary_location.source.is_core:true.
+  core <- read_current(slug, "leiden_core_ca_oa_by_year.csv", latest$snapshot_date)
+  core_section <- NULL
+  if (!is.null(core) && nrow(core) > 0) {
+    coref <- core[core$year == latest$ref_year, ]
+    core_members <- leiden_component_names(slug)
+    leiden_link <- tags$a(href = "https://open.leidenranking.com/",
+                          target = "_blank", "CWTS Leiden Ranking Open Edition")
+    openalex_help_link <- tags$a(
+      href = "https://help.openalex.org/hc/en-us/articles/27719473439511-How-does-OpenAlex-handle-predatory-and-lower-quality-journals",
+      target = "_blank", "CWTS Core sources allow-list")
+    has_cons_ref <- !is.null(cons) && nrow(cons) > 0 && nrow(cons[cons$year == latest$ref_year, ]) > 0
+    core_intro <- if (nrow(coref) > 0 && has_cons_ref) {
+      cref_row <- cons[cons$year == latest$ref_year, ]
+      inline_p(
+        "This view uses the same ", leiden_link, " member set as the ",
+        "consolidated view, but restricts works to sources on the OpenAlex ",
+        openalex_help_link, " via ", tags$code("primary_location.source.is_core:true"),
+        ". In ", tags$strong(latest$ref_year), " this leaves ",
+        tags$strong(fmt_int(coref$ca_works)), " corresponding-author works (down from ",
+        tags$strong(fmt_int(cref_row$ca_works)), " across all sources), with an OA share of ",
+        tags$strong(fmt_pct(coref$ca_oa_share)), ".")
+    } else if (nrow(coref) > 0) inline_p(
+      "This view uses the same ", leiden_link, " member set as the ",
+      "consolidated view, but restricts works to sources on the OpenAlex ",
+      openalex_help_link, " via ", tags$code("primary_location.source.is_core:true"),
+      ". In ", tags$strong(latest$ref_year), " this leaves ",
+      tags$strong(fmt_int(coref$ca_works)), " corresponding-author works, with an OA share of ",
+      tags$strong(fmt_pct(coref$ca_oa_share)), ".")
+    else inline_p(
+      "This view uses the same ", leiden_link, " member set as the ",
+      "consolidated view, but restricts works to sources on the OpenAlex ",
+      openalex_help_link, " via ", tags$code("primary_location.source.is_core:true"), ".")
+    core_section <- tagList(
+      tags$h2(id = "core", "Leiden/Core sources"),
+      core_intro,
+      inline_p(
+        "CWTS Core is a curated allow-list of international scientific sources ",
+        "in fields suitable for citation analysis; a source not on the list is not ",
+        "necessarily predatory or low quality. XPAC records remain excluded ",
+        "(", tags$code("is_xpac:false"), "). This is a source-only filter, not the ",
+        "complete official Leiden ", tags$em("core publication"), " definition, which adds ",
+        "publication-level criteria such as work type, language and references."),
+      if (length(core_members))
+        inline_p("Component members included: ", tags$em(paste(core_members, collapse = "; ")), "."),
+      ca_oa_by_year_table(core))
+  }
+
   oa_intro <- NULL
   oa_section <- NULL
   if (!is.null(latest$ca_works_ref) && !is.na(latest$ca_works_ref) &&
@@ -269,9 +327,13 @@ inst_page <- function(slug) {
       if (!is.null(cons)) HTML(paste0(" · ",
         as.character(code_link(paste0(slug, "/consolidated_ca_oa_by_year.csv"),
                                "consolidated_ca_oa_by_year.csv")))),
+      if (!is.null(core)) HTML(paste0(" · ",
+        as.character(code_link(paste0(slug, "/leiden_core_ca_oa_by_year.csv"),
+                               "leiden_core_ca_oa_by_year.csv")))),
       "."),
     oa_section,
     cons_section,
+    core_section,
     tags$h2(id = "metrics", "Metric history"),
     inline_p(
       "Figures for this single institution (", tags$strong("ROR/OpenAlex"),

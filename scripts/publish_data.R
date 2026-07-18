@@ -25,7 +25,8 @@ publish <- function(from, to) {
 # Top-level data products, metadata and the data licence.
 for (f in c("metrics.csv", "counts_by_year.csv",
             "ca_oa_by_year.csv", "ca_oa_status.csv",
-            "consolidated_ca_oa_by_year.csv", "meta.json")) {
+            "consolidated_ca_oa_by_year.csv", "leiden_core_ca_oa_by_year.csv",
+            "meta.json")) {
   src <- file.path("data", f)
   if (file.exists(src)) publish(src, f)
 }
@@ -43,7 +44,7 @@ slugs <- setdiff(slugs[nzchar(slugs)], "snapshots")
 for (slug in slugs) {
   for (f in c("metrics.csv", "counts_by_year.csv",
               "ca_oa_by_year.csv", "ca_oa_status.csv",
-              "consolidated_ca_oa_by_year.csv")) {
+              "consolidated_ca_oa_by_year.csv", "leiden_core_ca_oa_by_year.csv")) {
     src <- file.path("data", slug, f)
     if (file.exists(src)) publish(src, file.path("institutions", slug, f))
   }

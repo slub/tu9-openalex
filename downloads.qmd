@@ -31,6 +31,10 @@ Alliance-wide views:
 - [`consolidated_ca_oa_by_year.csv`](consolidated_ca_oa_by_year.csv) —
   **Leiden-consolidated** CA OA share by year: each TU9 university counted
   together with its weight-1 `component` affiliates (e.g. its university hospital)
+- [`leiden_core_ca_oa_by_year.csv`](leiden_core_ca_oa_by_year.csv) —
+  **Core-source-filtered** CA OA share by year: same Leiden-consolidated member
+  set, restricted to CWTS Core sources via
+  `primary_location.source.is_core:true`
 
 Per institution (metric history + yearly counts + OA views, plus every raw
 snapshot):
@@ -40,8 +44,8 @@ snapshot):
 #| output: asis
 for (x in meta$institutions) {
   cat(sprintf(
-    "- `institutions/%s/` — [metrics.csv](institutions/%s/metrics.csv) · [counts_by_year.csv](institutions/%s/counts_by_year.csv) · [ca_oa_by_year.csv](institutions/%s/ca_oa_by_year.csv) · [ca_oa_status.csv](institutions/%s/ca_oa_status.csv)\n",
-    x$slug, x$slug, x$slug, x$slug, x$slug))
+    "- `institutions/%s/` — [metrics.csv](institutions/%s/metrics.csv) · [counts_by_year.csv](institutions/%s/counts_by_year.csv) · [ca_oa_by_year.csv](institutions/%s/ca_oa_by_year.csv) · [ca_oa_status.csv](institutions/%s/ca_oa_status.csv) · [leiden_core_ca_oa_by_year.csv](institutions/%s/leiden_core_ca_oa_by_year.csv)\n",
+    x$slug, x$slug, x$slug, x$slug, x$slug, x$slug))
 }
 ```
 

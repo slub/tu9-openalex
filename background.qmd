@@ -75,6 +75,55 @@ counted inside TU Dresden and the
 Fractional `joint` affiliates are not (yet) included — only full components, and
 universities without any keep an empty consolidated value.
 
+## Core-source-filtered view (CWTS Core sources)
+
+A third view keeps the same Leiden-consolidated member set — the university's
+OpenAlex institution id OR-ed with its weight-1 `component` affiliates — but
+additionally restricts works to sources on the CWTS Core sources allow-list using
+OpenAlex's `primary_location.source.is_core:true` filter. This gives
+**corresponding-author works in CWTS Core sources** and their open-access share.
+
+The OpenAlex filter is applied literally as:
+
+```
+primary_location.source.is_core:true
+```
+
+combined with the corresponding-author lens
+(`corresponding_institution_ids:<university-and-component-ids>`) and the usual
+XPAC exclusion (`is_xpac:false`). The numerator additionally requires
+`is_oa:true`. The `primary_location` form is used deliberately so a work
+qualifies only when its primary venue is a Core source, not because a secondary
+or repository location is associated with one.
+
+This view is meaningful even for universities without Leiden components
+because the source filter itself narrows the publication universe. It is
+populated for all nine TU9 universities.
+
+Important caveat: this is a **source-only Core filter**, not a reproduction of
+the official Leiden Ranking `core publication` set. The official CWTS definition
+of a core publication applies additional publication-level criteria, including
+language, work type, source type, references, affiliation availability and
+retraction status. The Zenodo records below provide the versioned source list
+and methodology; the live OpenAlex `is_core` flag may evolve after the August
+2025 snapshot.
+
+### Provenance
+
+- "Core sources and core publications in OpenAlex", CWTS, 2025.
+  DOI: <https://doi.org/10.5281/zenodo.17200868>. Standalone source list
+  (`source.tsv`) including `source_id`, `source`, `source_type`, `issn_l`,
+  `is_core_source`, `n_works` and `n_core_works`, based on the August 2025
+  OpenAlex snapshot.
+- "A methodology for identifying core sources and core publications in OpenAlex",
+  CWTS, 2025. DOI: <https://doi.org/10.5281/zenodo.17200830>. Methodology report
+  plus the supplementary source spreadsheet (`Supplementary material -
+  Sources.ods`).
+- CWTS Leiden Ranking Open Edition 2025 — Data.
+  DOI: <https://doi.org/10.5281/zenodo.17471989>. The `pub.tsv` table includes an
+  `is_core_pub` publication-level field, but the standalone, auditable source
+  list is the separate Core-sources dataset above.
+
 ## Context metrics from the institution entity
 
 Beside the OA figures, each snapshot keeps a few entity-level indicators for
@@ -104,8 +153,10 @@ them only as an entity aggregate, so those figures **include** XPAC.
 1. For every university in `data-raw/institutions.csv`, the pipeline runs a
    handful of OpenAlex
    [works](https://developers.openalex.org/api-reference/works) `group_by`
-   queries — corresponding-author works by year and OA status, and total works
-   by year — and reads the
+   queries — corresponding-author works by year and OA status, total works
+   by year, the Leiden-consolidated corresponding-author view, and the
+   Leiden-consolidated view restricted to CWTS Core sources
+   (`primary_location.source.is_core:true`) — and reads the
    [institution entity](https://developers.openalex.org/api-reference/institutions)
    for the citation indicators, using the polite pool and, where configured, a
    free OpenAlex API key.
