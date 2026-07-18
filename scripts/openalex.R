@@ -15,7 +15,7 @@ suppressPackageStartupMessages({
 # OPENALEX_MAILTO environment variable to override; falls back to a repo contact.
 openalex_mailto <- function() {
   m <- Sys.getenv("OPENALEX_MAILTO")
-  if (nzchar(m)) m else "open-access@slub-dresden.de"
+  if (nzchar(m)) m else "openalex@slub-dresden.de"
 }
 
 # Normalise an OpenAlex institution id to its bare short form, e.g.

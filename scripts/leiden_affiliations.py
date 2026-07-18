@@ -179,7 +179,7 @@ def openalex_id_by_ror(ror, mailto, api_key, cache):
 
 
 def main():
-    mailto = os.environ.get("OPENALEX_MAILTO", "open-access@slub-dresden.de")
+    mailto = os.environ.get("OPENALEX_MAILTO", "openalex@slub-dresden.de")
     api_key = os.environ.get("OPENALEX_API_KEY", "")
 
     print("Reading Leiden mapping tables from the remote zip ...")
