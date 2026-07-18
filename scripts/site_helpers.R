@@ -191,8 +191,10 @@ code_link <- function(href, file) {
 # series and yearly counts, and links to its OpenAlex entity and raw snapshots.
 inst_page <- function(slug) {
   m   <- read_data(slug, "metrics.csv")
-  cby <- read_data(slug, "counts_by_year.csv")
   latest <- m[nrow(m), ]
+  # counts_by_year carries a snapshot_date too, so read it with the same
+  # staleness guard as the OA products rather than trusting mere existence.
+  cby <- read_current(slug, "counts_by_year.csv", latest$snapshot_date)
 
   # OA views are best-effort in the pipeline, so a page must render even if they
   # are absent for this institution.
@@ -344,14 +346,15 @@ inst_page <- function(slug) {
       "XPAC-inclusive basis (the entity works count is the matching denominator ",
       "for the citation figures)."),
     metric_history_table(m),
-    tags$h2(id = "by-year", "Works and citations by year"),
-    inline_p(
-      "By publication year, for this single institution (",
-      tags$strong("ROR/OpenAlex"), ", all authors) — not the corresponding-author ",
-      "subset. ", tags$strong("Works"), " exclude XPAC; ",
-      tags$strong("Works (incl. XPAC)"), " and the citation counts come from the ",
-      "OpenAlex entity, sharing the same XPAC-inclusive basis."),
-    counts_by_year_table(cby)
+    if (!is.null(cby)) tagList(
+      tags$h2(id = "by-year", "Works and citations by year"),
+      inline_p(
+        "By publication year, for this single institution (",
+        tags$strong("ROR/OpenAlex"), ", all authors) — not the corresponding-author ",
+        "subset. ", tags$strong("Works"), " exclude XPAC; ",
+        tags$strong("Works (incl. XPAC)"), " and the citation counts come from the ",
+        "OpenAlex entity, sharing the same XPAC-inclusive basis."),
+      counts_by_year_table(cby))
   )
 }
 
