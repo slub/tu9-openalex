@@ -1,11 +1,14 @@
 # TU9 OpenAlex Metrics
 
-Aggregated bibliometric indicators for the [TU9](https://www.tu9.de/)
-universities and closely related institutions, taken directly from their
-[OpenAlex](https://openalex.org/) institution records and **snapshotted over
-time**. Nothing is recomputed from individual works — every figure is the value
-OpenAlex already publishes for the institution; this repo records how those
-values evolve.
+Open-access monitoring for the nine [TU9](https://www.tu9.de/) universities,
+built from [OpenAlex](https://openalex.org/) and **snapshotted over time**. The
+headline is the open-access share of each university's **corresponding-author**
+output (`corresponding_institution_ids`) — the lens that matches OpenAPC and
+transformative-agreement accounting. A few entity-level indicators (works,
+citations, h-index) are kept as context. Every university is also shown
+**consolidated** with its affiliated organisations the way the
+[Leiden Ranking](https://open.leidenranking.com/) defines (e.g. with its
+university hospital).
 
 The pipeline and website mirror the setup of the sibling
 [`slub/tu9-jct-data`](https://github.com/slub/tu9-jct-data) repository (R +
@@ -13,21 +16,23 @@ The pipeline and website mirror the setup of the sibling
 
 ## Institutions tracked
 
-The nine TU9 universities plus institutions OpenAlex models separately and that
-are **not** linked to a tracked university as `parent`/`child` (a `related` link
-is allowed): the libraries TIB and SLUB Dresden, and the university hospitals in
-Aachen and Dresden. A `child` of an already-tracked institution (e.g. TUM
-Klinikum) is excluded to avoid double-counting. Edit
+The nine universities of the TU9 alliance — one OpenAlex institution each.
+Affiliated organisations (university hospitals, research institutes) are **not**
+tracked as separate institutions; where they belong to a university they enter
+only through the Leiden-consolidated view (see below). Edit
 [`data-raw/institutions.csv`](data-raw/institutions.csv) to change the set.
 
 ## What is stored
 
-- `data/metrics.csv` — one row per institution **per snapshot**: works,
-  citations, h-index, i10-index, 2-year mean citedness.
+- `data/metrics.csv` — one row per university **per snapshot**: the
+  corresponding-author OA headline (period + reference year) and the context
+  indicators (works, citations, h-index, i10-index, 2-year mean citedness).
+- `data/ca_oa_by_year.csv` — corresponding-author works and OA share by
+  publication year; `data/ca_oa_status.csv` — OA-status split for the reference
+  year; `data/consolidated_ca_oa_by_year.csv` — the Leiden-consolidated variant.
 - `data/counts_by_year.csv` — works and citations by publication year (most
   recent snapshot).
-- `data/<slug>/metrics.csv`, `data/<slug>/counts_by_year.csv` — per-institution
-  views.
+- `data/<slug>/…` — the same views per university.
 - `data/snapshots/<slug>/<date>.json` — the full raw OpenAlex entity, archived
   per snapshot.
 - `data/meta.json` — summary counts and last-updated date for the site.

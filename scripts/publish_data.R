@@ -5,11 +5,12 @@
 #
 #   data/metrics.csv               -> /metrics.csv
 #   data/counts_by_year.csv        -> /counts_by_year.csv
+#   data/ca_oa_by_year.csv         -> /ca_oa_by_year.csv
+#   data/ca_oa_status.csv          -> /ca_oa_status.csv
 #   data/meta.json                 -> /meta.json
 #   data/LICENSE                   -> /DATA-LICENSE
 #   data-raw/institutions.csv      -> /institutions.csv
-#   data/<slug>/metrics.csv        -> /institutions/<slug>/metrics.csv
-#   data/<slug>/counts_by_year.csv -> /institutions/<slug>/counts_by_year.csv
+#   data/<slug>/*.csv              -> /institutions/<slug>/*.csv
 #   data/snapshots/<slug>/*.json   -> /institutions/<slug>/snapshots/*.json
 
 out <- Sys.getenv("QUARTO_PROJECT_OUTPUT_DIR", "_site")
@@ -22,20 +23,27 @@ publish <- function(from, to) {
 }
 
 # Top-level data products, metadata and the data licence.
-publish("data/metrics.csv",        "metrics.csv")
-publish("data/counts_by_year.csv", "counts_by_year.csv")
-publish("data/meta.json",          "meta.json")
+for (f in c("metrics.csv", "counts_by_year.csv",
+            "ca_oa_by_year.csv", "ca_oa_status.csv",
+            "consolidated_ca_oa_by_year.csv", "meta.json")) {
+  src <- file.path("data", f)
+  if (file.exists(src)) publish(src, f)
+}
 if (file.exists("data/LICENSE")) publish("data/LICENSE", "DATA-LICENSE")
 
-# Build input.
+# Build inputs.
 publish("data-raw/institutions.csv", "institutions.csv")
+if (file.exists("data-raw/leiden_affiliations.csv"))
+  publish("data-raw/leiden_affiliations.csv", "leiden_affiliations.csv")
 
 # Per-institution views + raw snapshots, under /institutions/<slug>/ to mirror
 # the page paths.
 slugs <- list.dirs("data", recursive = FALSE, full.names = FALSE)
 slugs <- setdiff(slugs[nzchar(slugs)], "snapshots")
 for (slug in slugs) {
-  for (f in c("metrics.csv", "counts_by_year.csv")) {
+  for (f in c("metrics.csv", "counts_by_year.csv",
+              "ca_oa_by_year.csv", "ca_oa_status.csv",
+              "consolidated_ca_oa_by_year.csv")) {
     src <- file.path("data", slug, f)
     if (file.exists(src)) publish(src, file.path("institutions", slug, f))
   }

@@ -7,6 +7,9 @@ suppressPackageStartupMessages({
   library(htmltools)
 })
 
+# Null-coalescing helper (base R has none); also used to guard missing OA fields.
+`%||%` <- function(a, b) if (is.null(a)) b else a
+
 read_data <- function(...) {
   read_csv(file.path("data", ...), col_types = cols(.default = col_character()))
 }
@@ -51,33 +54,71 @@ bar_cell <- function(max_value, colour = "#4c78a8") {
   }
 }
 
+# Format a 0..1 share as a percentage string (e.g. 0.7637 -> "76.4%").
+fmt_pct <- function(x) {
+  x <- suppressWarnings(as.numeric(x))
+  ifelse(is.na(x), "", sprintf("%.1f%%", 100 * x))
+}
+
+# A 0..1 share rendered as a filled bar with the percentage beside it.
+share_bar_cell <- function(colour = "#2a9d4a") {
+  function(value) {
+    v <- suppressWarnings(as.numeric(value))
+    if (is.na(v)) return("")
+    width <- sprintf("%.1f%%", 100 * max(0, min(1, v)))
+    track <- tags$div(style = paste0(
+      "background:#e9ecef;border-radius:2px;flex:1;height:0.8em;",
+      "position:relative;overflow:hidden;"),
+      tags$div(style = paste0("background:", colour, ";height:100%;width:", width, ";")))
+    label <- tags$span(style = "margin-left:0.5em;min-width:3.2em;text-align:right;",
+                       fmt_pct(v))
+    as.character(tags$div(style = "display:flex;align-items:center;", track, label))
+  }
+}
+
 # Overview table for the landing page, built from meta.json's institution list.
 institutions_table <- function(inst, path_prefix = "institutions/") {
+  ca_num <- function(x) if (is.null(x)) NA_real_ else as.numeric(x)
+  ps <- inst[[1]]$period_start; pe <- inst[[1]]$period_end
+  period <- sprintf("%s–%s", ps, pe)   # e.g. "2020–2025"
+  # Two side-by-side readings, each with its own CA-works denominator and OA
+  # share: the single OpenAlex institution (ROR), and the same university
+  # grouped with its Leiden `component` affiliates.
   df <- data.frame(
-    Institution = vapply(inst, function(x) x$name, character(1)),
-    Type        = vapply(inst, function(x) x$type, character(1)),
-    Works       = vapply(inst, function(x) as.integer(x$works_count), integer(1)),
-    Citations   = vapply(inst, function(x) as.integer(x$cited_by_count), integer(1)),
-    h_index     = vapply(inst, function(x) as.integer(x$h_index), integer(1)),
-    slug        = vapply(inst, function(x) x$slug, character(1)),
-    openalex    = vapply(inst, function(x) x$openalex_id, character(1)),
+    Institution  = vapply(inst, function(x) x$name, character(1)),
+    CA_works     = vapply(inst, function(x) as.integer(x$ca_works_period %||% NA), integer(1)),
+    CA_OA_ror    = vapply(inst, function(x) ca_num(x$ca_oa_share_period), numeric(1)),
+    CA_works_leiden = vapply(inst, function(x) as.integer(x$cons_ca_works_period %||% NA), integer(1)),
+    CA_OA_leiden = vapply(inst, function(x) ca_num(x$cons_ca_oa_share_period), numeric(1)),
+    slug         = vapply(inst, function(x) x$slug, character(1)),
+    openalex     = vapply(inst, function(x) x$openalex_id, character(1)),
     stringsAsFactors = FALSE
   )
   reactable(
     df,
-    searchable = TRUE, sortable = TRUE, defaultPageSize = 13, highlight = TRUE,
-    defaultSorted = list(Works = "desc"),
+    searchable = FALSE, sortable = TRUE, defaultPageSize = 13, highlight = TRUE,
+    defaultSorted = list(CA_OA_ror = "desc"),
+    columnGroups = list(
+      colGroup(name = "Single institution (ROR/OpenAlex)",
+               columns = c("CA_works", "CA_OA_ror")),
+      colGroup(name = "Consolidated (OpenAlex/Leiden)",
+               columns = c("CA_works_leiden", "CA_OA_leiden"))
+    ),
     columns = list(
-      Institution = colDef(minWidth = 240, cell = function(value, index) {
+      Institution = colDef(minWidth = 210, cell = function(value, index) {
         tags$a(href = sprintf("%s%s.html", path_prefix, df$slug[index]), value)
       }),
-      Type      = colDef(maxWidth = 110),
-      Works     = colDef(format = colFormat(separators = TRUE, locales = "en-US")),
-      Citations = colDef(format = colFormat(separators = TRUE, locales = "en-US")),
-      h_index   = colDef(name = "h-index"),
+      CA_works  = colDef(name = "CA works", minWidth = 100,
+                         format = colFormat(separators = TRUE, locales = "en-US")),
+      CA_OA_ror = colDef(name = "CA OA share", minWidth = 150,
+                         cell = share_bar_cell(), html = TRUE),
+      CA_works_leiden = colDef(name = "CA works", minWidth = 100,
+                               format = colFormat(separators = TRUE, locales = "en-US")),
+      CA_OA_leiden = colDef(name = "CA OA share", minWidth = 150,
+                            cell = share_bar_cell("#7059b8"), html = TRUE),
       slug      = colDef(show = FALSE),
       openalex  = colDef(name = "OpenAlex", cell = openalex_cell, html = TRUE,
-                         minWidth = 110)
+                         minWidth = 100)
     )
   )
 }
@@ -99,10 +140,23 @@ counts_by_year_table <- function(cby) {
   )
 }
 
+# Names of the weight-1 component affiliates Leiden merges into a university,
+# read from the build-input mapping (data-raw/leiden_affiliations.csv).
+leiden_component_names <- function(slug,
+                                   path = "data-raw/leiden_affiliations.csv") {
+  if (!file.exists(path)) return(character(0))
+  la <- read_csv(path, col_types = cols(.default = col_character()))
+  la <- la[la$tu9_slug == slug & la$relation_type == "component" &
+           !is.na(la$affiliated_openalex_id) & nzchar(la$affiliated_openalex_id), ]
+  la$affiliated_name
+}
+
 # Compose an inline paragraph from text and tag pieces as a single HTML node
 # (avoids stray spaces htmltools introduces by pretty-printing children).
 inline_p <- function(...) {
-  parts <- vapply(list(...), as.character, character(1))
+  # Drop NULL / empty pieces so callers can inline conditional fragments.
+  parts <- Filter(function(x) !is.null(x) && length(x) > 0, list(...))
+  parts <- unlist(lapply(parts, as.character), use.names = FALSE)
   tags$p(HTML(paste0(parts, collapse = "")))
 }
 
@@ -118,13 +172,75 @@ inst_page <- function(slug) {
   cby <- read_data(slug, "counts_by_year.csv")
   latest <- m[nrow(m), ]
 
+  # OA views are best-effort in the pipeline, so a page must render even if they
+  # are absent for this institution.
+  oa_path     <- file.path("data", slug, "ca_oa_by_year.csv")
+  status_path <- file.path("data", slug, "ca_oa_status.csv")
+  oa     <- if (file.exists(oa_path)) read_data(slug, "ca_oa_by_year.csv") else NULL
+  status <- if (file.exists(status_path)) read_data(slug, "ca_oa_status.csv") else NULL
+
+  # Leiden-consolidated view (university + component affiliates), universities only.
+  cons_path <- file.path("data", slug, "consolidated_ca_oa_by_year.csv")
+  cons <- if (file.exists(cons_path)) read_data(slug, "consolidated_ca_oa_by_year.csv") else NULL
+  cons_section <- NULL
+  if (!is.null(cons) && nrow(cons) > 0) {
+    cref <- cons[cons$year == latest$ref_year, ]
+    members <- leiden_component_names(slug)
+    leiden_link <- tags$a(href = "https://open.leidenranking.com/",
+                          target = "_blank", "CWTS Leiden Ranking Open Edition")
+    cons_intro <- if (nrow(cref) > 0) inline_p(
+      "The ", leiden_link, " counts a university together with its ",
+      tags$strong("component"), " organisations. Adding those raises ",
+      "corresponding-author works in ", tags$strong(latest$ref_year), " from ",
+      tags$strong(fmt_int(latest$ca_works_ref)), " (entity) to ",
+      tags$strong(fmt_int(cref$ca_works)), " (consolidated), OA share ",
+      tags$strong(fmt_pct(cref$ca_oa_share)), ".")
+    else inline_p("The ", leiden_link,
+                  " counts a university together with its ",
+                  tags$strong("component"), " organisations.")
+    cons_section <- tagList(
+      tags$h2(id = "consolidated", "Leiden-consolidated (incl. component affiliates)"),
+      cons_intro,
+      if (length(members))
+        inline_p("Component members added: ", tags$em(paste(members, collapse = "; ")), "."),
+      ca_oa_by_year_table(cons))
+  }
+
+  oa_intro <- NULL
+  oa_section <- NULL
+  if (!is.null(latest$ca_works_ref) && !is.na(latest$ca_works_ref) &&
+      nzchar(latest$ca_works_ref)) {
+    oa_intro <- inline_p(
+      "In ", tags$strong(latest$ref_year), ", ",
+      tags$strong(fmt_int(latest$ca_works_ref)),
+      " works had a corresponding author at this institution, of which ",
+      tags$strong(fmt_pct(latest$ca_oa_share_ref)),
+      " were open access.")
+    oa_section <- tagList(
+      tags$h2(id = "oa", "Open access (corresponding author)"),
+      inline_p(
+        "Share of open-access works among those whose ",
+        tags$strong("corresponding author"),
+        " is affiliated with this institution — the lens used for OpenAPC and ",
+        "transformative agreements. Denominator and numerator both come from ",
+        "OpenAlex ", tags$code("corresponding_institution_ids"), "."),
+      if (!is.null(oa)) ca_oa_by_year_table(oa),
+      if (!is.null(status)) tagList(
+        tags$h3(sprintf("OA-status composition (%s)", latest$ref_year)),
+        ca_oa_status_table(status)))
+  }
+  # `cons_section` (built above) is placed after the OA section in the page body.
+
   tagList(
     inline_p(
-      "OpenAlex records ", tags$strong(fmt_int(latest$works_count)),
-      " works and ", tags$strong(fmt_int(latest$cited_by_count)),
-      " citations for this institution",
-      ", with an h-index of ", tags$strong(latest$h_index),
-      " (snapshot ", latest$snapshot_date, ")."),
+      "This university's own OpenAlex record (the single ",
+      tags$strong("ROR/OpenAlex"), " institution) holds ",
+      tags$strong(fmt_int(latest$works_count)), " works ",
+      "(all author positions) and ", tags$strong(fmt_int(latest$cited_by_count)),
+      " citations, h-index ", tags$strong(latest$h_index),
+      " (snapshot ", latest$snapshot_date, "). These are broader than the ",
+      "corresponding-author figures below."),
+    oa_intro,
     inline_p(
       "OpenAlex entity: ",
       tags$a(href = paste0("https://openalex.org/", latest$openalex_id),
@@ -137,14 +253,59 @@ inst_page <- function(slug) {
       code_link(paste0(slug, "/metrics.csv"), "metrics.csv"),
       " · ",
       code_link(paste0(slug, "/counts_by_year.csv"), "counts_by_year.csv"),
+      if (!is.null(oa)) HTML(paste0(" · ",
+        as.character(code_link(paste0(slug, "/ca_oa_by_year.csv"), "ca_oa_by_year.csv")))),
+      if (!is.null(cons)) HTML(paste0(" · ",
+        as.character(code_link(paste0(slug, "/consolidated_ca_oa_by_year.csv"),
+                               "consolidated_ca_oa_by_year.csv")))),
       "."),
+    oa_section,
+    cons_section,
     tags$h2(id = "metrics", "Metric history"),
     inline_p(
-      "One row per snapshot. It grows as the pipeline runs; ",
-      "the OpenAlex entity is re-read on each refresh."),
+      "Entity-level figures for this single institution (its ",
+      tags$strong("ROR/OpenAlex"), " record, all authors), one row per snapshot. ",
+      "It grows as the pipeline runs; the OpenAlex entity is re-read on each refresh."),
     metric_history_table(m),
     tags$h2(id = "by-year", "Works and citations by year"),
+    inline_p(
+      "Works (all authors) and citations for this single institution's ",
+      tags$strong("ROR/OpenAlex"), " record, by publication year — not the ",
+      "corresponding-author subset."),
     counts_by_year_table(cby)
+  )
+}
+
+# Corresponding-author OA share by publication year, with a bar on the share.
+ca_oa_by_year_table <- function(oa) {
+  oa <- oa[order(-as.integer(oa$year)), , drop = FALSE]
+  reactable(
+    oa[, c("year", "ca_works", "ca_oa_works", "ca_oa_share")],
+    sortable = TRUE, defaultPageSize = 14, highlight = TRUE,
+    columns = list(
+      year        = colDef(name = "Year", maxWidth = 90),
+      ca_works    = colDef(name = "CA works",
+                           format = colFormat(separators = TRUE, locales = "en-US")),
+      ca_oa_works = colDef(name = "CA OA works",
+                           format = colFormat(separators = TRUE, locales = "en-US")),
+      ca_oa_share = colDef(name = "CA OA share", minWidth = 150,
+                           cell = share_bar_cell(), html = TRUE)
+    )
+  )
+}
+
+# OA-status composition (gold/hybrid/green/bronze/diamond/closed) for one year.
+ca_oa_status_table <- function(status) {
+  works <- suppressWarnings(as.integer(status$ca_works))
+  status <- status[order(-works), , drop = FALSE]
+  max_w  <- if (length(works)) max(works, na.rm = TRUE) else 0
+  reactable(
+    status[, c("oa_status", "ca_works")],
+    sortable = TRUE, defaultPageSize = 8, highlight = TRUE,
+    columns = list(
+      oa_status = colDef(name = "OA status", maxWidth = 140),
+      ca_works  = colDef(name = "CA works", cell = bar_cell(max_w), html = TRUE)
+    )
   )
 }
 

@@ -2,62 +2,119 @@
 title: "Background"
 ---
 
-This site records the aggregated metrics that [OpenAlex](https://openalex.org/)
-publishes for each institution, and tracks how they change over time. It does
-not recompute anything from individual works — every figure is read straight
-from the institution's OpenAlex entity.
+This site monitors **open-access publishing** at the nine
+[TU9](https://www.tu9.de/) universities of technology, using
+[OpenAlex](https://openalex.org/) and snapshotting the figures over time. The
+headline metric is the open-access share of each university's
+**corresponding-author** output; a few entity-level indicators are kept as
+context. Nothing is scraped work by work — the counts come from OpenAlex's
+server-side aggregation.
 
 ## Which institutions
 
-The starting point is the [TU9](https://www.tu9.de/) alliance of nine German
-universities of technology. In OpenAlex, an institution can have associated
-institutions with a relationship of `parent`, `child`, or `related`. To avoid
-double-counting the same output, the tracked set includes only institutions
-that are **not linked to one another as `parent`/`child`** — a `related` link is
-allowed. Concretely:
-
-- the nine TU9 universities;
-- two libraries that OpenAlex models as separate institutions with their own
-  output — the [TIB](https://openalex.org/I2802635041) and the
-  [SLUB Dresden](https://openalex.org/I3132420320);
-- two university hospitals that OpenAlex links to their university only as
-  `related`, not `child` — [Universitätsklinikum Aachen](https://openalex.org/I4210120689)
-  and the [University Hospital Carl Gustav Carus](https://openalex.org/I4210162051)
-  in Dresden.
-
-A `child` institution is deliberately excluded when its parent is already
-tracked (for example, TUM Klinikum, a `child` of the Technical University of
-Munich). The full list, with OpenAlex and [ROR](https://ror.org/) IDs, is in
+The tracked institutions are the nine universities of the TU9 alliance — one
+OpenAlex institution each. Affiliated organisations such as university hospitals
+and research institutes are **not** tracked as separate institutions; where they
+belong to a university they enter only through the
+[consolidated view](#consolidated-view-leiden-ranking) below. The full list,
+with OpenAlex and [ROR](https://ror.org/) IDs, is in
 [`data-raw/institutions.csv`](https://github.com/slub/tu9-openalex/blob/main/data-raw/institutions.csv)
 and can be edited to change the selection.
 
-## What is tracked
+## Open access on the corresponding-author lens
 
-For each institution and each snapshot, the pipeline stores:
+The denominator is not a university's whole output but the works whose
+*corresponding author* is affiliated with it — OpenAlex's
+[`corresponding_institution_ids`](https://blog.openalex.org/a-big-improvement-to-our-corresponding-author-data/)
+filter, recently much improved. This is the lens that matches
+[OpenAPC](https://openapc.net/) and transformative-agreement accounting, where
+the corresponding author's institution carries the article charge, and it is the
+figure relevant to a possible OA monitoring.
 
-- **works_count** — the number of works OpenAlex attributes to the institution;
-- **cited_by_count** — total citations those works have received;
-- **h-index**, **i10-index**, **2-year mean citedness** — from the entity's
-  `summary_stats`;
-- **works and citations by publication year** — from the entity's
-  `counts_by_year`.
+Every OA figure is prefixed `ca_` to mark it as corresponding-author-level:
+
+- **`ca_works`** — works with a corresponding author at the university, by
+  publication year;
+- **`ca_oa_works`** / **`ca_oa_share`** — of those, how many (and what fraction)
+  are open access (`is_oa:true`);
+- a **headline** over a multi-year period (works published in the last complete
+  years) — a more robust number than any single year — plus the single-year
+  reference figure;
+- the **OA-status composition** for the reference year — the gold / hybrid /
+  green / bronze / diamond / closed split, which shows how much of the OA share
+  runs through the hybrid and gold routes that transformative agreements target.
+
+All of this comes from OpenAlex's server-side `group_by` aggregation (per-year
+and per-status counts), so no individual works are downloaded.
+
+Whether this corresponding-author OA share is a reliable enough basis for
+routine OA monitoring is exactly the question this dataset is meant to help
+answer.
+
+## Consolidated view (Leiden Ranking)
+
+Whether a university hospital or an affiliated institute counts as part of "the
+university" is a judgement call. The
+[CWTS Leiden Ranking Open Edition](https://open.leidenranking.com/) makes that
+judgement explicitly: it links affiliated organisations to a core university as
+`component` (weight 1, counted fully — e.g. the university hospital), `joint`
+(fractional), or `associated` (listed but not counted). The TU9 slice of that
+mapping is extracted, reproducibly, by `scripts/leiden_affiliations.py` into
+[`data-raw/leiden_affiliations.csv`](https://github.com/slub/tu9-openalex/blob/main/data-raw/leiden_affiliations.csv)
+(source: CWTS Leiden Ranking Open Edition 2025 — Data,
+[Zenodo](https://zenodo.org/records/17471989), CC0; OpenAlex snapshot 08/2025).
+
+So each university appears **two ways**: as the single OpenAlex institution
+(identified by its ROR id), and *consolidated* — its OpenAlex id OR-ed with those
+of its weight-1 `component` affiliates in one `corresponding_institution_ids`
+filter, so a work still counts once. The consolidated unit is where, for
+instance, the
+[University Hospital Carl Gustav Carus](https://openalex.org/I4210162051) is
+counted inside TU Dresden and the
+[Universitätsklinikum Aachen](https://openalex.org/I4210120689) inside RWTH.
+Fractional `joint` affiliates are not (yet) included — only full components, and
+universities without any keep an empty consolidated value.
+
+## Context metrics from the institution entity
+
+Beside the OA figures, each snapshot keeps a few entity-level indicators for
+context (shown on the institution pages, not in the overview):
+
+- **works_count** and **works per year** — the university's total output;
+- **cited_by_count**, **h-index**, **i10-index**, **2-year mean citedness**.
 
 The complete OpenAlex entity is also archived as raw JSON per snapshot
-(`data/snapshots/<slug>/<date>.json`), so any field not surfaced in the CSV
-views can still be recovered later.
+(`data/snapshots/<slug>/<date>.json`) for anything not surfaced in the CSVs.
+
+### Expansion Pack (XPAC) is excluded
+
+In November 2025 OpenAlex added ~190 million works as the
+[Expansion Pack](https://developers.openalex.org/guides/key-concepts#xpac-expansion-pack)
+(XPAC) — mainly datasets and repository records with lower average data quality.
+Every works query here appends `is_xpac:false`, so `works_count`, the
+works-per-year counts and all open-access figures exclude XPAC explicitly rather
+than by relying on OpenAlex's current default. Because the institution *entity*'s
+own aggregates include XPAC, `works_count` and works-per-year are taken from the
+works API (not the entity); the citation-based indicators (`cited_by_count`,
+h-index, i10-index, 2-year mean citedness) are kept from the entity, where XPAC —
+being near-uncited dataset and repository records — makes a negligible
+difference.
 
 ## How it is assembled
 
-1. For every institution in `data-raw/institutions.csv`, the pipeline requests
-   the OpenAlex institution entity
-   ([`/institutions/<id>`](https://docs.openalex.org/api-entities/institutions)),
-   using the polite pool and, where configured, a premium API key.
-2. The tracked metrics are appended to `data/metrics.csv` as a new dated row
-   per institution; re-running on the same day replaces that day's rows rather
-   than duplicating them.
-3. The yearly counts and per-institution views are rewritten, and `meta.json`
-   is regenerated for the site.
-4. A guard rail aborts the run if the total works count drops sharply against
+1. For every university in `data-raw/institutions.csv`, the pipeline runs a
+   handful of OpenAlex
+   [works](https://developers.openalex.org/api-reference/works) `group_by`
+   queries — corresponding-author works by year and OA status, and total works
+   by year — and reads the
+   [institution entity](https://developers.openalex.org/api-reference/institutions)
+   for the citation indicators, using the polite pool and, where configured, a
+   premium API key.
+2. Each snapshot appends a dated row per university to `data/metrics.csv`;
+   re-running on the same day replaces that day's rows rather than duplicating
+   them. Publication-year and OA views are rewritten for the latest snapshot,
+   and `meta.json` is regenerated for the site.
+3. A guard rail aborts the run if the total works count drops sharply against
    the previous snapshot, which usually signals a bad fetch rather than a real
    change.
 

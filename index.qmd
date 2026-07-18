@@ -8,23 +8,27 @@ source("scripts/site_helpers.R")
 meta <- read_meta()
 ```
 
-Aggregated bibliometric indicators for the [TU9](https://www.tu9.de/)
-universities and closely related institutions, taken directly from their
-[OpenAlex](https://openalex.org/) institution records and snapshotted over
-time. Each figure — works, citations, h-index, works per year — is the value
-OpenAlex already reports for the institution; this site records how those
-values evolve.
+Open-access monitoring for the nine [TU9](https://www.tu9.de/) universities,
+built from [OpenAlex](https://openalex.org/) and snapshotted over time. The
+headline is the **open-access share on the corresponding-author lens**
+(`corresponding_institution_ids`) — the fraction of a university's
+corresponding-author output that is open access. That is the view which matches
+[OpenAPC](https://openapc.net/) and transformative-agreement accounting, and the
+one relevant to OA monitoring.
 
-The data is refreshed on a schedule and released under CC0. See
-[Background](background.qmd) for how institutions are selected and what each
-metric means, and [Downloads](downloads.qmd) for the raw files.
+Each university is shown two ways: as the single OpenAlex institution, and
+grouped with its affiliated organisations the way the
+[Leiden Ranking](https://open.leidenranking.com/) defines (e.g. with its
+university hospital). See [Background](background.qmd) for method and sources and
+[Downloads](downloads.qmd) for the raw files. Refreshed on a schedule and
+released under CC0.
 
 ```{r}
 #| echo: false
 #| output: asis
 cat(sprintf(
-  "*Last updated: **%s**. Covers **%s** institutions across **%s** snapshot(s).*\n",
-  meta$updated, meta$n_institutions, meta$n_snapshots))
+  "*Last updated: **%s**. **%s** OpenAlex institution entities incl. consolidated components, **%s** snapshot(s). Figures cover corresponding-author works published **%s–%s**.*\n",
+  meta$updated, meta$n_entities, meta$n_snapshots, meta$oa_period_start, meta$oa_period_end))
 ```
 
 ## Institutions
@@ -34,5 +38,15 @@ cat(sprintf(
 institutions_table(meta$institutions)
 ```
 
-Figures reflect the most recent snapshot. Select an institution for its metric
-history and a works-by-year breakdown.
+Each university is shown two ways, each with its own corresponding-author
+**CA works** count (works published in the period whose corresponding author is
+at the institution) and the **CA OA share** among them:
+
+- **Single institution (ROR/OpenAlex)** — the one OpenAlex institution
+  identified by the university's [ROR](https://ror.org/) id.
+- **Consolidated (OpenAlex/Leiden)** — the university grouped with its Leiden
+  `component` affiliates (e.g. its university hospital). Blank where a university
+  has no components, so the two readings would be identical.
+
+Select a university for its OA share by year, OA-status composition, and snapshot
+history.
