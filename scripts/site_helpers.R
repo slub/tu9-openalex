@@ -129,11 +129,13 @@ counts_by_year_table <- function(cby) {
   works <- suppressWarnings(as.integer(cby$works_count))
   max_w <- if (length(works)) max(works, na.rm = TRUE) else 0
   reactable(
-    cby[, c("year", "works_count", "cited_by_count")],
+    cby[, c("year", "works_count", "works_count_incl_xpac", "cited_by_count")],
     sortable = TRUE, defaultPageSize = 12, highlight = TRUE,
     columns = list(
-      year           = colDef(name = "Year", maxWidth = 90),
+      year           = colDef(name = "Year", maxWidth = 80),
       works_count    = colDef(name = "Works", cell = bar_cell(max_w), html = TRUE),
+      works_count_incl_xpac = colDef(name = "Works (incl. XPAC)", maxWidth = 150,
+                              format = colFormat(separators = TRUE, locales = "en-US")),
       cited_by_count = colDef(name = "Citations received",
                               format = colFormat(separators = TRUE, locales = "en-US"))
     )
@@ -234,11 +236,12 @@ inst_page <- function(slug) {
   tagList(
     inline_p(
       "This university's own OpenAlex record (the single ",
-      tags$strong("ROR/OpenAlex"), " institution, all author positions) holds ",
-      tags$strong(fmt_int(latest$works_count)), " works (XPAC excluded) and, ",
-      "from the OpenAlex entity, ", tags$strong(fmt_int(latest$cited_by_count)),
-      " citations and an h-index of ", tags$strong(latest$h_index),
-      " (entity figures include XPAC; snapshot ", latest$snapshot_date,
+      tags$strong("ROR/OpenAlex"), " institution, all authors) holds ",
+      tags$strong(fmt_int(latest$works_count)), " works — ",
+      tags$strong(fmt_int(latest$works_count_incl_xpac)),
+      " including XPAC, the basis on which the OpenAlex entity reports ",
+      tags$strong(fmt_int(latest$cited_by_count)), " citations and an h-index of ",
+      tags$strong(latest$h_index), " (snapshot ", latest$snapshot_date,
       "). These are broader than the corresponding-author figures below."),
     oa_intro,
     inline_p(
@@ -263,17 +266,21 @@ inst_page <- function(slug) {
     cons_section,
     tags$h2(id = "metrics", "Metric history"),
     inline_p(
-      "Figures for this single institution (its ", tags$strong("ROR/OpenAlex"),
-      " record, all authors), one row per snapshot. Works exclude XPAC (works ",
-      "API); the citation columns — citations, h-index, i10-index, 2-year mean ",
-      "citedness — come from the OpenAlex entity and include XPAC."),
+      "Figures for this single institution (", tags$strong("ROR/OpenAlex"),
+      ", all authors), one row per snapshot. ", tags$strong("Works"),
+      " exclude XPAC (works API); ", tags$strong("Works (incl. XPAC)"),
+      " and the citation columns — citations, h-index, i10-index, 2-year mean ",
+      "citedness — come from the OpenAlex entity, so they share the same ",
+      "XPAC-inclusive basis (the entity works count is the matching denominator ",
+      "for the citation figures)."),
     metric_history_table(m),
     tags$h2(id = "by-year", "Works and citations by year"),
     inline_p(
-      "Works (all authors) and citations for this single institution's ",
-      tags$strong("ROR/OpenAlex"), " record, by publication year — not the ",
-      "corresponding-author subset. Works exclude XPAC; the citation counts come ",
-      "from the OpenAlex entity and include XPAC."),
+      "By publication year, for this single institution (",
+      tags$strong("ROR/OpenAlex"), ", all authors) — not the corresponding-author ",
+      "subset. ", tags$strong("Works"), " exclude XPAC; ",
+      tags$strong("Works (incl. XPAC)"), " and the citation counts come from the ",
+      "OpenAlex entity, sharing the same XPAC-inclusive basis."),
     counts_by_year_table(cby)
   )
 }
@@ -315,12 +322,14 @@ ca_oa_status_table <- function(status) {
 metric_history_table <- function(m) {
   m <- m[order(m$snapshot_date, decreasing = TRUE), , drop = FALSE]
   reactable(
-    m[, c("snapshot_date", "works_count", "cited_by_count",
+    m[, c("snapshot_date", "works_count", "works_count_incl_xpac", "cited_by_count",
           "h_index", "i10_index", "two_yr_mean_citedness")],
     sortable = TRUE, defaultPageSize = 12, highlight = TRUE,
     columns = list(
-      snapshot_date         = colDef(name = "Snapshot", maxWidth = 120),
+      snapshot_date         = colDef(name = "Snapshot", maxWidth = 110),
       works_count           = colDef(name = "Works",
+                                     format = colFormat(separators = TRUE, locales = "en-US")),
+      works_count_incl_xpac = colDef(name = "Works (incl. XPAC)",
                                      format = colFormat(separators = TRUE, locales = "en-US")),
       cited_by_count        = colDef(name = "Citations",
                                      format = colFormat(separators = TRUE, locales = "en-US")),

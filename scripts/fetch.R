@@ -130,7 +130,8 @@ for (i in seq_len(nrow(inst))) {
     type                  = row$type,
     openalex_id           = row$openalex_id,
     ror_id                = row$ror_id,
-    works_count           = works_count,
+    works_count           = works_count,      # XPAC-excluded (works API)
+    works_count_incl_xpac = m$works_count,    # entity aggregate (incl. XPAC)
     cited_by_count        = m$cited_by_count,
     h_index               = m$h_index,
     i10_index             = m$i10_index,
@@ -158,11 +159,12 @@ for (i in seq_len(nrow(inst))) {
       works_by_year <- ifelse(is.na(repl), cby$works_count, repl)
     }
     cby_rows[[length(cby_rows) + 1L]] <- tibble(
-      snapshot_date  = snapshot_date,
-      slug           = row$slug,
-      year           = cby$year,
-      works_count    = works_by_year,
-      cited_by_count = cby$cited_by_count
+      snapshot_date         = snapshot_date,
+      slug                  = row$slug,
+      year                  = cby$year,
+      works_count           = works_by_year,     # XPAC-excluded (works API)
+      works_count_incl_xpac = cby$works_count,   # entity counts_by_year (incl. XPAC)
+      cited_by_count        = cby$cited_by_count # entity (incl. XPAC)
     )
   }
 }

@@ -1,2 +1,2 @@
-snapshot_date,slug,name,type,openalex_id,ror_id,works_count,cited_by_count,h_index,i10_index,two_yr_mean_citedness,ref_year,ca_works_ref,ca_oa_works_ref,ca_oa_share_ref,period_start,period_end,ca_works_period,ca_oa_works_period,ca_oa_share_period
-2026-07-18,tu-berlin,Technische Universität Berlin,university,I4577782,03v4gjf40,105240,5497206,632,90673,3.06024096385542,2025,1805,1346,0.7457,2020,2025,12371,8216,0.6641
+snapshot_date,slug,name,type,openalex_id,ror_id,works_count,works_count_incl_xpac,cited_by_count,h_index,i10_index,two_yr_mean_citedness,ref_year,ca_works_ref,ca_oa_works_ref,ca_oa_share_ref,period_start,period_end,ca_works_period,ca_oa_works_period,ca_oa_share_period
+2026-07-18,tu-berlin,Technische Universität Berlin,university,I4577782,03v4gjf40,105240,111779,5497206,632,90673,3.06024096385542,2025,1805,1346,0.7457,2020,2025,12371,8216,0.6641
