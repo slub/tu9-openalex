@@ -99,7 +99,7 @@ openalex_bare <- function(x) {
 }
 
 # Full API URL for a single institution entity (looked up by its short id).
-# Adds the polite-pool `mailto` and, if OPENALEX_API_KEY is set, the premium
+# Adds the polite-pool `mailto` and, if OPENALEX_API_KEY is set, the (free)
 # `api_key` (kept out of the repo; see the `secret` file / GitHub Actions).
 openalex_institution_url <- function(id) {
   url <- paste0("https://api.openalex.org/institutions/", openalex_bare(id),
@@ -140,7 +140,7 @@ openalex_institution_reader <- function(id) {
 # See https://blog.openalex.org/a-big-improvement-to-our-corresponding-author-data/
 
 # Build a /works URL with a filter and a group_by dimension (+ polite pool and,
-# if set, the premium api_key).
+# if set, the api_key).
 openalex_works_group_url <- function(filter, group_by) {
   url <- paste0(
     "https://api.openalex.org/works",
@@ -275,7 +275,10 @@ read_institutions <- function(path = "data-raw/institutions.csv") {
 read_leiden_components <- function(path = "data-raw/leiden_affiliations.csv") {
   if (!file.exists(path)) return(NULL)
   la <- read_csv(path, col_types = cols(.default = col_character()))
-  la[la$relation_type == "component" &
+  # `component` implies weight 1 in the Leiden data, but check it explicitly so
+  # the code enforces the contract the comment claims rather than assuming it.
+  w <- suppressWarnings(as.numeric(la$weight))
+  la[la$relation_type == "component" & !is.na(w) & w == 1 &
      !is.na(la$affiliated_openalex_id) & nzchar(la$affiliated_openalex_id), ]
 }
 

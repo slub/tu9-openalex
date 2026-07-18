@@ -108,14 +108,18 @@ them only as an entity aggregate, so those figures **include** XPAC.
    by year — and reads the
    [institution entity](https://developers.openalex.org/api-reference/institutions)
    for the citation indicators, using the polite pool and, where configured, a
-   premium API key.
-2. Each snapshot appends a dated row per university to `data/metrics.csv`;
-   re-running on the same day replaces that day's rows rather than duplicating
-   them. Publication-year and OA views are rewritten for the latest snapshot,
-   and `meta.json` is regenerated for the site.
-3. A guard rail aborts the run if the total works count drops sharply against
-   the previous snapshot, which usually signals a bad fetch rather than a real
-   change.
+   free OpenAlex API key.
+2. Everything is fetched into memory first and only then validated: the exact
+   configured institution set, every required product per university, a single
+   consistent snapshot date, and the arithmetic behind each OA share. A coverage
+   guard rail additionally aborts if the total works count drops sharply against
+   the previous snapshot. If any check fails, nothing is written and the
+   published data is left untouched — a degraded run never publishes.
+3. Only after that are the files written: a dated row per university is appended
+   to `data/metrics.csv` (re-running on the same day replaces that day's rows
+   rather than duplicating them), the publication-year and OA views are rewritten
+   for the latest snapshot, and `meta.json` is regenerated. Products that no
+   longer apply are removed rather than left behind as stale files.
 
 ## Caveats
 

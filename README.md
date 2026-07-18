@@ -42,7 +42,7 @@ only through the Leiden-consolidated view (see below). Edit
 ```bash
 Rscript -e 'renv::restore()'      # once, to materialise the R library
 
-# The OpenAlex premium API key is read from OPENALEX_API_KEY. Keep it in the
+# The OpenAlex API key (free, optional) is read from OPENALEX_API_KEY. Keep it in
 # git-ignored `secret` file locally (see below) and source it before a run:
 source ./secret
 export OPENALEX_MAILTO="you@example.org"   # polite pool (optional)
@@ -56,20 +56,33 @@ quarto render                     # build the site into _site/
 
 ## Credentials
 
-The OpenAlex **premium API key** is optional (the pipeline works on the free API
-via the polite pool) and is read from the `OPENALEX_API_KEY` environment
-variable. It must **not** be committed:
+The OpenAlex **API key** is optional and free. OpenAlex grants $0.10/day of
+usage without a key and ten times that ($1/day) with a
+[free key](https://developers.openalex.org/api-reference/authentication), which
+covers 10,000 list+filter calls a day; single-entity lookups are not metered.
+
+One refresh makes about 57 requests — 9 institution lookups plus 48 `group_by`
+calls — so roughly 0.5 % of a single day's free-key allowance, once a week. The
+free tier is ample; the paid plans are not needed for this workload.
+
+The key is read from `OPENALEX_API_KEY` and must **not** be committed:
 
 - **Locally:** keep it in the git-ignored `secret` file
   (`export OPENALEX_API_KEY=...`) and `source ./secret` before running.
-- **In CI:** store it as the `OPENALEX_API_KEY` GitHub Actions secret; the
-  refresh workflow reads it from there.
+- **In CI:** store it as the `OPENALEX_API_KEY` repository secret (a *secret*,
+  not a variable); the refresh workflow reads it from there.
+
+`OPENALEX_MAILTO` is the polite-pool contact address. It is configuration rather
+than a credential, so in CI it is a repository **variable**; locally it falls
+back to the address in `scripts/openalex.R`.
 
 ## Automation
 
-- `.github/workflows/refresh.yml` — weekly (Mondays 05:00 UTC): fetches a fresh
-  snapshot, commits the new data, rebuilds and deploys the site. Can be run on
-  demand.
+- `.github/workflows/refresh.yml` — fetches a fresh snapshot, renders the site
+  and only then commits the new data, so a failed fetch, a failed validation or
+  a broken render never reaches `main`. The weekly schedule (Mondays 05:00 UTC)
+  is currently **disabled**; run it on demand from the Actions tab, and
+  uncomment the `schedule:` block to re-arm it.
 - `.github/workflows/pages.yml` — rebuilds and deploys the site from data
   already in the repo whenever site code changes.
 

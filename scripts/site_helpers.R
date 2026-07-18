@@ -92,8 +92,6 @@ share_bar_cell <- function(colour = "#2a9d4a") {
 # Overview table for the landing page, built from meta.json's institution list.
 institutions_table <- function(inst, path_prefix = "institutions/") {
   ca_num <- function(x) if (is.null(x)) NA_real_ else as.numeric(x)
-  ps <- inst[[1]]$period_start; pe <- inst[[1]]$period_end
-  period <- sprintf("%s–%s", ps, pe)   # e.g. "2020–2025"
   # Two side-by-side readings, each with its own CA-works denominator and OA
   # share: the single OpenAlex institution (ROR), and the same university
   # grouped with its Leiden `component` affiliates.
