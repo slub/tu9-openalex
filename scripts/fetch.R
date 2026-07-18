@@ -11,13 +11,12 @@
 #   data/<slug>/*.csv                  the same views for one institution
 #   data/meta.json                     summary + last-updated date (for the site)
 #
-# All counts EXCLUDE the OpenAlex Expansion Pack (XPAC) -- the works API's
-# default -- so figures reflect scholarly output, not the ~190M lower-quality
-# dataset/repository records added in 11/2025. Because the institution entity's
-# own aggregates INCLUDE XPAC, works_count and works-by-year are sourced from the
-# works API (XPAC-excluded); cited_by_count / h-index / i10 / 2yr-mean-citedness
-# are kept from the entity (XPAC records carry ~no citations, so the effect on
-# citation indicators is negligible).
+# Works counts EXCLUDE the OpenAlex Expansion Pack (XPAC; ~190M dataset/
+# repository records added 11/2025): works_count and works-by-year are sourced
+# from the works API with is_xpac:false. The citation indicators
+# (cited_by_count / h-index / i10 / 2yr-mean-citedness) are taken from the
+# institution entity, which OpenAlex publishes only as an XPAC-inclusive
+# aggregate -- so those figures include XPAC.
 #
 # The OA figures are computed with OpenAlex `group_by` on the corresponding-
 # author lens (`corresponding_institution_ids`); the `ca_` prefix marks every OA

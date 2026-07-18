@@ -95,10 +95,9 @@ Every works query here appends `is_xpac:false`, so `works_count`, the
 works-per-year counts and all open-access figures exclude XPAC explicitly rather
 than by relying on OpenAlex's current default. Because the institution *entity*'s
 own aggregates include XPAC, `works_count` and works-per-year are taken from the
-works API (not the entity); the citation-based indicators (`cited_by_count`,
-h-index, i10-index, 2-year mean citedness) are kept from the entity, where XPAC —
-being near-uncited dataset and repository records — makes a negligible
-difference.
+works API (not the entity). The citation-based indicators (`cited_by_count`,
+h-index, i10-index, 2-year mean citedness) are the exception: OpenAlex publishes
+them only as an entity aggregate, so those figures **include** XPAC.
 
 ## How it is assembled
 

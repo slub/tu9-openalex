@@ -234,12 +234,12 @@ inst_page <- function(slug) {
   tagList(
     inline_p(
       "This university's own OpenAlex record (the single ",
-      tags$strong("ROR/OpenAlex"), " institution) holds ",
-      tags$strong(fmt_int(latest$works_count)), " works ",
-      "(all author positions) and ", tags$strong(fmt_int(latest$cited_by_count)),
-      " citations, h-index ", tags$strong(latest$h_index),
-      " (snapshot ", latest$snapshot_date, "). These are broader than the ",
-      "corresponding-author figures below."),
+      tags$strong("ROR/OpenAlex"), " institution, all author positions) holds ",
+      tags$strong(fmt_int(latest$works_count)), " works (XPAC excluded) and, ",
+      "from the OpenAlex entity, ", tags$strong(fmt_int(latest$cited_by_count)),
+      " citations and an h-index of ", tags$strong(latest$h_index),
+      " (entity figures include XPAC; snapshot ", latest$snapshot_date,
+      "). These are broader than the corresponding-author figures below."),
     oa_intro,
     inline_p(
       "OpenAlex entity: ",
@@ -263,15 +263,17 @@ inst_page <- function(slug) {
     cons_section,
     tags$h2(id = "metrics", "Metric history"),
     inline_p(
-      "Entity-level figures for this single institution (its ",
-      tags$strong("ROR/OpenAlex"), " record, all authors), one row per snapshot. ",
-      "It grows as the pipeline runs; the OpenAlex entity is re-read on each refresh."),
+      "Figures for this single institution (its ", tags$strong("ROR/OpenAlex"),
+      " record, all authors), one row per snapshot. Works exclude XPAC (works ",
+      "API); the citation columns — citations, h-index, i10-index, 2-year mean ",
+      "citedness — come from the OpenAlex entity and include XPAC."),
     metric_history_table(m),
     tags$h2(id = "by-year", "Works and citations by year"),
     inline_p(
       "Works (all authors) and citations for this single institution's ",
       tags$strong("ROR/OpenAlex"), " record, by publication year — not the ",
-      "corresponding-author subset."),
+      "corresponding-author subset. Works exclude XPAC; the citation counts come ",
+      "from the OpenAlex entity and include XPAC."),
     counts_by_year_table(cby)
   )
 }

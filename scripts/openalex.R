@@ -215,9 +215,8 @@ read_leiden_components <- function(path = "data-raw/leiden_affiliations.csv") {
 # XPAC note: the institution entity's aggregates INCLUDE the Expansion Pack. We
 # therefore do NOT use `works_count` from here (it is sourced XPAC-excluded via
 # openalex_works_by_year); it is returned only as a fallback. `cited_by_count`,
-# `h_index`, `i10_index` and `2yr_mean_citedness` are kept from the entity: XPAC
-# records are datasets/repository items that carry virtually no citations, so
-# their effect on citation-based indicators is negligible.
+# `h_index`, `i10_index` and `2yr_mean_citedness` are kept from the entity,
+# which is the only place OpenAlex publishes them -- so these figures include XPAC.
 openalex_metrics <- function(obj) {
   n  <- function(x) if (is.null(x)) NA_integer_ else as.integer(x)
   d  <- function(x) if (is.null(x)) NA_real_    else as.numeric(x)
