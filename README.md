@@ -78,11 +78,11 @@ back to the address in `scripts/openalex.R`.
 
 ## Automation
 
-- `.github/workflows/refresh.yml` — fetches a fresh snapshot, renders the site
-  and only then commits the new data, so a failed fetch, a failed validation or
-  a broken render never reaches `main`. The weekly schedule (Mondays 05:00 UTC)
-  is currently **disabled**; run it on demand from the Actions tab, and
-  uncomment the `schedule:` block to re-arm it.
+- `.github/workflows/refresh.yml` — weekly (Mondays 05:00 UTC), and on demand
+  from the Actions tab: fetches a fresh snapshot, renders the site and only then
+  commits the new data, so a failed fetch, a failed validation or a broken
+  render never reaches `main`. Most weeks are no-ops — OpenAlex itself updates
+  roughly monthly, and the workflow skips the commit when nothing changed.
 - `.github/workflows/pages.yml` — rebuilds and deploys the site from data
   already in the repo whenever site code changes.
 
