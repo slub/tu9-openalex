@@ -5,9 +5,17 @@ name: Refresh OpenAlex metrics
 # simply keep the series fine-grained and catch upstream updates promptly.
 # Can also be run on demand from the Actions tab (use "force" to bypass the
 # guard rail if a legitimate, large change has occurred upstream).
+#
+# NOTE: the weekly schedule is deliberately DISABLED for now. A degraded run can
+# currently publish silently wrong data -- an XPAC-inclusive works count can be
+# written into the XPAC-excluded column, and an incomplete institution set is not
+# rejected -- and the commit/push happens before the site is rendered. Re-enable
+# the `schedule:` block below once the pipeline-integrity work is in: no
+# cross-definition fallbacks, fail-loud on an incomplete snapshot, validation
+# before any publish, and commit only after a successful render.
 on:
-  schedule:
-    - cron: "0 5 * * 1"   # every Monday at 05:00 UTC
+  # schedule:
+  #   - cron: "0 5 * * 1"   # every Monday at 05:00 UTC
   workflow_dispatch:
     inputs:
       force:
