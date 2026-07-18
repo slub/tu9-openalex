@@ -11,7 +11,6 @@
     {
       "name": "Technische Universität Braunschweig",
       "slug": "tu-braunschweig",
-      "type": "university",
       "openalex_id": "I94509681",
       "ror_id": "010nsgg66",
       "works_count": 59602,
@@ -30,7 +29,6 @@
     {
       "name": "Technical University of Munich",
       "slug": "tu-munich",
-      "type": "university",
       "openalex_id": "I62916508",
       "ror_id": "02kkvpp62",
       "works_count": 215174,
@@ -54,7 +52,6 @@
     {
       "name": "Leibniz University Hannover",
       "slug": "leibniz-hannover",
-      "type": "university",
       "openalex_id": "I114112103",
       "ror_id": "0304hq317",
       "works_count": 69790,
@@ -73,7 +70,6 @@
     {
       "name": "Technische Universität Berlin",
       "slug": "tu-berlin",
-      "type": "university",
       "openalex_id": "I4577782",
       "ror_id": "03v4gjf40",
       "works_count": 105240,
@@ -97,7 +93,6 @@
     {
       "name": "Technische Universität Dresden",
       "slug": "tu-dresden",
-      "type": "university",
       "openalex_id": "I78650965",
       "ror_id": "042aqky30",
       "works_count": 129281,
@@ -121,7 +116,6 @@
     {
       "name": "Karlsruhe Institute of Technology",
       "slug": "kit",
-      "type": "university",
       "openalex_id": "I102335020",
       "ror_id": "04t3en479",
       "works_count": 134480,
@@ -145,7 +139,6 @@
     {
       "name": "University of Stuttgart",
       "slug": "uni-stuttgart",
-      "type": "university",
       "openalex_id": "I100066346",
       "ror_id": "04vnq7t77",
       "works_count": 94960,
@@ -164,7 +157,6 @@
     {
       "name": "RWTH Aachen University",
       "slug": "rwth-aachen",
-      "type": "university",
       "openalex_id": "I887968799",
       "ror_id": "04xfq0f34",
       "works_count": 159884,
@@ -188,7 +180,6 @@
     {
       "name": "Technische Universität Darmstadt",
       "slug": "tu-darmstadt",
-      "type": "university",
       "openalex_id": "I31512782",
       "ror_id": "05n911h24",
       "works_count": 75746,

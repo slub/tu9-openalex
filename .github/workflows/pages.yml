@@ -26,9 +26,9 @@ permissions:
   pages: write
   id-token: write
 
-# Serialise with any other Pages deployment so the two workflows never clash.
+# Shares the `publish` group with refresh.yml so the two never deploy at once.
 concurrency:
-  group: pages
+  group: publish
   cancel-in-progress: false
 
 jobs:

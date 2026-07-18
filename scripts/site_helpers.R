@@ -14,6 +14,19 @@ read_data <- function(...) {
   read_csv(file.path("data", ...), col_types = cols(.default = col_character()))
 }
 
+# Read a per-institution product only if it belongs to the CURRENT snapshot.
+# A file left behind by an earlier run must never be rendered underneath a newer
+# headline, so a missing file, a missing snapshot_date column, or any row from a
+# different snapshot is treated as "product absent".
+read_current <- function(slug, file, snapshot_date) {
+  path <- file.path("data", slug, file)
+  if (!file.exists(path)) return(NULL)
+  d <- read_data(slug, file)
+  if (nrow(d) == 0 || !"snapshot_date" %in% names(d)) return(NULL)
+  if (!all(d$snapshot_date == snapshot_date)) return(NULL)
+  d
+}
+
 read_meta <- function() {
   jsonlite::read_json("data/meta.json", simplifyVector = FALSE)
 }
@@ -176,14 +189,11 @@ inst_page <- function(slug) {
 
   # OA views are best-effort in the pipeline, so a page must render even if they
   # are absent for this institution.
-  oa_path     <- file.path("data", slug, "ca_oa_by_year.csv")
-  status_path <- file.path("data", slug, "ca_oa_status.csv")
-  oa     <- if (file.exists(oa_path)) read_data(slug, "ca_oa_by_year.csv") else NULL
-  status <- if (file.exists(status_path)) read_data(slug, "ca_oa_status.csv") else NULL
+  oa     <- read_current(slug, "ca_oa_by_year.csv", latest$snapshot_date)
+  status <- read_current(slug, "ca_oa_status.csv", latest$snapshot_date)
 
   # Leiden-consolidated view (university + component affiliates), universities only.
-  cons_path <- file.path("data", slug, "consolidated_ca_oa_by_year.csv")
-  cons <- if (file.exists(cons_path)) read_data(slug, "consolidated_ca_oa_by_year.csv") else NULL
+  cons <- read_current(slug, "consolidated_ca_oa_by_year.csv", latest$snapshot_date)
   cons_section <- NULL
   if (!is.null(cons) && nrow(cons) > 0) {
     cref <- cons[cons$year == latest$ref_year, ]

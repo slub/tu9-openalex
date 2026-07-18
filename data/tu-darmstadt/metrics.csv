@@ -1,2 +1,2 @@
-snapshot_date,slug,name,type,openalex_id,ror_id,works_count,works_count_incl_xpac,cited_by_count,h_index,i10_index,two_yr_mean_citedness,ref_year,ca_works_ref,ca_oa_works_ref,ca_oa_share_ref,period_start,period_end,ca_works_period,ca_oa_works_period,ca_oa_share_period
-2026-07-18,tu-darmstadt,Technische Universität Darmstadt,university,I31512782,05n911h24,75746,80115,3988591,491,70458,2.98350643793519,2025,1752,1103,0.6296,2020,2025,10805,6455,0.5974
+snapshot_date,slug,name,openalex_id,ror_id,works_count,works_count_incl_xpac,cited_by_count,h_index,i10_index,two_yr_mean_citedness,ref_year,ca_works_ref,ca_oa_works_ref,ca_oa_share_ref,period_start,period_end,ca_works_period,ca_oa_works_period,ca_oa_share_period
+2026-07-18,tu-darmstadt,Technische Universität Darmstadt,I31512782,05n911h24,75746,80115,3988591,491,70458,2.98350643793519,2025,1752,1103,0.6296,2020,2025,10805,6455,0.5974

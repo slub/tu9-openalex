@@ -260,7 +260,7 @@ openalex_ca_oa_status <- function(inst_ids, year) {
   data.frame(oa_status = g$key, ca_works = g$count, stringsAsFactors = FALSE)
 }
 
-# Read the institution configuration (name, openalex_id, ror_id, slug, type)
+# Read the institution configuration (name, openalex_id, ror_id, slug)
 # and add a bare OpenAlex id column.
 read_institutions <- function(path = "data-raw/institutions.csv") {
   inst <- read_csv(path, col_types = cols(.default = col_character()))

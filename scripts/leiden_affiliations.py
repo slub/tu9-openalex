@@ -208,11 +208,10 @@ def main():
                 for r in tables["affiliated_organization.tsv"]}
 
     our_rows, our_by_ror = read_our_institutions()
-    # our university-type institutions that Leiden treats as core universities
-    cores = [r for r in our_rows
-             if r.get("type") == "university" and r["ror_id"] in uni]
+    # Leiden's own university table decides what counts as a core university.
+    cores = [r for r in our_rows if r["ror_id"] in uni]
     print("TU9 core universities matched in Leiden: %d/%d" % (
-        len(cores), sum(r.get("type") == "university" for r in our_rows)))
+        len(cores), len(our_rows)))
 
     rank = {"component": 0, "joint": 1, "associated": 2}
     cache = {}
@@ -245,12 +244,11 @@ def main():
                 "affiliated_ror_id": a,
                 "affiliated_name": name,
                 "affiliated_openalex_id": oid,
-                "tracked_slug": our_by_ror[a]["slug"] if a in our_by_ror else "",
             })
 
     fields = ["tu9_slug", "university_ror_id", "university_name",
               "relation_type", "weight", "affiliated_ror_id",
-              "affiliated_name", "affiliated_openalex_id", "tracked_slug"]
+              "affiliated_name", "affiliated_openalex_id"]
     with open(OUT_CSV, "w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=fields)
         w.writeheader()

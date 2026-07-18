@@ -1,78 +1,78 @@
-tu9_slug,university_ror_id,university_name,relation_type,weight,affiliated_ror_id,affiliated_name,affiliated_openalex_id,tracked_slug
-kit,04t3en479,Karlsruhe Institute of Technology,component,1,034rhsb33,Helmholtz-Institute Ulm,I4210129763,
-kit,04t3en479,Karlsruhe Institute of Technology,component,1,040fv5d16,DVGW-Forschungsstelle am Engler-Bunte-Institut des Karlsruher Instituts für Technologie,I4210144470,
-kit,04t3en479,Karlsruhe Institute of Technology,component,1,04d5k5771,European Institute for Energy Research,I4210148402,
-kit,04t3en479,Karlsruhe Institute of Technology,joint,0.5,01f7bcy98,Heidelberg Institute for Theoretical Studies,I71030271,
-kit,04t3en479,Karlsruhe Institute of Technology,associated,,02nx8n605,TU9,I4387153217,
-kit,04t3en479,Karlsruhe Institute of Technology,associated,,033zfn006,In-Service Aircraft for a Global Observing System,I4405252446,
-leibniz-hannover,0304hq317,Leibniz University Hannover,joint,0.5,00w53fs94,Forschungszentrum Küste,I4210096218,
-leibniz-hannover,0304hq317,Leibniz University Hannover,joint,0.5,039t4wk02,L3S Research Center,I4210136150,
-leibniz-hannover,0304hq317,Leibniz University Hannover,joint,0.5,04n901n71,CAIMed - Niedersächsisches Zentrum für KI und Kausale Methoden in der Medizin,I4401726777,
-leibniz-hannover,0304hq317,Leibniz University Hannover,joint,0.3333333333333333,0393vzh87,Hearing4all,I4210144375,
-leibniz-hannover,0304hq317,Leibniz University Hannover,associated,,021ft0n22,Universitätsmedizin Göttingen,I4210116730,
-leibniz-hannover,0304hq317,Leibniz University Hannover,associated,,02nx8n605,TU9,I4387153217,
-leibniz-hannover,0304hq317,Leibniz University Hannover,associated,,03d0p2685,Helmholtz Centre for Infection Research,I4210124929,
-leibniz-hannover,0304hq317,Leibniz University Hannover,associated,,05r5a5c61,Institut für Solarenergieforschung,I4210165208,
-rwth-aachen,04xfq0f34,RWTH Aachen University,component,1,02gm5zw39,Universitätsklinikum Aachen,I4210120689,
-rwth-aachen,04xfq0f34,RWTH Aachen University,component,1,02r0e4r58,Jülich Aachen Research Alliance,I4210133912,
-rwth-aachen,04xfq0f34,RWTH Aachen University,component,1,03hass884,Ernst Ruska Centre,I2801833913,
-rwth-aachen,04xfq0f34,RWTH Aachen University,component,1,0431amh23,Ophthalmology Clinic,I4210145692,
-rwth-aachen,04xfq0f34,RWTH Aachen University,associated,,000p86k36,Oel-Waerme-Institut,I4210087309,
-rwth-aachen,04xfq0f34,RWTH Aachen University,associated,,001g2x261,Institut für Unternehmenskybernetik,I4210086356,
-rwth-aachen,04xfq0f34,RWTH Aachen University,associated,,0186h8060,DWI – Leibniz Institute for Interactive Materials,I4210102767,
-rwth-aachen,04xfq0f34,RWTH Aachen University,associated,,01be19w37,Helios Klinikum Krefeld,I4210103130,
-rwth-aachen,04xfq0f34,RWTH Aachen University,associated,,0281dp749,Helmholtz Association of German Research Centres,I1305996414,
-rwth-aachen,04xfq0f34,RWTH Aachen University,associated,,02gwe8432,Access,I4210121009,
-rwth-aachen,04xfq0f34,RWTH Aachen University,associated,,02nx8n605,TU9,I4387153217,
-rwth-aachen,04xfq0f34,RWTH Aachen University,associated,,04gw0z407,Aachener Centrum für Technologietransfer in der Ophthalmologie,I4210131829,
-rwth-aachen,04xfq0f34,RWTH Aachen University,associated,,054zhq066,Bonn Aachen International Center for Information Technology,I4210164149,
-tu-berlin,03v4gjf40,Technische Universität Berlin,component,1,048d5b075,Daimler Center for Automotive Information Technology Innovations,I4210155076,
-tu-berlin,03v4gjf40,Technische Universität Berlin,joint,0.3333333333333333,05dsfb086,Berlin Institute for the Foundations of Learning and Data,I4401727010,
-tu-berlin,03v4gjf40,Technische Universität Berlin,joint,0.25,023kksk09,Weizenbaum Institute,I4210117750,
-tu-berlin,03v4gjf40,Technische Universität Berlin,associated,,00h1x4t21,Weierstrass Institute for Applied Analysis and Stochastics,I4210092021,
-tu-berlin,03v4gjf40,Technische Universität Berlin,associated,,02nx8n605,TU9,I4387153217,
-tu-braunschweig,010nsgg66,Technische Universität Braunschweig,joint,0.5,00w53fs94,Forschungszentrum Küste,I4210096218,
-tu-braunschweig,010nsgg66,Technische Universität Braunschweig,joint,0.5,039t4wk02,L3S Research Center,I4210136150,
-tu-braunschweig,010nsgg66,Technische Universität Braunschweig,joint,0.5,04n901n71,CAIMed - Niedersächsisches Zentrum für KI und Kausale Methoden in der Medizin,I4401726777,
-tu-braunschweig,010nsgg66,Technische Universität Braunschweig,associated,,021ft0n22,Universitätsmedizin Göttingen,I4210116730,
-tu-braunschweig,010nsgg66,Technische Universität Braunschweig,associated,,02nx8n605,TU9,I4387153217,
-tu-braunschweig,010nsgg66,Technische Universität Braunschweig,associated,,03d0p2685,Helmholtz Centre for Infection Research,I4210124929,
-tu-darmstadt,05n911h24,Technische Universität Darmstadt,component,1,014ybqb54,Hessian Center for Artificial Intelligence,I4392021234,
-tu-darmstadt,05n911h24,Technische Universität Darmstadt,component,1,04ms06f06,Zentrum verantwortungsbewusste Digitalisierung,I4401041591,
-tu-darmstadt,05n911h24,Technische Universität Darmstadt,associated,,02nx8n605,TU9,I4387153217,
-tu-darmstadt,05n911h24,Technische Universität Darmstadt,associated,,04a31e344,Helmholtz International Center for FAIR,I4210153653,
-tu-dresden,042aqky30,Technische Universität Dresden,component,1,00gfym921,Klinik und Poliklinik für Urologie,I4210086080,
-tu-dresden,042aqky30,Technische Universität Dresden,component,1,00me29179,Institut für Holztechnologie Dresden,I4210093369,
-tu-dresden,042aqky30,Technische Universität Dresden,component,1,015e4mc09,Universitäts Kinder Frauenzentrum,I4210101194,
-tu-dresden,042aqky30,Technische Universität Dresden,component,1,01dj9qb53,TransDeN Lab,I4387152255,
-tu-dresden,042aqky30,Technische Universität Dresden,component,1,01jx86h05,Herzzentrum Dresden Universitaetsklinik,I4407990358,
-tu-dresden,042aqky30,Technische Universität Dresden,component,1,01zy07c70,Nationales Centrum für Tumorerkrankungen Dresden,I4387153526,
-tu-dresden,042aqky30,Technische Universität Dresden,component,1,020z28a80,Institute of Electrical Power Systems and High Voltage Engineering,I4411591259,
-tu-dresden,042aqky30,Technische Universität Dresden,component,1,028070c57,NaMLab (Germany),I4210122489,
-tu-dresden,042aqky30,Technische Universität Dresden,component,1,04wn6w972,Förderverein Institut für Medizintechnik Dresden,I4210156650,
-tu-dresden,042aqky30,Technische Universität Dresden,component,1,04za5zm41,University Hospital Carl Gustav Carus,I4210162051,
-tu-dresden,042aqky30,Technische Universität Dresden,component,1,056gvz809,Klinik und Poliklinik für Augenheilkunde am Universitätsklinikum Carl Gustav Carus,I4210162590,
-tu-dresden,042aqky30,Technische Universität Dresden,component,1,056qj1t15,Institute of Automation,I4210157642,
-tu-dresden,042aqky30,Technische Universität Dresden,component,1,05hrn3e05,Center for Systems Biology Dresden,I4210148197,
-tu-dresden,042aqky30,Technische Universität Dresden,component,1,05ke5hb07,Paul Langerhans Institute Dresden,I4210164390,
-tu-dresden,042aqky30,Technische Universität Dresden,component,1,05medrv10,Klinik und Poliklinik für Psychotherapie und Psychosomatik,I4210164182,
-tu-dresden,042aqky30,Technische Universität Dresden,joint,0.5,00kkpv737,Complexity and Topology in Quantum Matter,I4210095490,
-tu-dresden,042aqky30,Technische Universität Dresden,joint,0.5,01t4ttr56,Center for Scalable Data Analytics and Artificial Intelligence,I4401726909,
-tu-dresden,042aqky30,Technische Universität Dresden,associated,,00qcpjs09,Klinikum Görlitz,I4210095734,
-tu-dresden,042aqky30,Technische Universität Dresden,associated,,02nx8n605,TU9,I4387153217,
-tu-dresden,042aqky30,Technische Universität Dresden,associated,,035xba693,Krankenhaus Dresden-Friedrichstadt,I4210123854,
-tu-dresden,042aqky30,Technische Universität Dresden,associated,,042wjdg05,Hannah-Arendt-Institut für Totalitarismusforschung e.V. an der TU Dresden,I4399657932,
-tu-dresden,042aqky30,Technische Universität Dresden,associated,,044fhy270,Carl-Thiem-Klinikum Cottbus,I4210143701,
-tu-dresden,042aqky30,Technische Universität Dresden,associated,,04wkp4f46,Klinikum Chemnitz,I4210162138,
-tu-munich,02kkvpp62,Technical University of Munich,component,1,04hbwba26,Deutsches Herzzentrum München,I4210148371,
-tu-munich,02kkvpp62,Technical University of Munich,component,1,04jc43x05,Klinikum rechts der Isar,I2802619606,
-tu-munich,02kkvpp62,Technical University of Munich,component,1,05g95eg64,Institute of Biological and Medical Imaging,I4387155950,
-tu-munich,02kkvpp62,Technical University of Munich,joint,0.5,025z3z560,Munich Cluster for Systems Neurology,I4210113080,
-tu-munich,02kkvpp62,Technical University of Munich,joint,0.5,02nfy3535,Munich Center for Machine Learning,I4403386549,
-tu-munich,02kkvpp62,Technical University of Munich,joint,0.5,032hzb643,Center for Integrated Protein Science Munich,I189554337,
-tu-munich,02kkvpp62,Technical University of Munich,joint,0.5,04j4kfb22,Centre for Advanced Laser Applications,I4210137376,
-tu-munich,02kkvpp62,Technical University of Munich,associated,,00ed5g627,Heinz Maier-Leibnitz Zentrum,I4210097247,
-tu-munich,02kkvpp62,Technical University of Munich,associated,,01fgmnw14,Berufsgenossenschaftliche Unfallklinik Murnau,I4210105334,
-tu-munich,02kkvpp62,Technical University of Munich,associated,,02nx8n605,TU9,I4387153217,
-uni-stuttgart,04vnq7t77,University of Stuttgart,joint,0.5,01z25am55,Center for Integrated Quantum Science and Technology,I4210113675,
-uni-stuttgart,04vnq7t77,University of Stuttgart,associated,,02nx8n605,TU9,I4387153217,
+tu9_slug,university_ror_id,university_name,relation_type,weight,affiliated_ror_id,affiliated_name,affiliated_openalex_id
+kit,04t3en479,Karlsruhe Institute of Technology,component,1,034rhsb33,Helmholtz-Institute Ulm,I4210129763
+kit,04t3en479,Karlsruhe Institute of Technology,component,1,040fv5d16,DVGW-Forschungsstelle am Engler-Bunte-Institut des Karlsruher Instituts für Technologie,I4210144470
+kit,04t3en479,Karlsruhe Institute of Technology,component,1,04d5k5771,European Institute for Energy Research,I4210148402
+kit,04t3en479,Karlsruhe Institute of Technology,joint,0.5,01f7bcy98,Heidelberg Institute for Theoretical Studies,I71030271
+kit,04t3en479,Karlsruhe Institute of Technology,associated,,02nx8n605,TU9,I4387153217
+kit,04t3en479,Karlsruhe Institute of Technology,associated,,033zfn006,In-Service Aircraft for a Global Observing System,I4405252446
+leibniz-hannover,0304hq317,Leibniz University Hannover,joint,0.5,00w53fs94,Forschungszentrum Küste,I4210096218
+leibniz-hannover,0304hq317,Leibniz University Hannover,joint,0.5,039t4wk02,L3S Research Center,I4210136150
+leibniz-hannover,0304hq317,Leibniz University Hannover,joint,0.5,04n901n71,CAIMed - Niedersächsisches Zentrum für KI und Kausale Methoden in der Medizin,I4401726777
+leibniz-hannover,0304hq317,Leibniz University Hannover,joint,0.3333333333333333,0393vzh87,Hearing4all,I4210144375
+leibniz-hannover,0304hq317,Leibniz University Hannover,associated,,021ft0n22,Universitätsmedizin Göttingen,I4210116730
+leibniz-hannover,0304hq317,Leibniz University Hannover,associated,,02nx8n605,TU9,I4387153217
+leibniz-hannover,0304hq317,Leibniz University Hannover,associated,,03d0p2685,Helmholtz Centre for Infection Research,I4210124929
+leibniz-hannover,0304hq317,Leibniz University Hannover,associated,,05r5a5c61,Institut für Solarenergieforschung,I4210165208
+rwth-aachen,04xfq0f34,RWTH Aachen University,component,1,02gm5zw39,Universitätsklinikum Aachen,I4210120689
+rwth-aachen,04xfq0f34,RWTH Aachen University,component,1,02r0e4r58,Jülich Aachen Research Alliance,I4210133912
+rwth-aachen,04xfq0f34,RWTH Aachen University,component,1,03hass884,Ernst Ruska Centre,I2801833913
+rwth-aachen,04xfq0f34,RWTH Aachen University,component,1,0431amh23,Ophthalmology Clinic,I4210145692
+rwth-aachen,04xfq0f34,RWTH Aachen University,associated,,000p86k36,Oel-Waerme-Institut,I4210087309
+rwth-aachen,04xfq0f34,RWTH Aachen University,associated,,001g2x261,Institut für Unternehmenskybernetik,I4210086356
+rwth-aachen,04xfq0f34,RWTH Aachen University,associated,,0186h8060,DWI – Leibniz Institute for Interactive Materials,I4210102767
+rwth-aachen,04xfq0f34,RWTH Aachen University,associated,,01be19w37,Helios Klinikum Krefeld,I4210103130
+rwth-aachen,04xfq0f34,RWTH Aachen University,associated,,0281dp749,Helmholtz Association of German Research Centres,I1305996414
+rwth-aachen,04xfq0f34,RWTH Aachen University,associated,,02gwe8432,Access,I4210121009
+rwth-aachen,04xfq0f34,RWTH Aachen University,associated,,02nx8n605,TU9,I4387153217
+rwth-aachen,04xfq0f34,RWTH Aachen University,associated,,04gw0z407,Aachener Centrum für Technologietransfer in der Ophthalmologie,I4210131829
+rwth-aachen,04xfq0f34,RWTH Aachen University,associated,,054zhq066,Bonn Aachen International Center for Information Technology,I4210164149
+tu-berlin,03v4gjf40,Technische Universität Berlin,component,1,048d5b075,Daimler Center for Automotive Information Technology Innovations,I4210155076
+tu-berlin,03v4gjf40,Technische Universität Berlin,joint,0.3333333333333333,05dsfb086,Berlin Institute for the Foundations of Learning and Data,I4401727010
+tu-berlin,03v4gjf40,Technische Universität Berlin,joint,0.25,023kksk09,Weizenbaum Institute,I4210117750
+tu-berlin,03v4gjf40,Technische Universität Berlin,associated,,00h1x4t21,Weierstrass Institute for Applied Analysis and Stochastics,I4210092021
+tu-berlin,03v4gjf40,Technische Universität Berlin,associated,,02nx8n605,TU9,I4387153217
+tu-braunschweig,010nsgg66,Technische Universität Braunschweig,joint,0.5,00w53fs94,Forschungszentrum Küste,I4210096218
+tu-braunschweig,010nsgg66,Technische Universität Braunschweig,joint,0.5,039t4wk02,L3S Research Center,I4210136150
+tu-braunschweig,010nsgg66,Technische Universität Braunschweig,joint,0.5,04n901n71,CAIMed - Niedersächsisches Zentrum für KI und Kausale Methoden in der Medizin,I4401726777
+tu-braunschweig,010nsgg66,Technische Universität Braunschweig,associated,,021ft0n22,Universitätsmedizin Göttingen,I4210116730
+tu-braunschweig,010nsgg66,Technische Universität Braunschweig,associated,,02nx8n605,TU9,I4387153217
+tu-braunschweig,010nsgg66,Technische Universität Braunschweig,associated,,03d0p2685,Helmholtz Centre for Infection Research,I4210124929
+tu-darmstadt,05n911h24,Technische Universität Darmstadt,component,1,014ybqb54,Hessian Center for Artificial Intelligence,I4392021234
+tu-darmstadt,05n911h24,Technische Universität Darmstadt,component,1,04ms06f06,Zentrum verantwortungsbewusste Digitalisierung,I4401041591
+tu-darmstadt,05n911h24,Technische Universität Darmstadt,associated,,02nx8n605,TU9,I4387153217
+tu-darmstadt,05n911h24,Technische Universität Darmstadt,associated,,04a31e344,Helmholtz International Center for FAIR,I4210153653
+tu-dresden,042aqky30,Technische Universität Dresden,component,1,00gfym921,Klinik und Poliklinik für Urologie,I4210086080
+tu-dresden,042aqky30,Technische Universität Dresden,component,1,00me29179,Institut für Holztechnologie Dresden,I4210093369
+tu-dresden,042aqky30,Technische Universität Dresden,component,1,015e4mc09,Universitäts Kinder Frauenzentrum,I4210101194
+tu-dresden,042aqky30,Technische Universität Dresden,component,1,01dj9qb53,TransDeN Lab,I4387152255
+tu-dresden,042aqky30,Technische Universität Dresden,component,1,01jx86h05,Herzzentrum Dresden Universitaetsklinik,I4407990358
+tu-dresden,042aqky30,Technische Universität Dresden,component,1,01zy07c70,Nationales Centrum für Tumorerkrankungen Dresden,I4387153526
+tu-dresden,042aqky30,Technische Universität Dresden,component,1,020z28a80,Institute of Electrical Power Systems and High Voltage Engineering,I4411591259
+tu-dresden,042aqky30,Technische Universität Dresden,component,1,028070c57,NaMLab (Germany),I4210122489
+tu-dresden,042aqky30,Technische Universität Dresden,component,1,04wn6w972,Förderverein Institut für Medizintechnik Dresden,I4210156650
+tu-dresden,042aqky30,Technische Universität Dresden,component,1,04za5zm41,University Hospital Carl Gustav Carus,I4210162051
+tu-dresden,042aqky30,Technische Universität Dresden,component,1,056gvz809,Klinik und Poliklinik für Augenheilkunde am Universitätsklinikum Carl Gustav Carus,I4210162590
+tu-dresden,042aqky30,Technische Universität Dresden,component,1,056qj1t15,Institute of Automation,I4210157642
+tu-dresden,042aqky30,Technische Universität Dresden,component,1,05hrn3e05,Center for Systems Biology Dresden,I4210148197
+tu-dresden,042aqky30,Technische Universität Dresden,component,1,05ke5hb07,Paul Langerhans Institute Dresden,I4210164390
+tu-dresden,042aqky30,Technische Universität Dresden,component,1,05medrv10,Klinik und Poliklinik für Psychotherapie und Psychosomatik,I4210164182
+tu-dresden,042aqky30,Technische Universität Dresden,joint,0.5,00kkpv737,Complexity and Topology in Quantum Matter,I4210095490
+tu-dresden,042aqky30,Technische Universität Dresden,joint,0.5,01t4ttr56,Center for Scalable Data Analytics and Artificial Intelligence,I4401726909
+tu-dresden,042aqky30,Technische Universität Dresden,associated,,00qcpjs09,Klinikum Görlitz,I4210095734
+tu-dresden,042aqky30,Technische Universität Dresden,associated,,02nx8n605,TU9,I4387153217
+tu-dresden,042aqky30,Technische Universität Dresden,associated,,035xba693,Krankenhaus Dresden-Friedrichstadt,I4210123854
+tu-dresden,042aqky30,Technische Universität Dresden,associated,,042wjdg05,Hannah-Arendt-Institut für Totalitarismusforschung e.V. an der TU Dresden,I4399657932
+tu-dresden,042aqky30,Technische Universität Dresden,associated,,044fhy270,Carl-Thiem-Klinikum Cottbus,I4210143701
+tu-dresden,042aqky30,Technische Universität Dresden,associated,,04wkp4f46,Klinikum Chemnitz,I4210162138
+tu-munich,02kkvpp62,Technical University of Munich,component,1,04hbwba26,Deutsches Herzzentrum München,I4210148371
+tu-munich,02kkvpp62,Technical University of Munich,component,1,04jc43x05,Klinikum rechts der Isar,I2802619606
+tu-munich,02kkvpp62,Technical University of Munich,component,1,05g95eg64,Institute of Biological and Medical Imaging,I4387155950
+tu-munich,02kkvpp62,Technical University of Munich,joint,0.5,025z3z560,Munich Cluster for Systems Neurology,I4210113080
+tu-munich,02kkvpp62,Technical University of Munich,joint,0.5,02nfy3535,Munich Center for Machine Learning,I4403386549
+tu-munich,02kkvpp62,Technical University of Munich,joint,0.5,032hzb643,Center for Integrated Protein Science Munich,I189554337
+tu-munich,02kkvpp62,Technical University of Munich,joint,0.5,04j4kfb22,Centre for Advanced Laser Applications,I4210137376
+tu-munich,02kkvpp62,Technical University of Munich,associated,,00ed5g627,Heinz Maier-Leibnitz Zentrum,I4210097247
+tu-munich,02kkvpp62,Technical University of Munich,associated,,01fgmnw14,Berufsgenossenschaftliche Unfallklinik Murnau,I4210105334
+tu-munich,02kkvpp62,Technical University of Munich,associated,,02nx8n605,TU9,I4387153217
+uni-stuttgart,04vnq7t77,University of Stuttgart,joint,0.5,01z25am55,Center for Integrated Quantum Science and Technology,I4210113675
+uni-stuttgart,04vnq7t77,University of Stuttgart,associated,,02nx8n605,TU9,I4387153217

@@ -1,10 +1,10 @@
-name,openalex_id,ror_id,slug,type
-Technische Universität Braunschweig,I94509681,010nsgg66,tu-braunschweig,university
-Technical University of Munich,I62916508,02kkvpp62,tu-munich,university
-Leibniz University Hannover,I114112103,0304hq317,leibniz-hannover,university
-Technische Universität Berlin,I4577782,03v4gjf40,tu-berlin,university
-Technische Universität Dresden,I78650965,042aqky30,tu-dresden,university
-Karlsruhe Institute of Technology,I102335020,04t3en479,kit,university
-University of Stuttgart,I100066346,04vnq7t77,uni-stuttgart,university
-RWTH Aachen University,I887968799,04xfq0f34,rwth-aachen,university
-Technische Universität Darmstadt,I31512782,05n911h24,tu-darmstadt,university
+name,openalex_id,ror_id,slug
+Technische Universität Braunschweig,I94509681,010nsgg66,tu-braunschweig
+Technical University of Munich,I62916508,02kkvpp62,tu-munich
+Leibniz University Hannover,I114112103,0304hq317,leibniz-hannover
+Technische Universität Berlin,I4577782,03v4gjf40,tu-berlin
+Technische Universität Dresden,I78650965,042aqky30,tu-dresden
+Karlsruhe Institute of Technology,I102335020,04t3en479,kit
+University of Stuttgart,I100066346,04vnq7t77,uni-stuttgart
+RWTH Aachen University,I887968799,04xfq0f34,rwth-aachen
+Technische Universität Darmstadt,I31512782,05n911h24,tu-darmstadt

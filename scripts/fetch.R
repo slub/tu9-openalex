@@ -117,7 +117,6 @@ for (i in seq_len(nrow(inst))) {
     snapshot_date         = snapshot_date,
     slug                  = row$slug,
     name                  = row$name,
-    type                  = row$type,
     openalex_id           = row$openalex_id,
     ror_id                = row$ror_id,
     works_count           = wby$total,      # XPAC-excluded (works API)
@@ -167,8 +166,7 @@ for (i in seq_len(nrow(inst))) {
 
 # Leiden-consolidated CA-OA view: each university OR-ed with its weight-1
 # `component` affiliates. Only universities that have components get one.
-unis_with_components <- intersect(inst$slug[inst$type == "university"],
-                                  unique(leiden$tu9_slug))
+unis_with_components <- intersect(inst$slug, unique(leiden$tu9_slug))
 for (slug in unis_with_components) {
   u <- inst[inst$slug == slug, ][1, ]
   comp <- leiden$affiliated_openalex_id[leiden$tu9_slug == slug]
@@ -309,7 +307,6 @@ meta_inst <- lapply(seq_len(nrow(latest)), function(i) {
   entry <- list(
     name           = r$name,
     slug           = r$slug,
-    type           = r$type,
     openalex_id    = r$openalex_id,
     ror_id         = r$ror_id,
     works_count    = r$works_count,
