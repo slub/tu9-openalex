@@ -127,7 +127,9 @@ and methodology; the live OpenAlex `is_core` flag may evolve after the August
 ## Context metrics from the institution entity
 
 Beside the OA figures, each snapshot keeps a few entity-level indicators for
-context (shown on the institution pages, not in the overview):
+context. They appear only on an individual university's own page; neither the
+per-university table on the home page nor the alliance summary under
+Institutions uses them:
 
 - **works_count** and **works per year** — the university's total output;
 - **cited_by_count**, **h-index**, **i10-index**, **2-year mean citedness**.
