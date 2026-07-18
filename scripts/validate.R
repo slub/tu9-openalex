@@ -149,6 +149,29 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
           label, length(off))
   }
   check_oa(snap$ca_oa_by_year, "ca_oa_by_year")
+  # DOAJ is a subset of the corresponding-author works it is counted from.
+  if (!is.null(snap$ca_oa_by_year) && nrow(snap$ca_oa_by_year) > 0 &&
+      "ca_doaj_works" %in% names(snap$ca_oa_by_year)) {
+    d <- snap$ca_oa_by_year
+    bad_dj <- which(n(d$ca_doaj_works) > n(d$ca_works))
+    if (length(bad_dj) > 0)
+      add("ca_oa_by_year: ca_doaj_works exceeds ca_works in %d row(s)", length(bad_dj))
+  }
+  # Per-year lens ordering, but only between the two figures that come from the
+  # LIVE works API: widening id -> lineage can only add works. The middle column
+  # (works_count_incl_xpac) is the institution ENTITY's precomputed counts_by_year,
+  # which lags the live API -- for the current, still-growing year the live
+  # XPAC-excluded count can legitimately exceed the entity's XPAC-inclusive one,
+  # so comparing across those two sources would fail on a data property rather
+  # than a defect.
+  cb <- snap$counts_by_year
+  if (!is.null(cb) && nrow(cb) > 0 &&
+      "works_count_lineage_incl_xpac" %in% names(cb)) {
+    bad_lens <- which(n(cb$works_count) > n(cb$works_count_lineage_incl_xpac))
+    if (length(bad_lens) > 0)
+      add("counts_by_year: id works exceed lineage works in %d row(s) (first: %s %s)",
+          length(bad_lens), cb$slug[bad_lens[1]], cb$year[bad_lens[1]])
+  }
   check_oa(snap$consolidated, "consolidated_ca_oa_by_year")
   check_oa(snap$core, "leiden_core_ca_oa_by_year")
 

@@ -44,6 +44,18 @@ Every OA figure is prefixed `ca_` to mark it as corresponding-author-level:
   green / bronze / diamond / closed split, which shows how much of the OA share
   runs through the hybrid and gold routes that transformative agreements target.
 
+- **`ca_doaj_works`** / **`ca_doaj_share`** — of the corresponding-author works,
+  how many appeared in a journal listed in the
+  [DOAJ](https://doaj.org/), via `primary_location.source.is_in_doaj:true`.
+
+DOAJ is reported **separately from the OA-status composition**, not as one of its
+categories. It is a *source-level registry flag* — is this journal listed as
+fully open access? — whereas gold/hybrid/green/bronze/diamond/closed classify the
+individual work. The two cut across each other: for TU Dresden in 2025, 543 works
+were in DOAJ-listed journals while 788 were classified gold or diamond. Adding it
+as a status row would both mix the two classifications and break the property
+that the status categories sum to the works total.
+
 All of this comes from OpenAlex's server-side `group_by` aggregation (per-year
 and per-status counts), so no individual works are downloaded.
 
@@ -181,6 +193,20 @@ own aggregates include XPAC, `works_count` and works-per-year are taken from the
 works API (not the entity). The citation-based indicators (`cited_by_count`,
 h-index, i10-index, 2-year mean citedness) are the exception: OpenAlex publishes
 them only as an entity aggregate, so those figures **include** XPAC.
+
+### Entity aggregates lag the live API
+
+The institution entity's own figures — `works_count`, `counts_by_year`,
+`cited_by_count` and the summary statistics — are precomputed aggregates, while
+every works query here is answered live. The two are therefore not from the same
+moment. For a year that is still filling up this is visible: in July 2026 the live
+XPAC-*excluded* count of TU Munich's 2026 works (9,497) already exceeded the
+entity's precomputed XPAC-*inclusive* figure for the same year (9,431).
+
+That is a property of the data, not an error, but it means the two sources should
+not be compared as though they were simultaneous. The consistency checks in
+`scripts/validate.R` compare live figures with live figures for exactly this
+reason.
 
 ## How it is assembled
 

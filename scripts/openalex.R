@@ -141,12 +141,13 @@ openalex_institution_reader <- function(id) {
 
 # Build a /works URL with a filter and a group_by dimension (+ polite pool and,
 # if set, the api_key).
-openalex_works_group_url <- function(filter, group_by) {
+openalex_works_group_url <- function(filter, group_by, include_xpac = FALSE) {
   url <- paste0(
     "https://api.openalex.org/works",
     "?filter=", utils::URLencode(filter, reserved = TRUE),
     "&group_by=", utils::URLencode(group_by, reserved = TRUE),
     "&mailto=", utils::URLencode(openalex_mailto(), reserved = TRUE))
+  if (include_xpac) url <- paste0(url, "&include_xpac=true")
   key <- Sys.getenv("OPENALEX_API_KEY")
   if (nzchar(key)) url <- paste0(url, "&api_key=", utils::URLencode(key, reserved = TRUE))
   url
@@ -165,10 +166,10 @@ openalex_works_group_url <- function(filter, group_by) {
 # https://developers.openalex.org/guides/key-concepts#xpac-expansion-pack
 XPAC_EXCLUDE <- "is_xpac:false"
 
-openalex_group_reader <- function(filter, group_by) {
+openalex_group_reader <- function(filter, group_by, include_xpac = FALSE) {
   # `filter` can carry institution ids but never the key, so it is safe context.
   what <- paste0("works group_by=", group_by)
-  txt <- openalex_get(openalex_works_group_url(filter, group_by), what)
+  txt <- openalex_get(openalex_works_group_url(filter, group_by, include_xpac), what)
   if (is.null(txt)) return(NULL)
   tryCatch(
     {
@@ -246,6 +247,25 @@ openalex_works_by_year <- function(inst_ids) {
   )
 }
 
+# Works by publication year INCLUDING the institution's OpenAlex lineage (its
+# child institutions) and including XPAC -- the per-year counterpart of
+# openalex_works_lineage_total(). Carried for reconciliation with openalex.org
+# only; no metric on the site is derived from it.
+# Returns list(total = <int>, by_year = data.frame(year, works_count)). The
+# total comes from the same response's meta.count, so the headline figure and
+# the per-year breakdown can never disagree -- and it costs one request, not two.
+openalex_works_lineage_by_year <- function(inst_id) {
+  id <- openalex_bare(inst_id)
+  g <- openalex_group_reader(paste0("authorships.institutions.lineage:", id),
+                             "publication_year", include_xpac = TRUE)
+  if (is.null(g)) return(NULL)
+  yr <- suppressWarnings(as.integer(g$key))
+  keep <- !is.na(yr) & yr <= as.integer(format(Sys.Date(), "%Y"))
+  list(total = attr(g, "total"),
+       by_year = data.frame(year = yr[keep], works_count = g$count[keep],
+                            stringsAsFactors = FALSE))
+}
+
 # Corresponding-author (CA) OA share by publication year, from `start_year`
 # onward. `inst_ids` may be one id or several: several are OR-ed in the
 # corresponding_institution_ids filter, so a work counts once if its
@@ -296,6 +316,22 @@ openalex_ca_oa_by_year <- function(inst_ids, start_year, extra_filter = NULL) {
 openalex_ca_oa_by_year_core <- function(inst_ids, start_year) {
   openalex_ca_oa_by_year(inst_ids, start_year,
                          extra_filter = "primary_location.source.is_core:true")
+}
+
+# Corresponding-author works published in DOAJ-listed journals, by publication
+# year. This is a source-level registry flag (primary_location.source.is_in_doaj),
+# not an OA status: it cuts ACROSS gold/hybrid/green/... rather than partitioning
+# with them, so it is reported separately from the OA-status composition.
+openalex_ca_doaj_by_year <- function(inst_ids, start_year) {
+  ids <- paste(openalex_bare(inst_ids), collapse = "|")
+  g <- openalex_group_reader(
+    paste0("corresponding_institution_ids:", ids,
+           ",primary_location.source.is_in_doaj:true,", XPAC_EXCLUDE),
+    "publication_year")
+  if (is.null(g)) return(NULL)
+  yr <- suppressWarnings(as.integer(g$key))
+  keep <- !is.na(yr) & yr >= start_year
+  data.frame(year = yr[keep], ca_doaj_works = g$count[keep], stringsAsFactors = FALSE)
 }
 
 # Open-access status composition (gold/hybrid/green/bronze/diamond/closed) of an

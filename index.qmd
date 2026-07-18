@@ -28,31 +28,22 @@ Refreshed on a schedule and released under CC0.
 #| echo: false
 #| output: asis
 cat(sprintf(
-  "*Last updated: **%s**. **%s** OpenAlex institution entities incl. consolidated components, **%s** snapshot(s). Figures cover corresponding-author works published **%s–%s**.*\n",
-  meta$updated, meta$n_entities, meta$n_snapshots, meta$oa_period_start, meta$oa_period_end))
+  "*Last updated: **%s**. Covering **%s** OpenAlex institution entities incl. consolidated components over **%s** %s. Figures span corresponding-author works published **%s–%s**.*\n",
+  meta$updated, meta$n_entities, meta$n_snapshots,
+  if (meta$n_snapshots == 1) "snapshot" else "snapshots",
+  meta$oa_period_start, meta$oa_period_end))
 ```
 
-## Institutions
+## Coverage of the alliance
 
 ```{r}
 #| echo: false
-institutions_table(meta)
+alliance_summary_table(meta)
 ```
 
-Each university is shown three ways, each with its own corresponding-author
-**CA works** count (works published in the period whose corresponding author is
-at the institution) and the **CA OA share** among them:
+Consolidated totals include only the six universities that have weight-1 Leiden
+`component` affiliates; the other three have no consolidated row because the
+single-institution and consolidated member sets would be identical.
 
-- **Single institution (ROR/OpenAlex)** — the one OpenAlex institution
-  identified by the university's [ROR](https://ror.org/) id.
-- **Consolidated (OpenAlex/Leiden)** — the university grouped with its Leiden
-  `component` affiliates (e.g. its university hospital). Blank where a university
-  has no components, so the two readings would be identical.
-- **Core sources (Leiden/Core)** — the same Leiden-consolidated member set,
-  additionally restricted to sources on the CWTS Core sources allow-list
-  (`primary_location.source.is_core:true`). Populated for all nine universities,
-  because the source filter changes the publication universe even where there are
-  no component affiliates.
-
-Select a university for its OA share by year, OA-status composition, and snapshot
-history.
+The [Institutions](institutions/index.qmd) page breaks the same three readings
+down per university.

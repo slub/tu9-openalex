@@ -121,11 +121,20 @@ for (i in seq_len(nrow(inst))) {
   # institutions) and including XPAC -- the population openalex.org's own profile
   # links to. Treated as mandatory like every other product, so a degraded run
   # fails rather than publishing a snapshot with a hole in it.
-  lineage_total <- openalex_works_lineage_total(row$openalex_bare)
-  if (is.na(lineage_total)) { fail(row$slug, "lineage works total"); next }
+  lby <- openalex_works_lineage_by_year(row$openalex_bare)
+  if (is.null(lby) || is.na(lby$total)) { fail(row$slug, "lineage works"); next }
+  lineage_total <- lby$total
 
   oa <- openalex_ca_oa_by_year(row$openalex_bare, OA_START_YEAR)
   if (is.null(oa) || nrow(oa) == 0) { fail(row$slug, "corresponding-author OA by year"); next }
+
+  doaj <- openalex_ca_doaj_by_year(row$openalex_bare, OA_START_YEAR)
+  if (is.null(doaj)) { fail(row$slug, "DOAJ works by year"); next }
+  # Align DOAJ counts to the OA years now, so both the metric row and the
+  # per-year rows below can use them. A year the DOAJ query does not return has
+  # no DOAJ-listed works, i.e. 0.
+  dj <- doaj$ca_doaj_works[match(oa$year, doaj$year)]
+  dj[is.na(dj)] <- 0L
 
   st <- openalex_ca_oa_status(row$openalex_bare, REF_YEAR)
   if (is.null(st) || nrow(st) == 0) { fail(row$slug, "OA-status composition"); next }
@@ -150,6 +159,9 @@ for (i in seq_len(nrow(inst))) {
     ca_works_ref          = if (nrow(ref)) ref$ca_works    else NA_integer_,
     ca_oa_works_ref       = if (nrow(ref)) ref$ca_oa_works else NA_integer_,
     ca_oa_share_ref       = if (nrow(ref)) ref$ca_oa_share else NA_real_,
+    ca_doaj_works_ref     = { d <- dj[oa$year == REF_YEAR]; if (length(d)) as.integer(d) else NA_integer_ },
+    ca_doaj_share_ref     = { d <- dj[oa$year == REF_YEAR]; w <- oa$ca_works[oa$year == REF_YEAR]
+                              if (length(d) && length(w) && w > 0) round(d / w, 4) else NA_real_ },
     period_start          = PERIOD_START,
     period_end            = REF_YEAR,
     ca_works_period       = pa$works,
@@ -159,7 +171,9 @@ for (i in seq_len(nrow(inst))) {
 
   oa_year_rows[[length(oa_year_rows) + 1L]] <- tibble(
     snapshot_date = snapshot_date, slug = row$slug, year = oa$year,
-    ca_works = oa$ca_works, ca_oa_works = oa$ca_oa_works, ca_oa_share = oa$ca_oa_share)
+    ca_works = oa$ca_works, ca_oa_works = oa$ca_oa_works, ca_oa_share = oa$ca_oa_share,
+    ca_doaj_works = as.integer(dj),
+    ca_doaj_share = ifelse(oa$ca_works > 0, round(dj / oa$ca_works, 4), NA_real_))
 
   oa_status_rows[[length(oa_status_rows) + 1L]] <- tibble(
     snapshot_date = snapshot_date, slug = row$slug, year = REF_YEAR,
@@ -174,13 +188,18 @@ for (i in seq_len(nrow(inst))) {
     idx <- match(cby$year, wby$by_year$year)
     works_excl <- wby$by_year$works_count[idx]
     works_excl[is.na(works_excl)] <- 0L
+    # Same treatment for the lineage lens; a year the query does not return has
+    # no works, and the validator's ordering invariant catches anything absurd.
+    works_lin <- lby$by_year$works_count[match(cby$year, lby$by_year$year)]
+    works_lin[is.na(works_lin)] <- 0L
     cby_rows[[length(cby_rows) + 1L]] <- tibble(
       snapshot_date         = snapshot_date,
       slug                  = row$slug,
       year                  = cby$year,
-      works_count           = as.integer(works_excl), # XPAC-excluded
-      works_count_incl_xpac = cby$works_count,        # entity (incl. XPAC)
-      cited_by_count        = cby$cited_by_count      # entity (incl. XPAC)
+      works_count           = as.integer(works_excl),   # id, XPAC-excluded
+      works_count_incl_xpac = cby$works_count,          # id, incl. XPAC (entity)
+      works_count_lineage_incl_xpac = as.integer(works_lin), # + lineage, incl. XPAC
+      cited_by_count        = cby$cited_by_count        # entity (incl. XPAC)
     )
   }
 }

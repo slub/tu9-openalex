@@ -215,12 +215,16 @@ counts_by_year_table <- function(cby) {
   works <- suppressWarnings(as.integer(cby$works_count))
   max_w <- if (length(works)) max(works, na.rm = TRUE) else 0
   reactable(
-    cby[, c("year", "works_count", "works_count_incl_xpac", "cited_by_count")],
+    cby[, c("year", "works_count", "works_count_incl_xpac",
+            "works_count_lineage_incl_xpac", "cited_by_count")],
     sortable = TRUE, defaultPageSize = 12, highlight = TRUE,
     columns = list(
       year           = colDef(name = "Year", maxWidth = 80),
       works_count    = colDef(name = "Works", cell = bar_cell(max_w), html = TRUE),
       works_count_incl_xpac = colDef(name = "Works (incl. XPAC)", maxWidth = 150,
+                              format = colFormat(separators = TRUE, locales = "en-US")),
+      works_count_lineage_incl_xpac = colDef(name = "Works (+lineage, incl. XPAC)",
+                              maxWidth = 170,
                               format = colFormat(separators = TRUE, locales = "en-US")),
       cited_by_count = colDef(name = "Citations received",
                               format = colFormat(separators = TRUE, locales = "en-US"))
@@ -359,7 +363,11 @@ inst_page <- function(slug) {
         tags$strong("corresponding author"),
         " is affiliated with this institution — the lens used for OpenAPC and ",
         "transformative agreements. Denominator and numerator both come from ",
-        "OpenAlex ", tags$code("corresponding_institution_ids"), "."),
+        "OpenAlex ", tags$code("corresponding_institution_ids"), ". ",
+        tags$strong("CA DOAJ"), " counts those works whose journal is listed in ",
+        tags$a(href = "https://doaj.org/", target = "_blank", "DOAJ"),
+        "; it is a source-level registry flag that cuts across the OA statuses ",
+        "below rather than being one of them."),
       if (!is.null(oa)) ca_oa_by_year_table(oa),
       if (!is.null(status)) tagList(
         tags$h3(sprintf("OA-status composition (%s)", latest$ref_year)),
@@ -432,19 +440,28 @@ inst_page <- function(slug) {
 # Corresponding-author OA share by publication year, with a bar on the share.
 ca_oa_by_year_table <- function(oa) {
   oa <- oa[order(-as.integer(oa$year)), , drop = FALSE]
-  reactable(
-    oa[, c("year", "ca_works", "ca_oa_works", "ca_oa_share")],
-    sortable = TRUE, defaultPageSize = 14, highlight = TRUE,
-    columns = list(
-      year        = colDef(name = "Year", maxWidth = 90),
-      ca_works    = colDef(name = "CA works",
-                           format = colFormat(separators = TRUE, locales = "en-US")),
-      ca_oa_works = colDef(name = "CA OA works",
-                           format = colFormat(separators = TRUE, locales = "en-US")),
-      ca_oa_share = colDef(name = "CA OA share", minWidth = 150,
-                           cell = share_bar_cell(), html = TRUE)
-    )
+  # DOAJ is only computed for the single-institution view; the consolidated and
+  # Core products share this renderer but have no DOAJ columns.
+  has_doaj <- all(c("ca_doaj_works", "ca_doaj_share") %in% names(oa))
+  cols <- c("year", "ca_works", "ca_oa_works", "ca_oa_share")
+  defs <- list(
+    year        = colDef(name = "Year", maxWidth = 90),
+    ca_works    = colDef(name = "CA works",
+                         format = colFormat(separators = TRUE, locales = "en-US")),
+    ca_oa_works = colDef(name = "CA OA works",
+                         format = colFormat(separators = TRUE, locales = "en-US")),
+    ca_oa_share = colDef(name = "CA OA share", minWidth = 150,
+                         cell = share_bar_cell(), html = TRUE)
   )
+  if (has_doaj) {
+    cols <- c(cols, "ca_doaj_works", "ca_doaj_share")
+    defs$ca_doaj_works <- colDef(name = "CA DOAJ works",
+                         format = colFormat(separators = TRUE, locales = "en-US"))
+    defs$ca_doaj_share <- colDef(name = "CA DOAJ share", minWidth = 150,
+                         cell = share_bar_cell("#0072b2"), html = TRUE)
+  }
+  reactable(oa[, cols], sortable = TRUE, defaultPageSize = 14, highlight = TRUE,
+            columns = defs)
 }
 
 # OA-status composition (gold/hybrid/green/bronze/diamond/closed) for one year.
