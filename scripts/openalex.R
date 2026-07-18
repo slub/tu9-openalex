@@ -9,7 +9,80 @@
 suppressPackageStartupMessages({
   library(readr)
   library(jsonlite)
+  library(curl)
 })
+
+# --- HTTP layer -------------------------------------------------------------
+# Requests go through one status-aware helper so transient failures are retried
+# and credentials never reach a log. Policy:
+#   * retry on 429, 5xx and transport errors (timeout, connection reset)
+#   * fail fast on other 4xx -- a bad filter will not fix itself
+#   * bounded exponential backoff with jitter, honouring Retry-After
+# The budget is deliberately small: the pipeline is fail-loud, so it is better
+# to abort a run than to stall a scheduled job for many minutes.
+OPENALEX_ATTEMPTS  <- 3L    # total tries per request
+OPENALEX_MAX_WAIT  <- 30    # seconds of cumulative backoff per request
+OPENALEX_TIMEOUT   <- 60    # seconds per individual request
+
+# Remove the API key from anything we are about to print. Errors and warnings
+# can echo the full request URL, which carries `api_key=` as a query parameter.
+openalex_redact <- function(x) {
+  x <- paste(as.character(x), collapse = " ")
+  x <- gsub("api_key=[^&[:space:]]*", "api_key=<redacted>", x)
+  key <- Sys.getenv("OPENALEX_API_KEY")
+  if (nzchar(key)) x <- gsub(key, "<redacted>", x, fixed = TRUE)
+  x
+}
+
+# Perform one GET with retries. Returns the response body as text, or NULL when
+# the request could not be completed. `what` is a short human label used in
+# messages so that no full URL (and hence no key) is ever logged.
+openalex_get <- function(url, what) {
+  waited <- 0
+  for (attempt in seq_len(OPENALEX_ATTEMPTS)) {
+    h <- curl::new_handle(timeout = OPENALEX_TIMEOUT, connecttimeout = 20,
+                          useragent = paste0("tu9-openalex (", openalex_mailto(), ")"))
+    res <- tryCatch(curl::curl_fetch_memory(url, handle = h),
+                    error = function(e) structure(list(err = conditionMessage(e)),
+                                                  class = "openalex_transport_error"))
+
+    if (!inherits(res, "openalex_transport_error")) {
+      if (res$status_code >= 200 && res$status_code < 300) {
+        return(rawToChar(res$content))
+      }
+      # Permanent client errors: no point retrying.
+      if (res$status_code >= 400 && res$status_code < 500 && res$status_code != 429) {
+        message(sprintf("    %s: HTTP %d (permanent) -- %s", what, res$status_code,
+                        openalex_redact(substr(rawToChar(res$content), 1, 200))))
+        return(NULL)
+      }
+      retry_after <- suppressWarnings(as.numeric(
+        curl::parse_headers_list(res$headers)[["retry-after"]]))
+      reason <- sprintf("HTTP %d", res$status_code)
+    } else {
+      retry_after <- NA_real_
+      reason <- openalex_redact(res$err)
+    }
+
+    if (attempt == OPENALEX_ATTEMPTS) {
+      message(sprintf("    %s: giving up after %d attempts -- %s",
+                      what, OPENALEX_ATTEMPTS, reason))
+      return(NULL)
+    }
+    # Exponential backoff with jitter, capped by the remaining budget.
+    wait <- min(2^attempt + stats::runif(1, 0, 1), OPENALEX_MAX_WAIT - waited)
+    if (!is.na(retry_after)) wait <- min(max(wait, retry_after), OPENALEX_MAX_WAIT - waited)
+    if (wait <= 0) {
+      message(sprintf("    %s: backoff budget exhausted -- %s", what, reason))
+      return(NULL)
+    }
+    message(sprintf("    %s: %s, retrying in %.1fs (attempt %d/%d)",
+                    what, reason, wait, attempt, OPENALEX_ATTEMPTS))
+    Sys.sleep(wait)
+    waited <- waited + wait
+  }
+  NULL
+}
 
 # Contact e-mail for the OpenAlex "polite pool" (faster, more reliable). Set the
 # OPENALEX_MAILTO environment variable to override; falls back to a repo contact.
@@ -42,20 +115,18 @@ openalex_institution_url <- function(id) {
 # network/parse error so that one bad id never aborts the whole run (the
 # guard rail in fetch.R catches systematic, large-scale failures instead).
 openalex_institution_reader <- function(id) {
-  url <- openalex_institution_url(id)
+  txt <- openalex_get(openalex_institution_url(id),
+                      paste0("institution ", openalex_bare(id)))
+  if (is.null(txt)) return(NULL)
   tryCatch(
     {
-      old_timeout <- getOption("timeout")
-      on.exit(options(timeout = old_timeout), add = TRUE)
-      options(timeout = max(60, old_timeout))
-      txt <- paste(readLines(url, warn = FALSE), collapse = "\n")
       obj <- fromJSON(txt, simplifyVector = FALSE)
       if (is.null(obj$id)) stop("no id in response")
       obj
     },
     error = function(e) {
-      message("  could not read institution ", openalex_bare(id), ": ",
-              conditionMessage(e))
+      message("    institution ", openalex_bare(id), ": unparsable response -- ",
+              openalex_redact(conditionMessage(e)))
       NULL
     }
   )
@@ -95,13 +166,12 @@ openalex_works_group_url <- function(filter, group_by) {
 XPAC_EXCLUDE <- "is_xpac:false"
 
 openalex_group_reader <- function(filter, group_by) {
-  url <- openalex_works_group_url(filter, group_by)
+  # `filter` can carry institution ids but never the key, so it is safe context.
+  what <- paste0("works group_by=", group_by)
+  txt <- openalex_get(openalex_works_group_url(filter, group_by), what)
+  if (is.null(txt)) return(NULL)
   tryCatch(
     {
-      old_timeout <- getOption("timeout")
-      on.exit(options(timeout = old_timeout), add = TRUE)
-      options(timeout = max(60, old_timeout))
-      txt <- paste(readLines(url, warn = FALSE), collapse = "\n")
       obj <- fromJSON(txt, simplifyVector = FALSE)
       g <- obj$group_by
       if (is.null(g)) stop("no group_by in response")
@@ -114,7 +184,8 @@ openalex_group_reader <- function(filter, group_by) {
       df
     },
     error = function(e) {
-      message("    works query failed (", group_by, "): ", conditionMessage(e))
+      message("    ", what, ": unparsable response -- ",
+              openalex_redact(conditionMessage(e)))
       NULL
     }
   )

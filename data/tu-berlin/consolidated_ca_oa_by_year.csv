@@ -1,15 +1,15 @@
-year,ca_works,ca_oa_works,ca_oa_share
-2026,1121,925,0.8252
-2025,1805,1346,0.7457
-2024,1941,1420,0.7316
-2023,2095,1297,0.6191
-2022,2079,1322,0.6359
-2021,2218,1494,0.6736
-2020,2233,1337,0.5987
-2019,1776,793,0.4465
-2018,1798,659,0.3665
-2017,1717,574,0.3343
-2016,1693,549,0.3243
-2015,1692,467,0.276
-2014,1517,400,0.2637
-2013,1350,321,0.2378
+snapshot_date,tu9_slug,university_name,n_members,year,ca_works,ca_oa_works,ca_oa_share
+2026-07-18,tu-berlin,Technische Universität Berlin,2,2026,1121,925,0.8252
+2026-07-18,tu-berlin,Technische Universität Berlin,2,2025,1805,1346,0.7457
+2026-07-18,tu-berlin,Technische Universität Berlin,2,2024,1941,1420,0.7316
+2026-07-18,tu-berlin,Technische Universität Berlin,2,2023,2095,1297,0.6191
+2026-07-18,tu-berlin,Technische Universität Berlin,2,2022,2079,1322,0.6359
+2026-07-18,tu-berlin,Technische Universität Berlin,2,2021,2218,1494,0.6736
+2026-07-18,tu-berlin,Technische Universität Berlin,2,2020,2233,1337,0.5987
+2026-07-18,tu-berlin,Technische Universität Berlin,2,2019,1776,793,0.4465
+2026-07-18,tu-berlin,Technische Universität Berlin,2,2018,1798,659,0.3665
+2026-07-18,tu-berlin,Technische Universität Berlin,2,2017,1717,574,0.3343
+2026-07-18,tu-berlin,Technische Universität Berlin,2,2016,1693,549,0.3243
+2026-07-18,tu-berlin,Technische Universität Berlin,2,2015,1692,467,0.276
+2026-07-18,tu-berlin,Technische Universität Berlin,2,2014,1517,400,0.2637
+2026-07-18,tu-berlin,Technische Universität Berlin,2,2013,1350,321,0.2378
