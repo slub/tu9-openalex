@@ -27,15 +27,19 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   }
 
   # --- 1. exact institution set -------------------------------------------
-  got <- sort(unique(snap$metrics$slug))
+  # Check duplicates on the RAW slug vector: de-duplicating first would make the
+  # duplicate test unfalsifiable.
+  got_raw <- snap$metrics$slug
+  got <- sort(unique(got_raw))
   missing <- setdiff(expected, got)
   unexpected <- setdiff(got, expected)
   if (length(missing) > 0)
     add("missing institutions in metrics: %s", paste(missing, collapse = ", "))
   if (length(unexpected) > 0)
     add("unexpected institutions in metrics: %s", paste(unexpected, collapse = ", "))
-  if (anyDuplicated(got) > 0)
-    add("duplicate institution rows in metrics")
+  if (anyDuplicated(got_raw) > 0)
+    add("duplicate institution rows in metrics: %s",
+        paste(unique(got_raw[duplicated(got_raw)]), collapse = ", "))
 
   # --- 2. mandatory products per institution -------------------------------
   need <- list(counts_by_year = snap$counts_by_year,
@@ -137,19 +141,31 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   check_oa(snap$consolidated, "consolidated_ca_oa_by_year")
   check_oa(snap$core, "leiden_core_ca_oa_by_year")
 
-  # Core is a subset of consolidated (where consolidated exists) for every
-  # university and year. It is also a subset of the single-institution view,
-  # but the stronger check against consolidated catches the member-set logic.
-  if (nrow(snap$core) > 0 && nrow(snap$consolidated) > 0) {
-    core_by_slug_year <- setNames(
-      n(snap$core$ca_works),
-      paste(snap$core$tu9_slug, snap$core$year, sep = "|"))
-    cons_rows <- snap$consolidated
-    for (i in seq_len(nrow(cons_rows))) {
-      key <- paste(cons_rows$tu9_slug[i], cons_rows$year[i], sep = "|")
-      core_w <- core_by_slug_year[key]
-      if (!is.na(core_w) && core_w > n(cons_rows$ca_works[i]))
-        add("core ca_works exceeds consolidated for %s year %s", cons_rows$tu9_slug[i], cons_rows$year[i])
+  # Core draws from the same member set as the consolidated view, so it can never
+  # be larger than the set it is filtered out of. Iterate over the CORE rows and
+  # compare each against consolidated where that exists, otherwise against the
+  # single-institution view -- iterating over consolidated instead would leave
+  # the universities without Leiden components unchecked entirely.
+  if (nrow(snap$core) > 0) {
+    upper <- setNames(n(snap$ca_oa_by_year$ca_works),
+                      paste(snap$ca_oa_by_year$slug, snap$ca_oa_by_year$year, sep = "|"))
+    source_of <- setNames(rep("single-institution", length(upper)), names(upper))
+    if (nrow(snap$consolidated) > 0) {
+      ck <- paste(snap$consolidated$tu9_slug, snap$consolidated$year, sep = "|")
+      upper[ck] <- n(snap$consolidated$ca_works)
+      source_of[ck] <- "consolidated"
+    }
+    for (i in seq_len(nrow(snap$core))) {
+      key <- paste(snap$core$tu9_slug[i], snap$core$year[i], sep = "|")
+      ub <- upper[key]
+      if (is.na(ub)) {
+        add("core row for %s year %s has no %s counterpart to check against",
+            snap$core$tu9_slug[i], snap$core$year[i], "single-institution")
+      } else if (n(snap$core$ca_works[i]) > ub) {
+        add("core ca_works (%s) exceeds its %s upper bound (%s) for %s year %s",
+            snap$core$ca_works[i], source_of[[key]], ub,
+            snap$core$tu9_slug[i], snap$core$year[i])
+      }
     }
   }
 
@@ -168,7 +184,7 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
           round(sum(n(p$ca_oa_works), na.rm = TRUE) / expected_works, 4) else NA_real_
         if (!isTRUE(all.equal(expected_works, n(cm$ca_works_period))))
           add("core period works (%s) do not sum yearly values for %s", n(cm$ca_works_period), slug)
-        if (!isTRUE(all.equal(expected_share, n(cm$ca_oa_share_period), na.rm = TRUE)))
+        if (!isTRUE(all.equal(expected_share, n(cm$ca_oa_share_period))))
           add("core period share does not match summed values for %s", slug)
       }
     }

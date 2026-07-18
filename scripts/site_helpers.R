@@ -234,31 +234,31 @@ inst_page <- function(slug) {
     core_members <- leiden_component_names(slug)
     leiden_link <- tags$a(href = "https://open.leidenranking.com/",
                           target = "_blank", "CWTS Leiden Ranking Open Edition")
-    openalex_help_link <- tags$a(
-      href = "https://help.openalex.org/hc/en-us/articles/27719473439511-How-does-OpenAlex-handle-predatory-and-lower-quality-journals",
+    core_sources_link <- tags$a(
+      href = "https://doi.org/10.5281/zenodo.17200868",
       target = "_blank", "CWTS Core sources allow-list")
     has_cons_ref <- !is.null(cons) && nrow(cons) > 0 && nrow(cons[cons$year == latest$ref_year, ]) > 0
     core_intro <- if (nrow(coref) > 0 && has_cons_ref) {
       cref_row <- cons[cons$year == latest$ref_year, ]
       inline_p(
         "This view uses the same ", leiden_link, " member set as the ",
-        "consolidated view, but restricts works to sources on the OpenAlex ",
-        openalex_help_link, " via ", tags$code("primary_location.source.is_core:true"),
-        ". In ", tags$strong(latest$ref_year), " this leaves ",
-        tags$strong(fmt_int(coref$ca_works)), " corresponding-author works (down from ",
-        tags$strong(fmt_int(cref_row$ca_works)), " across all sources), with an OA share of ",
-        tags$strong(fmt_pct(coref$ca_oa_share)), ".")
+      "consolidated view, but restricts works to sources on the ",
+      core_sources_link, " via ", tags$code("primary_location.source.is_core:true"),
+      ". In ", tags$strong(latest$ref_year), " this leaves ",
+      tags$strong(fmt_int(coref$ca_works)), " corresponding-author works (down from ",
+      tags$strong(fmt_int(cref_row$ca_works)), " across all sources), with an OA share of ",
+      tags$strong(fmt_pct(coref$ca_oa_share)), ".")
     } else if (nrow(coref) > 0) inline_p(
       "This view uses the same ", leiden_link, " member set as the ",
-      "consolidated view, but restricts works to sources on the OpenAlex ",
-      openalex_help_link, " via ", tags$code("primary_location.source.is_core:true"),
+      "consolidated view, but restricts works to sources on the ",
+      core_sources_link, " via ", tags$code("primary_location.source.is_core:true"),
       ". In ", tags$strong(latest$ref_year), " this leaves ",
       tags$strong(fmt_int(coref$ca_works)), " corresponding-author works, with an OA share of ",
       tags$strong(fmt_pct(coref$ca_oa_share)), ".")
     else inline_p(
       "This view uses the same ", leiden_link, " member set as the ",
-      "consolidated view, but restricts works to sources on the OpenAlex ",
-      openalex_help_link, " via ", tags$code("primary_location.source.is_core:true"), ".")
+      "consolidated view, but restricts works to sources on the ",
+      core_sources_link, " via ", tags$code("primary_location.source.is_core:true"), ".")
     core_section <- tagList(
       tags$h2(id = "core", "Leiden/Core sources"),
       core_intro,

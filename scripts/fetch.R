@@ -69,9 +69,19 @@ period_ca <- function(oa) {
 }
 
 inst   <- read_institutions()
-leiden <- tryCatch(read_leiden_components(), error = function(e) NULL)
-if (is.null(leiden)) leiden <- data.frame(tu9_slug = character(),
-                                          affiliated_openalex_id = character())
+# The Leiden mapping defines both the consolidated and the Core member sets, so
+# it is a hard requirement. Substituting an empty mapping would fail OPEN: every
+# university would silently lose its components, the consolidated products would
+# be dropped as "not applicable", and validation would agree -- because it
+# derives its expectations from that same empty mapping.
+leiden <- read_leiden_components()
+if (is.null(leiden))
+  stop("data-raw/leiden_affiliations.csv is missing or unreadable; refusing to ",
+       "publish without the Leiden consolidation mapping.", call. = FALSE)
+if (nrow(leiden) == 0)
+  stop("data-raw/leiden_affiliations.csv yielded no weight-1 `component` rows; ",
+       "the mapping is present but unusable (schema change?). Refusing to ",
+       "publish a snapshot in which no university has components.", call. = FALSE)
 message("Institutions to fetch: ", nrow(inst))
 
 # ===========================================================================
