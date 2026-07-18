@@ -10,7 +10,7 @@ meta <- read_meta()
 
 Figures cover corresponding-author works published
 **`r meta$oa_period_start`–`r meta$oa_period_end`**. The table below summarises
-the whole TU9 alliance across the three views; the [home page](index.qmd) shows
+the whole TU9 alliance across the three views; the [home page](../index.qmd) shows
 the same readings per university.
 
 ```{r}
