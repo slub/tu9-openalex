@@ -2,6 +2,12 @@ project:
   type: website
   output-dir: _site
   execute-dir: project
+  # Render only the site's own pages. Quarto would otherwise pick up every
+  # Markdown file in the project, so a stray note dropped in the working
+  # directory (a review, a scratch file) would be published with the site.
+  render:
+    - "*.qmd"
+    - "institutions/*.qmd"
   # Expose data/meta.json's last-updated date as {{< var updated >}} for the
   # footer, before any page renders. See scripts/gen_variables.R.
   pre-render:

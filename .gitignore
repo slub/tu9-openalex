@@ -1,10 +1,13 @@
-# Credentials — the OpenAlex premium API key lives here locally and must NOT be
+# Credentials — the OpenAlex API key lives here locally and must NOT be
 # committed. In CI it comes from a GitHub Actions secret instead.
 secret
 .secret*
 *.swp
 
+# Local development notes / reviews: keep them out of the repo AND out of the
+# published site (see the `render:` list in _quarto.yml).
 dev/
+/dev-*.md
 
 # Quarto render output
 /_site/
