@@ -90,7 +90,12 @@ share_bar_cell <- function(colour = "#2a9d4a") {
 }
 
 # Overview table for the landing page, built from meta.json's institution list.
-institutions_table <- function(inst, path_prefix = "institutions/") {
+# Takes the whole meta object so the headers can state the period the figures
+# cover: the table is embedded on more than one page, and each embedding would
+# otherwise have to name the window in its own prose.
+institutions_table <- function(meta, path_prefix = "institutions/") {
+  inst   <- meta$institutions
+  period <- sprintf("%s–%s", meta$oa_period_start, meta$oa_period_end)
   ca_num <- function(x) if (is.null(x)) NA_real_ else as.numeric(x)
   # Three side-by-side readings, each with its own CA-works denominator and OA
   # share: the single OpenAlex institution (ROR), the same university grouped
@@ -113,11 +118,11 @@ institutions_table <- function(inst, path_prefix = "institutions/") {
     searchable = FALSE, sortable = TRUE, defaultPageSize = 13, highlight = TRUE,
     defaultSorted = list(CA_OA_ror = "desc"),
     columnGroups = list(
-      colGroup(name = "Single institution (ROR/OpenAlex)",
+      colGroup(name = sprintf("Single institution %s (ROR/OpenAlex)", period),
                columns = c("CA_works", "CA_OA_ror")),
-      colGroup(name = "Consolidated (OpenAlex/Leiden)",
+      colGroup(name = sprintf("Consolidated %s (OpenAlex/Leiden)", period),
                columns = c("CA_works_leiden", "CA_OA_leiden")),
-      colGroup(name = "Core sources (Leiden/Core)",
+      colGroup(name = sprintf("Core sources %s (Leiden/Core)", period),
                columns = c("CA_works_core", "CA_OA_core"))
     ),
     columns = list(

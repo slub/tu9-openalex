@@ -17,5 +17,5 @@ share by year, OA-status composition, and snapshot history.
 
 ```{r}
 #| echo: false
-institutions_table(meta$institutions, path_prefix = "")
+institutions_table(meta, path_prefix = "")
 ```

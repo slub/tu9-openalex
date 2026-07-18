@@ -36,7 +36,7 @@ cat(sprintf(
 
 ```{r}
 #| echo: false
-institutions_table(meta$institutions)
+institutions_table(meta)
 ```
 
 Each university is shown three ways, each with its own corresponding-author
