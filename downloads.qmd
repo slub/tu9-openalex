@@ -21,7 +21,10 @@ Alliance-wide views:
 - [`metrics.csv`](metrics.csv) — one row per university per snapshot: the
   corresponding-author OA headline (period `ca_works_period` / `ca_oa_share_period`
   and the reference-year `ca_*_ref`) plus context indicators (works, citations,
-  h-index, i10-index, 2-year mean citedness)
+  h-index, i10-index, 2-year mean citedness). Works come under three lenses:
+  `works_count` (institution only, XPAC excluded), `works_count_incl_xpac` (same
+  institution, XPAC included) and `works_count_lineage_incl_xpac` (additionally
+  its OpenAlex child institutions — the figure openalex.org links to)
 - [`counts_by_year.csv`](counts_by_year.csv) — works and citations by
   publication year, for the most recent snapshot
 - [`ca_oa_by_year.csv`](ca_oa_by_year.csv) — **corresponding-author** OA share

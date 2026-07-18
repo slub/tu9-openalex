@@ -117,6 +117,13 @@ for (i in seq_len(nrow(inst))) {
   wby <- openalex_works_by_year(row$openalex_bare)
   if (is.null(wby) || is.na(wby$total)) { fail(row$slug, "works-by-year (XPAC-excluded)"); next }
 
+  # Reconciliation figure: the institution INCLUDING its OpenAlex lineage (child
+  # institutions) and including XPAC -- the population openalex.org's own profile
+  # links to. Treated as mandatory like every other product, so a degraded run
+  # fails rather than publishing a snapshot with a hole in it.
+  lineage_total <- openalex_works_lineage_total(row$openalex_bare)
+  if (is.na(lineage_total)) { fail(row$slug, "lineage works total"); next }
+
   oa <- openalex_ca_oa_by_year(row$openalex_bare, OA_START_YEAR)
   if (is.null(oa) || nrow(oa) == 0) { fail(row$slug, "corresponding-author OA by year"); next }
 
@@ -133,7 +140,8 @@ for (i in seq_len(nrow(inst))) {
     openalex_id           = row$openalex_id,
     ror_id                = row$ror_id,
     works_count           = wby$total,      # XPAC-excluded (works API)
-    works_count_incl_xpac = m$works_count,  # entity aggregate (incl. XPAC)
+    works_count_incl_xpac = m$works_count,  # entity aggregate: same id, incl. XPAC
+    works_count_lineage_incl_xpac = lineage_total,  # + child institutions (openalex.org)
     cited_by_count        = m$cited_by_count,
     h_index               = m$h_index,
     i10_index             = m$i10_index,

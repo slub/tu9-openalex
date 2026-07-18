@@ -135,6 +135,38 @@ context (shown on the institution pages, not in the overview):
 The complete OpenAlex entity is also archived as raw JSON per snapshot
 (`data/snapshots/<slug>/<date>.json`) for anything not surfaced in the CSVs.
 
+### Why these figures differ from the OpenAlex profile
+
+An institution's page on openalex.org links to its works with
+`authorships.institutions.lineage:<id>&include_xpac=true`. That is a wider
+population than the one counted here, in two independent ways, so the numbers
+will not match unless both are accounted for. For TU Dresden:
+
+| Lens | Works |
+|------|------:|
+| `authorships.institutions.id`, XPAC excluded — **published here** | 129,281 |
+| `authorships.institutions.id`, XPAC included — the entity's `works_count` | 139,032 |
+| `authorships.institutions.lineage`, XPAC included — **what openalex.org links to** | 148,325 |
+
+The first step is the Expansion Pack. The second is **lineage**: OpenAlex's
+parent/child hierarchy, which rolls a university's child institutions into it.
+This dataset counts the institution itself — `corresponding_institution_ids` and
+`authorships.institutions.id` match one entity and perform no lineage expansion
+(verified: adding a child institution to the filter increases the count).
+
+The lineage figure is carried in `metrics.csv` as
+`works_count_lineage_incl_xpac` purely so the two can be reconciled; no metric on
+this site is derived from it.
+
+Lineage is also **not** interchangeable with the Leiden consolidation. They
+overlap but diverge exactly where it matters: the
+[University Hospital Carl Gustav Carus](https://openalex.org/I4210162051) is
+*not* in TU Dresden's OpenAlex lineage (OpenAlex links it as `related`, not
+`child`), yet Leiden counts it as a `component`. Conversely an institute such as
+[NaMLab](https://openalex.org/I4210122489) *is* in the lineage. Using lineage
+would therefore quietly drop the university hospital — which is why the
+consolidated view is built from the Leiden mapping instead.
+
 ### Expansion Pack (XPAC) is excluded
 
 In November 2025 OpenAlex added ~190 million works as the

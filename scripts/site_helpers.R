@@ -148,6 +148,67 @@ institutions_table <- function(meta, path_prefix = "institutions/") {
   )
 }
 
+# Alliance-level summary across the three corresponding-author OA views.
+# Computes total CA works and the median CA OA share for each lens.
+alliance_summary_table <- function(meta) {
+  ca_num <- function(x) if (is.null(x)) NA_real_ else as.numeric(x)
+  inst <- meta$institutions
+
+  single_works <- vapply(inst, function(x) as.integer(x$ca_works_period %||% NA), integer(1))
+  single_share <- vapply(inst, function(x) ca_num(x$ca_oa_share_period), numeric(1))
+
+  cons_works <- vapply(inst, function(x) as.integer(x$cons_ca_works_period %||% NA), integer(1))
+  cons_share <- vapply(inst, function(x) ca_num(x$cons_ca_oa_share_period), numeric(1))
+
+  core_works <- vapply(inst, function(x) as.integer(x$core_ca_works_period %||% NA), integer(1))
+  core_share <- vapply(inst, function(x) ca_num(x$core_ca_oa_share_period), numeric(1))
+
+  df <- data.frame(
+    View          = c("Single institution (ROR/OpenAlex)",
+                       "Consolidated (OpenAlex/Leiden)",
+                       "Core sources (Leiden/Core)"),
+    CA_works      = c(sum(single_works, na.rm = TRUE),
+                       sum(cons_works, na.rm = TRUE),
+                       sum(core_works, na.rm = TRUE)),
+    CA_OA_share   = c(median(single_share, na.rm = TRUE),
+                       median(cons_share, na.rm = TRUE),
+                       median(core_share, na.rm = TRUE)),
+    stringsAsFactors = FALSE
+  )
+
+  reactable(
+    df,
+    sortable = FALSE, highlight = TRUE,
+    columns = list(
+      View        = colDef(minWidth = 230),
+      CA_works    = colDef(name = "Total CA works",
+                           format = colFormat(separators = TRUE, locales = "en-US")),
+      CA_OA_share = colDef(name = "Median CA OA share", minWidth = 160,
+                           cell = share_bar_cell("#2a9d4a"), html = TRUE)
+    )
+  )
+}
+
+# Compact directory of institution pages, one linked card per university.
+institution_directory <- function(inst, path_prefix = "") {
+  df <- data.frame(
+    Institution = vapply(inst, function(x) x$name, character(1)),
+    slug        = vapply(inst, function(x) x$slug, character(1)),
+    stringsAsFactors = FALSE
+  )
+  tags$div(
+    style = "display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0.75rem;margin-top:1rem;",
+    lapply(seq_len(nrow(df)), function(i) {
+      tags$a(
+        href = sprintf("%s%s.html", path_prefix, df$slug[i]),
+        class = "btn btn-outline-primary",
+        style = "text-align:left;white-space:normal;",
+        df$Institution[i]
+      )
+    })
+  )
+}
+
 # Yearly works / citations table for one institution.
 counts_by_year_table <- function(cby) {
   cby <- cby[order(-as.integer(cby$year)), , drop = FALSE]
@@ -349,7 +410,12 @@ inst_page <- function(slug) {
       " and the citation columns — citations, h-index, i10-index, 2-year mean ",
       "citedness — come from the OpenAlex entity, so they share the same ",
       "XPAC-inclusive basis (the entity works count is the matching denominator ",
-      "for the citation figures)."),
+      "for the citation figures). ", tags$strong("Works (+lineage, incl. XPAC)"),
+      " additionally counts the institution's OpenAlex child institutions: it is ",
+      "the figure ", tags$a(href = "https://openalex.org/", target = "_blank",
+                            "openalex.org"),
+      " itself links to from an institution profile, carried here so the two can ",
+      "be reconciled. It is not used for any metric on this site."),
     metric_history_table(m),
     if (!is.null(cby)) tagList(
       tags$h2(id = "by-year", "Works and citations by year"),
@@ -400,7 +466,8 @@ ca_oa_status_table <- function(status) {
 metric_history_table <- function(m) {
   m <- m[order(m$snapshot_date, decreasing = TRUE), , drop = FALSE]
   reactable(
-    m[, c("snapshot_date", "works_count", "works_count_incl_xpac", "cited_by_count",
+    m[, c("snapshot_date", "works_count", "works_count_incl_xpac",
+          "works_count_lineage_incl_xpac", "cited_by_count",
           "h_index", "i10_index", "two_yr_mean_citedness")],
     sortable = TRUE, defaultPageSize = 12, highlight = TRUE,
     columns = list(
@@ -408,6 +475,8 @@ metric_history_table <- function(m) {
       works_count           = colDef(name = "Works",
                                      format = colFormat(separators = TRUE, locales = "en-US")),
       works_count_incl_xpac = colDef(name = "Works (incl. XPAC)",
+                                     format = colFormat(separators = TRUE, locales = "en-US")),
+      works_count_lineage_incl_xpac = colDef(name = "Works (+lineage, incl. XPAC)",
                                      format = colFormat(separators = TRUE, locales = "en-US")),
       cited_by_count        = colDef(name = "Citations",
                                      format = colFormat(separators = TRUE, locales = "en-US")),

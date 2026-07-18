@@ -1,2 +1,2 @@
-snapshot_date,slug,name,openalex_id,ror_id,works_count,works_count_incl_xpac,cited_by_count,h_index,i10_index,two_yr_mean_citedness,ref_year,ca_works_ref,ca_oa_works_ref,ca_oa_share_ref,period_start,period_end,ca_works_period,ca_oa_works_period,ca_oa_share_period
-2026-07-18,kit,Karlsruhe Institute of Technology,I102335020,04t3en479,134480,167483,11311715,751,179496,2.88397537021017,2025,3237,2537,0.7838,2020,2025,20848,15243,0.7311
+snapshot_date,slug,name,openalex_id,ror_id,works_count,works_count_incl_xpac,works_count_lineage_incl_xpac,cited_by_count,h_index,i10_index,two_yr_mean_citedness,ref_year,ca_works_ref,ca_oa_works_ref,ca_oa_share_ref,period_start,period_end,ca_works_period,ca_oa_works_period,ca_oa_share_period
+2026-07-18,kit,Karlsruhe Institute of Technology,I102335020,04t3en479,134480,167483,171487,11311715,751,179496,2.88397537021017,2025,3237,2537,0.7838,2020,2025,20848,15243,0.7311

@@ -8,14 +8,27 @@ source("scripts/site_helpers.R")
 meta <- read_meta()
 ```
 
-The TU9 universities. Figures cover corresponding-author works published
-**`r meta$oa_period_start`–`r meta$oa_period_end`**, shown three ways: the single
-OpenAlex institution (ROR/OpenAlex), that institution grouped with its Leiden
-`component` affiliates (OpenAlex/Leiden), and the same Leiden member set
-restricted to CWTS Core sources (Leiden/Core). Select a university for its OA
-share by year, OA-status composition, and snapshot history.
+Figures cover corresponding-author works published
+**`r meta$oa_period_start`–`r meta$oa_period_end`**. The table below summarises
+the whole TU9 alliance across the three views; the [home page](index.qmd) shows
+the same readings per university.
 
 ```{r}
 #| echo: false
-institutions_table(meta, path_prefix = "")
+alliance_summary_table(meta)
+```
+
+Consolidated totals include only the six universities that have weight-1 Leiden
+`component` affiliates; the other three have no consolidated row because the
+single-institution and consolidated member sets would be identical.
+
+## Universities
+
+Select a university for its OA share by year, OA-status composition, and snapshot
+history.
+
+```{r}
+#| echo: false
+#| output: asis
+institution_directory(meta$institutions, path_prefix = "")
 ```

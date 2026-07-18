@@ -29,6 +29,10 @@ only through the Leiden-consolidated view (see below). Edit
 - `data/metrics.csv` — one row per university **per snapshot**: the
   corresponding-author OA headline (period + reference year) and the context
   indicators (works, citations, h-index, i10-index, 2-year mean citedness).
+  Works appear under three lenses — the institution alone excluding XPAC
+  (`works_count`), the same including XPAC (`works_count_incl_xpac`, the entity's
+  own figure), and additionally including its OpenAlex child institutions
+  (`works_count_lineage_incl_xpac`, what openalex.org links to).
 - `data/ca_oa_by_year.csv` — corresponding-author works and OA share by
   publication year; `data/ca_oa_status.csv` — OA-status split for the reference
   year; `data/consolidated_ca_oa_by_year.csv` — the Leiden-consolidated variant;

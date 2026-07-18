@@ -1,2 +1,2 @@
-snapshot_date,slug,name,openalex_id,ror_id,works_count,works_count_incl_xpac,cited_by_count,h_index,i10_index,two_yr_mean_citedness,ref_year,ca_works_ref,ca_oa_works_ref,ca_oa_share_ref,period_start,period_end,ca_works_period,ca_oa_works_period,ca_oa_share_period
-2026-07-18,uni-stuttgart,University of Stuttgart,I100066346,04vnq7t77,94960,158778,5324561,613,85746,1.82250548245614,2025,1809,1138,0.6291,2020,2025,12054,6981,0.5791
+snapshot_date,slug,name,openalex_id,ror_id,works_count,works_count_incl_xpac,works_count_lineage_incl_xpac,cited_by_count,h_index,i10_index,two_yr_mean_citedness,ref_year,ca_works_ref,ca_oa_works_ref,ca_oa_share_ref,period_start,period_end,ca_works_period,ca_oa_works_period,ca_oa_share_period
+2026-07-18,uni-stuttgart,University of Stuttgart,I100066346,04vnq7t77,94960,158778,159956,5324561,613,85746,1.82250548245614,2025,1809,1138,0.6291,2020,2025,12054,6981,0.5791

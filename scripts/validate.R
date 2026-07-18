@@ -122,6 +122,12 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   if (length(bad_xpac) > 0)
     add("works_count exceeds works_count_incl_xpac for: %s",
         paste(m$slug[bad_xpac], collapse = ", "))
+  # Widening the lens can only add works: the same id including XPAC cannot
+  # exceed that id PLUS its lineage, also including XPAC.
+  bad_lin <- which(n(m$works_count_incl_xpac) > n(m$works_count_lineage_incl_xpac))
+  if (length(bad_lin) > 0)
+    add("works_count_incl_xpac exceeds works_count_lineage_incl_xpac for: %s",
+        paste(m$slug[bad_lin], collapse = ", "))
   # The period window contains the reference year, so it cannot be smaller.
   bad_period <- which(n(m$ca_works_period) < n(m$ca_works_ref))
   if (length(bad_period) > 0)

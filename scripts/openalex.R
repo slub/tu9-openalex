@@ -191,6 +191,41 @@ openalex_group_reader <- function(filter, group_by) {
   )
 }
 
+# Total number of works matching a filter (meta.count only). `include_xpac`
+# switches the Expansion Pack back ON, which is needed to reproduce the figure
+# OpenAlex's own institution profile links to.
+openalex_works_count <- function(filter, include_xpac = FALSE, what = "works count") {
+  url <- paste0("https://api.openalex.org/works",
+                "?filter=", utils::URLencode(filter, reserved = TRUE),
+                "&per_page=1",
+                "&mailto=", utils::URLencode(openalex_mailto(), reserved = TRUE))
+  if (include_xpac) url <- paste0(url, "&include_xpac=true")
+  key <- Sys.getenv("OPENALEX_API_KEY")
+  if (nzchar(key)) url <- paste0(url, "&api_key=", utils::URLencode(key, reserved = TRUE))
+  txt <- openalex_get(url, what)
+  if (is.null(txt)) return(NA_integer_)
+  tryCatch(as.integer(fromJSON(txt, simplifyVector = FALSE)$meta$count),
+           error = function(e) {
+             message("    ", what, ": unparsable response -- ",
+                     openalex_redact(conditionMessage(e)))
+             NA_integer_
+           })
+}
+
+# Works attributed to an institution INCLUDING its OpenAlex lineage -- that is,
+# its child institutions -- and including XPAC. This is the population OpenAlex's
+# own institution profile links to, and it is carried purely so the figures here
+# can be reconciled against what a visitor sees on openalex.org. Note that the
+# lineage is OpenAlex's parent/child hierarchy, which is NOT the same set as the
+# Leiden `component` affiliates: a university hospital linked only as `related`
+# (e.g. Dresden) is outside the lineage but inside the Leiden consolidation.
+openalex_works_lineage_total <- function(inst_id) {
+  id <- openalex_bare(inst_id)
+  openalex_works_count(paste0("authorships.institutions.lineage:", id),
+                       include_xpac = TRUE,
+                       what = paste0("lineage works ", id))
+}
+
 # XPAC-excluded works of an institution (all authorship positions), broken down
 # by publication year. `inst_ids` may be one id or several (OR-ed). Returns
 # list(total = <int>, by_year = data.frame(year, works_count)) or NULL. This is
