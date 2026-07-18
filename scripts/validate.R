@@ -48,8 +48,13 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
                core           = snap$core)
   for (nm in names(need)) {
     d <- need[[nm]]
-    if (is.null(d) || nrow(d) == 0) next
-    have <- if (nm == "core") unique(d$tu9_slug) else unique(d$slug)
+    have <- if (is.null(d) || nrow(d) == 0) {
+      character()
+    } else if (nm == "core") {
+      unique(d$tu9_slug)
+    } else {
+      unique(d$slug)
+    }
     gone <- setdiff(expected, have)
     if (length(gone) > 0)
       add("%s missing for: %s", nm, paste(gone, collapse = ", "))
