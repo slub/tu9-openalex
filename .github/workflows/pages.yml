@@ -6,7 +6,7 @@ name: Render & deploy site
 # change to the site layout, helpers or pages.
 #
 # Runs automatically when site code is pushed to main, and can be started
-# manually from the Actions tab. The monthly data refresh stays in refresh.yml.
+# manually from the Actions tab. The weekly data refresh stays in refresh.yml.
 on:
   workflow_dispatch:
   push:

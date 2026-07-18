@@ -67,8 +67,9 @@ variable. It must **not** be committed:
 
 ## Automation
 
-- `.github/workflows/refresh.yml` — monthly: fetches a fresh snapshot, commits
-  the new data, rebuilds and deploys the site. Can be run on demand.
+- `.github/workflows/refresh.yml` — weekly (Mondays 05:00 UTC): fetches a fresh
+  snapshot, commits the new data, rebuilds and deploys the site. Can be run on
+  demand.
 - `.github/workflows/pages.yml` — rebuilds and deploys the site from data
   already in the repo whenever site code changes.
 

@@ -1,12 +1,13 @@
 name: Refresh OpenAlex metrics
 
-# Monthly snapshot of the OpenAlex institution metrics + website. OpenAlex
-# refreshes roughly monthly, so a monthly cadence matches the upstream data.
+# Weekly snapshot of the OpenAlex metrics + website. OpenAlex itself refreshes
+# roughly monthly, so most weeks will show little or no change -- the extra runs
+# simply keep the series fine-grained and catch upstream updates promptly.
 # Can also be run on demand from the Actions tab (use "force" to bypass the
 # guard rail if a legitimate, large change has occurred upstream).
 on:
   schedule:
-    - cron: "0 5 5 * *"   # 05:00 UTC on the 5th of each month
+    - cron: "0 5 * * 1"   # every Monday at 05:00 UTC
   workflow_dispatch:
     inputs:
       force:
@@ -59,7 +60,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No data changes to commit."
           else
-            git commit -m "data: monthly refresh ($(date -u +%Y-%m-%d))"
+            git commit -m "data: weekly refresh ($(date -u +%Y-%m-%d))"
             git push
           fi
 
