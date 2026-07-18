@@ -8,7 +8,7 @@ source("scripts/site_helpers.R")
 meta <- read_meta()
 ```
 
-Open-access monitoring for the nine [TU9](https://www.tu9.de/) universities,
+Open-access monitoring for the [TU9](https://www.tu9.de/) universities,
 built from [OpenAlex](https://openalex.org/) and snapshotted over time. The
 headline is the **open-access share on the corresponding-author lens**
 (`corresponding_institution_ids`) — the fraction of a university's

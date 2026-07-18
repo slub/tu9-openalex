@@ -2,7 +2,7 @@
 title: "Background"
 ---
 
-This site monitors **open-access publishing** at the nine
+This site monitors **open-access publishing** at the
 [TU9](https://www.tu9.de/) universities of technology, using
 [OpenAlex](https://openalex.org/) and snapshotting the figures over time. The
 headline metric is the open-access share of each university's

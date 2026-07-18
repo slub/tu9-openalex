@@ -8,7 +8,7 @@ source("scripts/site_helpers.R")
 meta <- read_meta()
 ```
 
-The nine TU9 universities. Shares are the corresponding-author OA share over the
+The TU9 universities. Shares are the corresponding-author OA share over the
 period shown — as the single OpenAlex institution (ROR/OpenAlex) and grouped with
 its Leiden `component` affiliates (OpenAlex/Leiden). Select a university for its
 OA share by year, OA-status composition, and snapshot history.

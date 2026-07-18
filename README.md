@@ -1,6 +1,6 @@
 # TU9 OpenAlex Metrics
 
-Open-access monitoring for the nine [TU9](https://www.tu9.de/) universities,
+Open-access monitoring for the [TU9](https://www.tu9.de/) universities,
 built from [OpenAlex](https://openalex.org/) and **snapshotted over time**. The
 headline is the open-access share of each university's **corresponding-author**
 output (`corresponding_institution_ids`) — the lens that matches OpenAPC and
