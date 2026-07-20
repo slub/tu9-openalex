@@ -6,6 +6,7 @@ A few entity-level indicators (works, citations, h-index) are kept as context.
 Every university is shown three ways: as the single OpenAlex institution, consolidated with its affiliated organisations the way the [Leiden Ranking](https://open.leidenranking.com/) defines (e.g. with its university hospital), and that same Leiden member set restricted to CWTS Core sources.
 
 The pipeline and website mirror the setup of the sibling [`slub/tu9-jct-data`](https://github.com/slub/tu9-jct-data) repository (R + `renv` + Quarto, refreshed by GitHub Actions and deployed to GitHub Pages).
+For the pipeline's guarantees, CI execution paths, and schema-maintenance process, see the [Data and Publication Contract](CONTRACT.md).
 
 ## Institutions tracked
 
