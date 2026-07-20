@@ -1,3 +1,3 @@
 snapshot_date,slug,name,openalex_id,ror_id,works_count,works_count_incl_xpac,works_count_lineage_incl_xpac,cited_by_count,h_index,i10_index,two_yr_mean_citedness,ref_year,ca_works_ref,ca_oa_works_ref,ca_oa_share_ref,ca_doaj_works_ref,ca_doaj_share_ref,period_start,period_end,ca_works_period,ca_oa_works_period,ca_oa_share_period
 2026-07-18,rwth-aachen,RWTH Aachen University,I887968799,04xfq0f34,159884,192704,193178,17451279,893,250348,2.4442004375796,2025,4441,3542,0.7976,726,0.1635,2020,2025,24754,16994,0.6865
-2026-07-20,rwth-aachen,RWTH Aachen University,I887968799,04xfq0f34,159910,192794,193205,17456202,893,250399,2.44975663049416,2025,4443,3543,0.7974,726,0.1634,2020,2025,24753,16995,0.6866
+2026-07-20,rwth-aachen,RWTH Aachen University,I887968799,04xfq0f34,159922,192794,193217,17456202,893,250399,2.44975663049416,2025,4443,3543,0.7974,726,0.1634,2020,2025,24755,16996,0.6866

@@ -1,3 +1,3 @@
 snapshot_date,slug,name,openalex_id,ror_id,works_count,works_count_incl_xpac,works_count_lineage_incl_xpac,cited_by_count,h_index,i10_index,two_yr_mean_citedness,ref_year,ca_works_ref,ca_oa_works_ref,ca_oa_share_ref,ca_doaj_works_ref,ca_doaj_share_ref,period_start,period_end,ca_works_period,ca_oa_works_period,ca_oa_share_period
 2026-07-18,tu-darmstadt,Technische Universität Darmstadt,I31512782,05n911h24,75746,80115,80170,3988591,491,70458,2.98350643793519,2025,1752,1103,0.6296,266,0.1518,2020,2025,10805,6455,0.5974
-2026-07-20,tu-darmstadt,Technische Universität Darmstadt,I31512782,05n911h24,75751,80138,80179,3990044,491,70476,2.98819600838705,2025,1752,1103,0.6296,266,0.1518,2020,2025,10805,6454,0.5973
+2026-07-20,tu-darmstadt,Technische Universität Darmstadt,I31512782,05n911h24,75756,80138,80184,3990044,491,70476,2.98819600838705,2025,1752,1103,0.6296,266,0.1518,2020,2025,10807,6455,0.5973

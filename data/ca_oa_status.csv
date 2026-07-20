@@ -5,7 +5,7 @@ snapshot_date,slug,year,oa_status,ca_works
 2026-07-20,kit,2025,green,482
 2026-07-20,kit,2025,diamond,196
 2026-07-20,kit,2025,bronze,44
-2026-07-20,leibniz-hannover,2025,hybrid,521
+2026-07-20,leibniz-hannover,2025,hybrid,522
 2026-07-20,leibniz-hannover,2025,closed,497
 2026-07-20,leibniz-hannover,2025,gold,349
 2026-07-20,leibniz-hannover,2025,green,101
@@ -41,9 +41,9 @@ snapshot_date,slug,year,oa_status,ca_works
 2026-07-20,tu-dresden,2025,green,248
 2026-07-20,tu-dresden,2025,diamond,133
 2026-07-20,tu-dresden,2025,bronze,46
-2026-07-20,tu-munich,2025,hybrid,1582
+2026-07-20,tu-munich,2025,hybrid,1581
 2026-07-20,tu-munich,2025,gold,1198
-2026-07-20,tu-munich,2025,closed,940
+2026-07-20,tu-munich,2025,closed,939
 2026-07-20,tu-munich,2025,green,893
 2026-07-20,tu-munich,2025,diamond,197
 2026-07-20,tu-munich,2025,bronze,59
