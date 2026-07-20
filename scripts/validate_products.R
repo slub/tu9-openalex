@@ -306,18 +306,9 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
                   dt, f, h$slug[i], h[[f]][i], cfg[[f]])
           }
         }
-        # Fields the pages actually display must be real numbers, in every row
-        # of the series and not only the newest one.
-        for (col in c("works_count", "works_count_incl_xpac",
-                      "works_count_lineage_incl_xpac", "cited_by_count",
-                      "h_index", "i10_index", "ca_works_ref", "ca_works_period")) {
-          if (!(col %in% names(h))) next
-          v <- n(h[[col]])
-          bad <- which(is.na(v) | !is.finite(v) | v < 0)
-          if (length(bad) > 0)
-            add("metrics.csv %s: %s is missing, non-finite or negative for: %s",
-                dt, col, paste(h$slug[bad], collapse = ", "))
-        }
+        # The numeric contract itself lives in metrics_row_invariants(): a second
+        # field list here was how two_yr_mean_citedness and the OA numerators
+        # came to be checked for current rows but not for historical ones.
         metrics_row_invariants(h, add, prefix = sprintf("metrics.csv %s: ", dt))
       }
     }

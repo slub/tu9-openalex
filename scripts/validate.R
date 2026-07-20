@@ -8,16 +8,51 @@
 # All problems are collected and reported together, so one run tells you
 # everything that is wrong rather than one issue at a time.
 
-# Ordering and arithmetic invariants that hold for ANY row of metrics.csv,
-# current or historical. Factored out so the published history is checked by the
-# same code as the current snapshot rather than by a second copy of the rules
-# that could drift from it. `add` is the caller's issue collector; `prefix`
-# labels the rows being checked (e.g. "history 2026-07-18: ").
+# Every published numeric field must be present and finite. NA is never a
+# legitimate published value: it means an upstream field was absent and the row
+# was assembled anyway. Shared by every table so there is one implementation of
+# "this column must be a real number".
+require_num_cols <- function(d, cols, add, label, min_value = 0) {
+  if (is.null(d) || nrow(d) == 0) return(invisible(NULL))
+  n <- function(x) suppressWarnings(as.numeric(x))
+  for (col in cols) {
+    if (!(col %in% names(d))) {
+      add("%s: required column %s is absent", label, col)
+      next
+    }
+    v <- n(d[[col]])
+    bad <- which(is.na(v) | !is.finite(v))
+    if (length(bad) > 0)
+      add("%s: %s is missing or non-finite in %d row(s)", label, col, length(bad))
+    low <- which(!is.na(v) & is.finite(v) & v < min_value)
+    if (length(low) > 0)
+      add("%s: %s is below %s in %d row(s)", label, col, min_value, length(low))
+  }
+  invisible(NULL)
+}
+
+# The numeric fields every metrics row must carry, whatever its age. This list is
+# the single definition of the metrics numeric contract: the current snapshot and
+# the published history both validate against it, so the two cannot drift apart
+# -- which is exactly how two_yr_mean_citedness and the OA numerators ended up
+# checked for current rows and unchecked for historical ones.
+METRICS_REQUIRED_NUMERIC <- c(
+  "works_count", "works_count_incl_xpac", "works_count_lineage_incl_xpac",
+  "cited_by_count", "h_index", "i10_index", "two_yr_mean_citedness",
+  "ca_works_ref", "ca_oa_works_ref", "ca_doaj_works_ref",
+  "ca_works_period", "ca_oa_works_period",
+  "ref_year", "period_start", "period_end")
+
+# The numeric, ordering and arithmetic contract for ANY row of metrics.csv,
+# current or historical. `add` is the caller's issue collector; `prefix` labels
+# the rows being checked (e.g. "metrics.csv 2026-07-18: ").
 metrics_row_invariants <- function(m, add, prefix = "") {
   if (is.null(m) || nrow(m) == 0) return(invisible(NULL))
   n <- function(x) suppressWarnings(as.numeric(x))
   slugs <- function(i) paste(m$slug[i], collapse = ", ")
 
+  require_num_cols(m, METRICS_REQUIRED_NUMERIC, add,
+                   label = if (nzchar(prefix)) sub(":\\s*$", "", prefix) else "metrics")
   if (any(n(m$works_count) <= 0, na.rm = TRUE))
     add("%snon-positive works_count for: %s", prefix,
         slugs(which(n(m$works_count) <= 0)))
@@ -39,7 +74,7 @@ metrics_row_invariants <- function(m, add, prefix = "") {
 
   # Numerator <= denominator, and each published share is the quotient it claims
   # to be. These are properties of a single metrics row, so they hold for the
-  # history too -- where nothing checked them before.
+  # history too.
   for (tri in list(c("ca_oa_works_ref", "ca_works_ref", "ca_oa_share_ref"),
                    c("ca_oa_works_period", "ca_works_period", "ca_oa_share_period"),
                    c("ca_doaj_works_ref", "ca_works_ref", "ca_doaj_share_ref"))) {
@@ -48,6 +83,14 @@ metrics_row_invariants <- function(m, add, prefix = "") {
     over <- which(!is.na(num) & !is.na(den) & num > den)
     if (length(over) > 0)
       add("%s%s exceeds %s for: %s", prefix, tri[1], tri[2], slugs(over))
+    # A share may be blank ONLY where there is nothing to divide by -- the
+    # project's existing policy, kept as it stands. Requiring it wherever the
+    # denominator is positive is the half that was missing: every check below
+    # skips NA, so a blank share with real works underneath passed all of them.
+    gone <- which(!is.na(den) & den > 0 & (is.na(sh) | !is.finite(sh)))
+    if (length(gone) > 0)
+      add("%s%s is missing or non-finite where %s > 0 for: %s", prefix, tri[3],
+          tri[2], slugs(gone))
     expect <- ifelse(!is.na(den) & den > 0, round(num / den, 4), NA_real_)
     off <- which(!is.na(sh) & !is.na(expect) & abs(sh - expect) > 1e-9)
     if (length(off) > 0)
@@ -78,22 +121,8 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   # was assembled anyway. openalex_metrics() and openalex_counts_by_year() turn a
   # missing entity field into NA to keep the row shape stable, so without this
   # the shape survives and the content quietly does not.
-  require_num <- function(d, cols, label, min_value = 0) {
-    if (is.null(d) || nrow(d) == 0) return(invisible(NULL))
-    for (col in cols) {
-      if (!(col %in% names(d))) {
-        add("%s: required column %s is absent", label, col)
-        next
-      }
-      v <- n(d[[col]])
-      bad <- which(is.na(v) | !is.finite(v))
-      if (length(bad) > 0)
-        add("%s: %s is missing or non-finite in %d row(s)", label, col, length(bad))
-      low <- which(!is.na(v) & is.finite(v) & v < min_value)
-      if (length(low) > 0)
-        add("%s: %s is below %s in %d row(s)", label, col, min_value, length(low))
-    }
-  }
+  require_num <- function(d, cols, label, min_value = 0)
+    require_num_cols(d, cols, add, label, min_value)
   # The reference year is the latest complete calendar year, as in fetch.R.
   ref_year <- as.integer(format(as.Date(snapshot_date), "%Y")) - 1L
 
@@ -323,12 +352,9 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   # Entity-derived fields first: these come straight from the OpenAlex entity and
   # were previously only ever compared against each other, so a degraded entity
   # could publish blanks that every comparison then skipped.
-  require_num(m, c("works_count", "works_count_incl_xpac",
-                   "works_count_lineage_incl_xpac", "cited_by_count",
-                   "h_index", "i10_index", "two_yr_mean_citedness",
-                   "ca_oa_works_ref", "ca_oa_works_period",
-                   "ca_doaj_works_ref",
-                   "ref_year", "period_start", "period_end"), "metrics")
+  # (The metrics fields themselves are covered by metrics_row_invariants() below,
+  # which validates METRICS_REQUIRED_NUMERIC -- the one list both the current
+  # snapshot and the published history use.)
   require_num(snap$counts_by_year,
               c("year", "works_count", "works_count_incl_xpac",
                 "works_count_lineage_incl_xpac", "cited_by_count"),
