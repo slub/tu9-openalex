@@ -64,12 +64,29 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
       add("raw entity missing for: %s", slug)
   }
 
-  # --- 3. consolidated view matches the Leiden mapping exactly --------------
-  cons_expected <- sort(unique(leiden_comp$tu9_slug[leiden_comp$tu9_slug %in% expected]))
+  # --- 3. consolidated view present for every university, member set correct --
+  # Presence is required for all nine so the alliance totals stay summable over
+  # the same set in every view. The member-set check keeps the Leiden mapping
+  # authoritative: a university without components must consolidate to itself.
   cons_got <- if (nrow(snap$consolidated) > 0) sort(unique(snap$consolidated$tu9_slug)) else character()
-  if (!identical(cons_expected, cons_got)) {
-    add("consolidated view mismatch: expected {%s}, got {%s}",
-        paste(cons_expected, collapse = ", "), paste(cons_got, collapse = ", "))
+  missing_cons <- setdiff(expected, cons_got)
+  unexpected_cons <- setdiff(cons_got, expected)
+  if (length(missing_cons) > 0)
+    add("consolidated view missing for: %s", paste(missing_cons, collapse = ", "))
+  if (length(unexpected_cons) > 0)
+    add("unexpected universities in consolidated view: %s",
+        paste(unexpected_cons, collapse = ", "))
+  for (slug in expected) {
+    cons_mem <- snap$cons_members[[slug]]$members
+    if (is.null(cons_mem)) {
+      add("consolidated member list missing for: %s", slug)
+      next
+    }
+    want <- unique(c(openalex_bare(inst$openalex_id[inst$slug == slug]),
+                     openalex_bare(leiden_comp$affiliated_openalex_id[
+                       leiden_comp$tu9_slug == slug])))
+    if (!identical(sort(cons_mem), sort(want)))
+      add("consolidated member set for %s does not match the Leiden mapping", slug)
   }
 
   # --- 4. core view is present for every university -------------------------
@@ -81,7 +98,9 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   if (length(unexpected_core) > 0)
     add("unexpected universities in core view: %s", paste(unexpected_core, collapse = ", "))
 
-  # --- 5. core member set equals consolidated member set where applicable -----
+  # --- 5. core member set equals consolidated member set ---------------------
+  # Both views now cover every university, so this holds unconditionally: core
+  # is the consolidated set with a source filter, never a different set.
   for (slug in expected) {
     core_mem <- snap$core_members[[slug]]$members
     cons_mem <- snap$cons_members[[slug]]$members
@@ -89,15 +108,9 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
       add("core member list missing for: %s", slug)
       next
     }
-    if (!is.null(cons_mem)) {
-      if (!identical(sort(core_mem), sort(cons_mem)))
-        add("core/cons member mismatch for %s", slug)
-    } else {
-      # Without Leiden components the consolidated view is not produced, but the
-      # core view must still use the university id alone.
-      if (length(core_mem) != 1L || core_mem[1] != openalex_bare(inst$openalex_id[inst$slug == slug]))
-        add("core member set for %s differs from single institution id", slug)
-    }
+    if (is.null(cons_mem)) next  # already reported by check 3
+    if (!identical(sort(core_mem), sort(cons_mem)))
+      add("core/cons member mismatch for %s", slug)
   }
 
   # --- 6. one consistent snapshot_date everywhere --------------------------
@@ -176,10 +189,10 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   check_oa(snap$core, "leiden_core_ca_oa_by_year")
 
   # Core draws from the same member set as the consolidated view, so it can never
-  # be larger than the set it is filtered out of. Iterate over the CORE rows and
-  # compare each against consolidated where that exists, otherwise against the
-  # single-institution view -- iterating over consolidated instead would leave
-  # the universities without Leiden components unchecked entirely.
+  # be larger than the set it is filtered out of. Consolidated now covers every
+  # university, so it supplies the bound in all cases; the single-institution
+  # fallback below is kept only so a missing consolidated row degrades to a
+  # weaker check instead of skipping the comparison silently.
   if (nrow(snap$core) > 0) {
     upper <- setNames(n(snap$ca_oa_by_year$ca_works),
                       paste(snap$ca_oa_by_year$slug, snap$ca_oa_by_year$year, sep = "|"))

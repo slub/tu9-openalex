@@ -41,9 +41,12 @@ cat(sprintf(
 alliance_summary_table(meta)
 ```
 
-Consolidated totals include only the six universities that have weight-1 Leiden
-`component` affiliates; the other three have no consolidated row because the
-single-institution and consolidated member sets would be identical.
+All three readings cover the same nine universities, so the totals are directly
+comparable. Consolidating adds the weight-1 Leiden `component` affiliates and can
+therefore only raise a university's count; three universities have no such
+affiliates and consolidate to themselves. Core sources uses the consolidated
+member set with publications restricted to CWTS Core sources, so it is always the
+smallest of the three.
 
 The [Institutions](institutions/index.qmd) page breaks the same three readings
 down per university.

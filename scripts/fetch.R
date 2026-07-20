@@ -205,10 +205,15 @@ for (i in seq_len(nrow(inst))) {
 }
 
 # Leiden-consolidated CA-OA view: each university OR-ed with its weight-1
-# `component` affiliates. Only universities that have components get one.
-unis_with_components <- intersect(inst$slug, unique(leiden$tu9_slug))
-for (slug in unis_with_components) {
-  u <- inst[inst$slug == slug, ][1, ]
+# `component` affiliates. Every university gets one, as in the core view below:
+# where a university has no components the member set is the university alone,
+# which is its correct consolidated value. Producing it keeps the alliance
+# totals summable over the same nine universities in all three views -- omitting
+# these rows made the consolidated total smaller than the single-institution
+# total, which reads as if consolidating lost works.
+for (i in seq_len(nrow(inst))) {
+  slug <- inst$slug[i]
+  u    <- inst[i, ]
   comp <- leiden$affiliated_openalex_id[leiden$tu9_slug == slug]
   members <- unique(c(openalex_bare(u$openalex_id), openalex_bare(comp)))
   message("  consolidated ", slug, " (", length(members), " members)")

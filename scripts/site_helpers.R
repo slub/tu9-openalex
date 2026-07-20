@@ -163,10 +163,16 @@ alliance_summary_table <- function(meta) {
   core_works <- vapply(inst, function(x) as.integer(x$core_ca_works_period %||% NA), integer(1))
   core_share <- vapply(inst, function(x) ca_num(x$core_ca_oa_share_period), numeric(1))
 
+  # Carry the number of universities behind each figure. The totals are only
+  # comparable across rows while these agree, so the count is shown in the
+  # table rather than left to a footnote underneath it.
   df <- data.frame(
     View          = c("Single institution (ROR/OpenAlex)",
                        "Consolidated (OpenAlex/Leiden)",
                        "Core sources (Leiden/Core)"),
+    Universities  = c(sum(!is.na(single_works)),
+                       sum(!is.na(cons_works)),
+                       sum(!is.na(core_works))),
     CA_works      = c(sum(single_works, na.rm = TRUE),
                        sum(cons_works, na.rm = TRUE),
                        sum(core_works, na.rm = TRUE)),
@@ -180,7 +186,8 @@ alliance_summary_table <- function(meta) {
     df,
     sortable = FALSE, highlight = TRUE,
     columns = list(
-      View        = colDef(minWidth = 230),
+      View         = colDef(minWidth = 230),
+      Universities = colDef(minWidth = 110),
       CA_works    = colDef(name = "Total CA works",
                            format = colFormat(separators = TRUE, locales = "en-US")),
       CA_OA_share = colDef(name = "Median CA OA share", minWidth = 160,
