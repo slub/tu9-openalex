@@ -80,7 +80,37 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
     }
   }
 
-  # --- 2. mandatory products per institution -------------------------------
+  # --- 2. mandatory products, their shape, and per-institution coverage -----
+  # Shape first. Every value-level check below indexes a column by name, and in R
+  # a missing column yields NULL, so the comparison quietly does nothing instead
+  # of failing: dropping ror_id or the DOAJ columns entirely used to pass.
+  schemas <- list(
+    metrics = c("snapshot_date", "slug", "name", "openalex_id", "ror_id",
+                "works_count", "works_count_incl_xpac",
+                "works_count_lineage_incl_xpac", "cited_by_count", "h_index",
+                "i10_index", "two_yr_mean_citedness", "ref_year",
+                "ca_works_ref", "ca_oa_works_ref", "ca_oa_share_ref",
+                "ca_doaj_works_ref", "ca_doaj_share_ref",
+                "period_start", "period_end", "ca_works_period",
+                "ca_oa_works_period", "ca_oa_share_period"),
+    counts_by_year = c("snapshot_date", "slug", "year", "works_count",
+                       "works_count_incl_xpac", "works_count_lineage_incl_xpac",
+                       "cited_by_count"),
+    ca_oa_by_year = c("snapshot_date", "slug", "year", "ca_works", "ca_oa_works",
+                      "ca_oa_share", "ca_doaj_works", "ca_doaj_share"),
+    ca_oa_status = c("snapshot_date", "slug", "year", "oa_status", "ca_works"),
+    consolidated = c("snapshot_date", "tu9_slug", "university_name", "n_members",
+                     "year", "ca_works", "ca_oa_works", "ca_oa_share"),
+    core = c("snapshot_date", "tu9_slug", "university_name", "n_members",
+             "year", "ca_works", "ca_oa_works", "ca_oa_share"))
+  for (nm in names(schemas)) {
+    d <- snap[[nm]]
+    if (is.null(d)) { add("%s is absent from the snapshot", nm); next }
+    gone <- setdiff(schemas[[nm]], names(d))
+    if (length(gone) > 0)
+      add("%s lacks required column(s): %s", nm, paste(gone, collapse = ", "))
+  }
+
   need <- list(counts_by_year = snap$counts_by_year,
                ca_oa_by_year  = snap$ca_oa_by_year,
                ca_oa_status   = snap$ca_oa_status,
@@ -226,6 +256,8 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
       add("ca_oa_share_ref is missing for %s", m$slug[i])
     if (!is.na(p) && p > 0 && is.na(n(m$ca_oa_share_period[i])))
       add("ca_oa_share_period is missing for %s", m$slug[i])
+    if (!is.na(w) && w > 0 && is.na(n(m$ca_doaj_share_ref[i])))
+      add("ca_doaj_share_ref is missing for %s", m$slug[i])
   }
 
   # --- 7. one consistent snapshot_date everywhere --------------------------
@@ -246,6 +278,7 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
                    "works_count_lineage_incl_xpac", "cited_by_count",
                    "h_index", "i10_index", "two_yr_mean_citedness",
                    "ca_oa_works_ref", "ca_oa_works_period",
+                   "ca_doaj_works_ref",
                    "ref_year", "period_start", "period_end"), "metrics")
   require_num(snap$counts_by_year,
               c("year", "works_count", "works_count_incl_xpac",
@@ -308,9 +341,11 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   }
   check_oa(snap$ca_oa_by_year, "ca_oa_by_year")
   # DOAJ is a subset of the corresponding-author works it is counted from.
-  if (!is.null(snap$ca_oa_by_year) && nrow(snap$ca_oa_by_year) > 0 &&
-      "ca_doaj_works" %in% names(snap$ca_oa_by_year)) {
+  if (!is.null(snap$ca_oa_by_year) && nrow(snap$ca_oa_by_year) > 0) {
     d <- snap$ca_oa_by_year
+    blank_dj <- which(is.na(n(d$ca_doaj_works)))
+    if (length(blank_dj) > 0)
+      add("ca_oa_by_year: ca_doaj_works is missing in %d row(s)", length(blank_dj))
     bad_dj <- which(n(d$ca_doaj_works) > n(d$ca_works))
     if (length(bad_dj) > 0)
       add("ca_oa_by_year: ca_doaj_works exceeds ca_works in %d row(s)", length(bad_dj))
@@ -454,10 +489,12 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
 
   # DOAJ counts ride along in the single-institution table; their share is
   # computed the same way as the OA share and was never checked.
-  if (!is.null(snap$ca_oa_by_year) && nrow(snap$ca_oa_by_year) > 0 &&
-      "ca_doaj_share" %in% names(snap$ca_oa_by_year)) {
+  if (!is.null(snap$ca_oa_by_year) && nrow(snap$ca_oa_by_year) > 0) {
     d <- snap$ca_oa_by_year
     w <- n(d$ca_works); dj <- n(d$ca_doaj_works); sh <- n(d$ca_doaj_share)
+    blank_sh <- which(!is.na(w) & w > 0 & is.na(sh))
+    if (length(blank_sh) > 0)
+      add("ca_oa_by_year: ca_doaj_share is missing in %d row(s)", length(blank_sh))
     if (any(dj < 0, na.rm = TRUE)) add("ca_oa_by_year: negative ca_doaj_works")
     expect <- ifelse(w > 0, round(dj / w, 4), NA_real_)
     off <- which(!is.na(sh) & !is.na(expect) & abs(sh - expect) > 1e-9)

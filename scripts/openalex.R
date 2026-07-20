@@ -415,6 +415,19 @@ read_institutions <- function(path = "data-raw/institutions.csv") {
   dup_oa <- unique(inst$openalex_id[duplicated(openalex_bare(inst$openalex_id))])
   if (length(dup_oa) > 0)
     problems <- c(problems, paste("duplicate openalex_id(s):", paste(dup_oa, collapse = ", ")))
+  # Two houses sharing a ROR id would be two rows describing one institution:
+  # the consolidated member sets are keyed by slug but resolved through ROR, so
+  # the duplicate would silently double-count in the alliance totals.
+  dup_ror <- unique(inst$ror_id[duplicated(inst$ror_id)])
+  if (length(dup_ror) > 0)
+    problems <- c(problems, paste("duplicate ror_id(s):", paste(dup_ror, collapse = ", ")))
+  # The slug is pasted straight into file and URL paths (data/<slug>/…,
+  # institutions/<slug>.qmd, /institutions/<slug>/…), so it must be a plain
+  # basename. Anything else escapes the directory it is supposed to name -- a
+  # slug of "../outside-data" was accepted before this.
+  bad_slug <- inst$slug[!grepl("^[a-z0-9]+(-[a-z0-9]+)*$", inst$slug)]
+  if (length(bad_slug) > 0)
+    problems <- c(problems, paste("unsafe slug(s):", paste(bad_slug, collapse = ", ")))
   # An id in the wrong shape yields a 404 per institution rather than an obvious
   # configuration error, so check the shape here.
   bad_oa <- inst$openalex_id[!grepl("^I[0-9]+$", openalex_bare(inst$openalex_id))]
@@ -446,20 +459,27 @@ read_leiden_components <- function(path = "data-raw/leiden_affiliations.csv") {
   # `component` implies weight 1 in the Leiden data, but check it explicitly so
   # the code enforces the contract the comment claims rather than assuming it.
   w <- suppressWarnings(as.numeric(la$weight))
-  is_comp <- la$relation_type == "component" & !is.na(w) & w == 1
   has_id <- !is.na(la$affiliated_openalex_id) & nzchar(la$affiliated_openalex_id)
-  # A weight-1 component without an OpenAlex id used to be filtered out here in
-  # silence, which shrinks a university's member set without any signal -- and
-  # validation would then agree, because it reads the same file. The generator
-  # refuses to write such a row; this catches a file that predates that guard or
-  # was edited by hand.
-  orphan <- which(is_comp & !has_id)
+  # Every row that calls itself a component must BE one: weight exactly 1 and a
+  # usable OpenAlex id. Deriving "is a component" from the weight, as this did,
+  # left the circularity half in place -- a component row with a blank or
+  # unparsable weight fell out of the set being examined, so the missing-id check
+  # never saw it and it was filtered away in silence. Judge membership by
+  # relation_type alone and require the rest.
+  claims_comp <- la$relation_type == "component"
+  bad_weight <- which(claims_comp & (is.na(w) | w != 1))
+  if (length(bad_weight) > 0)
+    stop(sprintf("Leiden mapping has %d `component` row(s) whose weight is not 1 (%s): %s",
+                 length(bad_weight), path,
+                 paste(utils::head(la$tu9_slug[bad_weight], 5), collapse = ", ")),
+         call. = FALSE)
+  orphan <- which(claims_comp & !has_id)
   if (length(orphan) > 0)
-    stop(sprintf("Leiden mapping has %d weight-1 component(s) without an OpenAlex id (%s): %s",
+    stop(sprintf("Leiden mapping has %d `component` row(s) without an OpenAlex id (%s): %s",
                  length(orphan), path,
                  paste(utils::head(la$tu9_slug[orphan], 5), collapse = ", ")),
          call. = FALSE)
-  la[is_comp, ]
+  la[claims_comp, ]
 }
 
 # Pull the entity-level aggregated metrics out of a parsed institution entity.

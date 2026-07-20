@@ -14,6 +14,10 @@
 #   Rscript scripts/validate_products.R      # standalone (used by both workflows)
 #
 # and fetch.R calls validate_products() itself once the write is complete.
+#
+# Depends on scripts/openalex.R (configuration and mapping readers) and
+# scripts/validate.R (validate_snapshot, which does the semantic checking);
+# fetch.R sources both before this file.
 
 suppressPackageStartupMessages({
   library(readr)
@@ -159,12 +163,133 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
     }
   }
 
+  # Everything above is topology: which files exist, which dates they carry, who
+  # they cover, whether the slices agree. That is not the same as the data being
+  # right, and reporting "complete and consistent" on the strength of it
+  # overstated what had been checked -- a wrong OA share, a mirrored 2099 row and
+  # a falsified meta.json headline all passed.
+  #
+  # Rather than restating those rules here and letting the two copies drift, feed
+  # the published files back through validate_snapshot(), the same function that
+  # guards the fetch. The member summaries are taken from meta.json on purpose:
+  # its consolidated and Core headlines are then checked against the yearly rows
+  # in the CSVs, which is what nothing verified before.
+  if (length(issues) == 0) {
+    leiden <- read_leiden_components(file.path(raw_dir, "leiden_affiliations.csv"))
+    if (is.null(leiden))
+      add("Leiden mapping is missing; cannot verify the consolidated member sets")
+
+    members_of <- function(slug) unique(c(
+      openalex_bare(inst$openalex_id[inst$slug == slug]),
+      openalex_bare(leiden$affiliated_openalex_id[leiden$tu9_slug == slug])))
+    by_slug <- function(meta_prefix) {
+      setNames(lapply(expected, function(s) {
+        e <- Filter(function(x) identical(as.character(x$slug %or% ""), s),
+                    meta$institutions %or% list())
+        e <- if (length(e) > 0) e[[1]] else list()
+        list(n_members       = length(members_of(s)),
+             members         = members_of(s),
+             ca_works_ref    = n(e[[paste0(meta_prefix, "_ca_works_ref")]] %or% NA),
+             ca_oa_share_ref = n(e[[paste0(meta_prefix, "_ca_oa_share_ref")]] %or% NA),
+             ca_works_period = n(e[[paste0(meta_prefix, "_ca_works_period")]] %or% NA),
+             ca_oa_share_period = n(e[[paste0(meta_prefix, "_ca_oa_share_period")]] %or% NA))
+      }), expected)
+    }
+
+    mt <- loaded[["metrics.csv"]]
+    ents <- list()
+    for (slug in expected) {
+      f <- file.path(data_dir, "snapshots", slug, paste0(updated, ".json"))
+      # Existence was checked above; a snapshot that does not parse is just as
+      # useless as one that is absent, and nothing read them until now.
+      ents[[slug]] <- tryCatch(jsonlite::read_json(f, simplifyVector = FALSE),
+                               error = function(e) {
+                                 add("raw snapshot does not parse: %s (%s)", f,
+                                     conditionMessage(e))
+                                 NULL
+                               })
+    }
+
+    snap <- list(
+      metrics        = mt[as.character(mt$snapshot_date) == updated, , drop = FALSE],
+      counts_by_year = loaded[["counts_by_year.csv"]],
+      ca_oa_by_year  = loaded[["ca_oa_by_year.csv"]],
+      ca_oa_status   = loaded[["ca_oa_status.csv"]],
+      consolidated   = loaded[["consolidated_ca_oa_by_year.csv"]],
+      core           = loaded[["leiden_core_ca_oa_by_year.csv"]],
+      cons_members   = by_slug("cons"),
+      core_members   = by_slug("core"),
+      entities       = ents,
+      failures       = character())
+
+    period_start <- as.integer(meta$oa_period_start %or% NA)
+    if (is.na(period_start)) add("meta.json has no oa_period_start")
+    # force = TRUE skips only the coverage guard rail: it compares this snapshot
+    # with the previous one, which is a question about change over time, not
+    # about whether the published data is well formed. It already ran at fetch.
+    sem <- tryCatch({
+      validate_snapshot(snap, inst, leiden, updated,
+                        prev_metrics = NULL, force = TRUE,
+                        period_start = if (is.na(period_start)) 2020 else period_start)
+      character()
+    }, error = function(e) conditionMessage(e))
+    if (length(sem) > 0 && nzchar(sem))
+      add("semantic validation of the published products failed:\n    %s",
+          gsub("\n", "\n    ", sem))
+
+    # The published member count must match the mapping the members come from.
+    for (nm in c("consolidated_ca_oa_by_year.csv", "leiden_core_ca_oa_by_year.csv")) {
+      d <- loaded[[nm]]
+      if (is.null(d)) next
+      for (slug in expected) {
+        got_nm <- unique(n(d$n_members[d$tu9_slug == slug]))
+        if (length(got_nm) != 1 || !identical(as.integer(got_nm), length(members_of(slug))))
+          add("%s: n_members for %s is %s, the Leiden mapping gives %d", nm, slug,
+              paste(got_nm, collapse = "/"), length(members_of(slug)))
+      }
+    }
+
+    # meta.json fields that no product check touched.
+    if (!is.null(mt)) {
+      cur <- mt[as.character(mt$snapshot_date) == updated, , drop = FALSE]
+      for (e in meta$institutions %or% list()) {
+        slug <- as.character(e$slug %or% "")
+        r <- cur[cur$slug == slug, , drop = FALSE]
+        if (nrow(r) != 1) next
+        for (f in c("name", "openalex_id", "ror_id")) {
+          if (!identical(as.character(e[[f]] %or% ""), as.character(r[[f]])))
+            add("meta.json %s for %s is '%s', metrics.csv says '%s'", f, slug,
+                as.character(e[[f]] %or% ""), as.character(r[[f]]))
+        }
+      }
+      for (pair in list(c("oa_ref_year", "ref_year"),
+                        c("oa_period_start", "period_start"),
+                        c("oa_period_end", "period_end"))) {
+        want <- unique(n(cur[[pair[2]]]))
+        if (length(want) == 1 && !isTRUE(all.equal(n(meta[[pair[1]]] %or% NA), want)))
+          add("meta.json %s is %s, metrics.csv %s is %s", pair[1],
+              paste(meta[[pair[1]]], collapse = ""), pair[2], want)
+      }
+      n_snap <- length(unique(as.character(mt$snapshot_date)))
+      if (!identical(as.integer(meta$n_snapshots %or% NA_integer_), n_snap))
+        add("meta.json n_snapshots is %s, metrics.csv holds %d",
+            paste(meta$n_snapshots, collapse = ""), n_snap)
+      if (!is.null(leiden)) {
+        want_ent <- length(unique(c(openalex_bare(inst$openalex_id),
+                                    openalex_bare(leiden$affiliated_openalex_id))))
+        if (!identical(as.integer(meta$n_entities %or% NA_integer_), want_ent))
+          add("meta.json n_entities is %s, the configuration and mapping give %d",
+              paste(meta$n_entities, collapse = ""), want_ent)
+      }
+    }
+  }
+
   if (length(issues) > 0)
     stop(sprintf("Product validation failed (%d issue(s)):\n  - %s",
                  length(issues), paste(issues, collapse = "\n  - ")), call. = FALSE)
   message("Product validation passed: ", length(expected),
-          " institutions, all published products complete and consistent (",
-          updated, ").")
+          " institutions; published products complete, and semantically valid ",
+          "under the same checks as the fetch (", updated, ").")
   invisible(TRUE)
 }
 
@@ -172,5 +297,6 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
 # sourced (by fetch.R) sys.nframe() is non-zero, so the call below is skipped.
 if (sys.nframe() == 0L) {
   source("scripts/openalex.R")
+  source("scripts/validate.R")   # supplies validate_snapshot()
   validate_products()
 }
