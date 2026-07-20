@@ -23,10 +23,11 @@ execute:
   message: false
 
 website:
-  title: "TU9 OpenAlex Metrics"
+  title: "TU9 Open Access Monitoring with OpenAlex"
   description: >-
-    Aggregated OpenAlex metrics for the TU9 universities and related
-    institutions, snapshotted over time.
+    Open-access monitoring for the TU9 universities with OpenAlex,
+    including corresponding-author and Leiden-consolidated views
+    snapshotted over time.
   repo-url: https://github.com/slub/tu9-openalex
   navbar:
     left:
