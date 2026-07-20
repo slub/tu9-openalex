@@ -338,9 +338,13 @@ openalex_ca_oa_by_year_core <- function(inst_ids, start_year) {
 }
 
 # Corresponding-author works published in DOAJ-listed journals, by publication
-# year. This is a source-level registry flag (primary_location.source.is_in_doaj),
-# not an OA status: it cuts ACROSS gold/hybrid/green/... rather than partitioning
-# with them, so it is reported separately from the OA-status composition.
+# year (primary_location.source.is_in_doaj). Kept out of the OA-status
+# composition because it does not partition with those categories: every work has
+# exactly one oa_status and they sum to the works total, while DOAJ listing is an
+# independent yes/no cutting across them. Note this is NOT a level distinction --
+# gold and diamond are journal properties too ("appeared in a fully open-access
+# journal", diamond adding "without an APC"), which is why a DOAJ row would
+# double-count rather than add a category.
 openalex_ca_doaj_by_year <- function(inst_ids, start_year) {
   ids <- paste(openalex_bare(inst_ids), collapse = "|")
   g <- openalex_group_reader(

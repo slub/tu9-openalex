@@ -49,12 +49,24 @@ Every OA figure is prefixed `ca_` to mark it as corresponding-author-level:
   [DOAJ](https://doaj.org/), via `primary_location.source.is_in_doaj:true`.
 
 DOAJ is reported **separately from the OA-status composition**, not as one of its
-categories. It is a *source-level registry flag* — is this journal listed as
-fully open access? — whereas gold/hybrid/green/bronze/diamond/closed classify the
-individual work. The two cut across each other: for TU Dresden in 2025, 543 works
-were in DOAJ-listed journals while 788 were classified gold or diamond. Adding it
-as a status row would both mix the two classifications and break the property
-that the status categories sum to the works total.
+categories — though not because it sits at a different level. `gold` and
+`diamond` are themselves journal properties: both mean the work appeared in a
+fully open-access journal, which is close to what the DOAJ flag records
+(`diamond` adds that the journal levies no APC). Only `hybrid`, `bronze`, `green`
+and `closed` turn on the individual record — its licence, and whether a free copy
+exists anywhere.
+
+The reason to keep DOAJ out is structural rather than conceptual: the OA statuses
+are a **partition** — every work has exactly one, and they sum to the works total
+— whereas DOAJ listing is an independent yes/no that cuts across them. A
+DOAJ-listed work is normally gold or diamond, yet the two do not coincide even
+where they overlap most: for TU Dresden in 2025, 543 corresponding-author works
+appeared in DOAJ-listed journals while 788 were classified gold or diamond. The
+gap runs in the direction one would expect if OpenAlex treats more journals as
+fully open access than DOAJ currently lists, but we have not traced it
+title by title. Folding DOAJ in as a seventh row would count those works twice —
+once under the status they already hold — and break the sum that validation
+enforces.
 
 All of this comes from OpenAlex's server-side `group_by` aggregation (per-year
 and per-status counts), so no individual works are downloaded.

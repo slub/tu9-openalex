@@ -394,8 +394,9 @@ inst_page <- function(slug) {
         "OpenAlex ", tags$code("corresponding_institution_ids"), ". ",
         tags$strong("CA DOAJ"), " counts those works whose journal is listed in ",
         tags$a(href = "https://doaj.org/", target = "_blank", "DOAJ"),
-        "; it is a source-level registry flag that cuts across the OA statuses ",
-        "below rather than being one of them."),
+        ". It cuts across the OA statuses below rather than being one of them: ",
+        "those partition the works, DOAJ listing is an independent yes/no that ",
+        "overlaps mainly with gold and diamond."),
       if (!is.null(oa)) ca_oa_by_year_table(oa),
       if (!is.null(status)) tagList(
         tags$h3(sprintf("OA-status composition (%s)", latest$ref_year)),
