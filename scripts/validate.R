@@ -23,6 +23,28 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   expected <- sort(inst$slug)
   m <- snap$metrics
   n <- function(x) suppressWarnings(as.numeric(x))
+
+  # Every published numeric field must be present and finite. NA is never a
+  # legitimate published value: it means an upstream field was absent and the row
+  # was assembled anyway. openalex_metrics() and openalex_counts_by_year() turn a
+  # missing entity field into NA to keep the row shape stable, so without this
+  # the shape survives and the content quietly does not.
+  require_num <- function(d, cols, label, min_value = 0) {
+    if (is.null(d) || nrow(d) == 0) return(invisible(NULL))
+    for (col in cols) {
+      if (!(col %in% names(d))) {
+        add("%s: required column %s is absent", label, col)
+        next
+      }
+      v <- n(d[[col]])
+      bad <- which(is.na(v) | !is.finite(v))
+      if (length(bad) > 0)
+        add("%s: %s is missing or non-finite in %d row(s)", label, col, length(bad))
+      low <- which(!is.na(v) & is.finite(v) & v < min_value)
+      if (length(low) > 0)
+        add("%s: %s is below %s in %d row(s)", label, col, min_value, length(low))
+    }
+  }
   # The reference year is the latest complete calendar year, as in fetch.R.
   ref_year <- as.integer(format(as.Date(snapshot_date), "%Y")) - 1L
 
@@ -45,6 +67,18 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   if (anyDuplicated(got_raw) > 0)
     add("duplicate institution rows in metrics: %s",
         paste(unique(got_raw[duplicated(got_raw)]), collapse = ", "))
+  # The identity columns are what every page and every download show beside the
+  # figures. Coverage was checked, the identities were not -- a name or id that
+  # had drifted from the configuration would misattribute the whole row.
+  for (i in seq_len(nrow(m))) {
+    cfg <- inst[inst$slug == m$slug[i], , drop = FALSE]
+    if (nrow(cfg) != 1) next  # already reported as a coverage problem
+    for (f in c("name", "openalex_id", "ror_id")) {
+      if (!identical(as.character(m[[f]][i]), as.character(cfg[[f]])))
+        add("metrics %s for %s is '%s', the configuration says '%s'",
+            f, m$slug[i], m[[f]][i], cfg[[f]])
+    }
+  }
 
   # --- 2. mandatory products per institution -------------------------------
   need <- list(counts_by_year = snap$counts_by_year,
@@ -205,6 +239,29 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   }
 
   # --- 8. numeric invariants ----------------------------------------------
+  # Entity-derived fields first: these come straight from the OpenAlex entity and
+  # were previously only ever compared against each other, so a degraded entity
+  # could publish blanks that every comparison then skipped.
+  require_num(m, c("works_count", "works_count_incl_xpac",
+                   "works_count_lineage_incl_xpac", "cited_by_count",
+                   "h_index", "i10_index", "two_yr_mean_citedness",
+                   "ca_oa_works_ref", "ca_oa_works_period",
+                   "ref_year", "period_start", "period_end"), "metrics")
+  require_num(snap$counts_by_year,
+              c("year", "works_count", "works_count_incl_xpac",
+                "works_count_lineage_incl_xpac", "cited_by_count"),
+              "counts_by_year")
+  require_num(snap$ca_oa_status, c("year", "ca_works"), "ca_oa_status")
+  # A publication year below this is a parsing accident, not a record.
+  for (nm in c("counts_by_year", "ca_oa_by_year", "consolidated", "core")) {
+    d <- snap[[nm]]
+    if (is.null(d) || nrow(d) == 0) next
+    early <- sort(unique(n(d$year)[!is.na(n(d$year)) & n(d$year) < 1800]))
+    if (length(early) > 0)
+      add("%s: implausible publication year(s): %s", nm,
+          paste(early, collapse = ", "))
+  }
+
   if (any(n(m$works_count) <= 0, na.rm = TRUE))
     add("non-positive works_count for: %s",
         paste(m$slug[n(m$works_count) <= 0], collapse = ", "))
@@ -304,24 +361,109 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
     }
   }
 
-  # Core headline-period totals must equal the sum of their yearly Core values.
+  # Headline period totals must equal the sum of the yearly values they are
+  # derived from -- in every view, not only in Core, which was the only one
+  # checked. period_ca() sums with na.rm = TRUE, so a dropped year surfaces as a
+  # quietly smaller headline rather than as an error; this is what makes that
+  # visible. The single-institution headline lives in metrics, the other two in
+  # the member summaries that also feed meta.json.
   period_years <- seq(period_start, ref_year)
-  for (slug in expected) {
-    core_slug <- snap$core[snap$core$tu9_slug == slug, ]
-    if (nrow(core_slug) == 0) next
-    p <- core_slug[core_slug$year %in% period_years, ]
-    if (nrow(p) > 0) {
-      cm <- snap$core_members[[slug]]
-      if (!is.null(cm)) {
-        expected_works <- sum(n(p$ca_works), na.rm = TRUE)
-        expected_share <- if (expected_works > 0)
-          round(sum(n(p$ca_oa_works), na.rm = TRUE) / expected_works, 4) else NA_real_
-        if (!isTRUE(all.equal(expected_works, n(cm$ca_works_period))))
-          add("core period works (%s) do not sum yearly values for %s", n(cm$ca_works_period), slug)
-        if (!isTRUE(all.equal(expected_share, n(cm$ca_oa_share_period))))
-          add("core period share does not match summed values for %s", slug)
+  period_views <- list(
+    list(label = "single-institution", rows = snap$ca_oa_by_year, key = "slug",
+         works = function(s) n(m$ca_works_period[m$slug == s]),
+         share = function(s) n(m$ca_oa_share_period[m$slug == s])),
+    list(label = "consolidated", rows = snap$consolidated, key = "tu9_slug",
+         works = function(s) n(snap$cons_members[[s]]$ca_works_period),
+         share = function(s) n(snap$cons_members[[s]]$ca_oa_share_period)),
+    list(label = "core", rows = snap$core, key = "tu9_slug",
+         works = function(s) n(snap$core_members[[s]]$ca_works_period),
+         share = function(s) n(snap$core_members[[s]]$ca_oa_share_period)))
+  for (v in period_views) {
+    d <- v$rows
+    if (is.null(d) || nrow(d) == 0) next
+    for (slug in expected) {
+      p <- d[d[[v$key]] == slug & n(d$year) %in% period_years, , drop = FALSE]
+      if (nrow(p) == 0) next
+      want_w <- sum(n(p$ca_works), na.rm = TRUE)
+      want_s <- if (want_w > 0)
+        round(sum(n(p$ca_oa_works), na.rm = TRUE) / want_w, 4) else NA_real_
+      got_w <- v$works(slug); got_s <- v$share(slug)
+      if (length(got_w) != 1 || !isTRUE(all.equal(want_w, got_w)))
+        add("%s: period works for %s do not sum the yearly values (headline %s, sum %s)",
+            v$label, slug, paste(got_w, collapse = "/"), want_w)
+      if (length(got_s) != 1 || !isTRUE(all.equal(want_s, got_s)))
+        add("%s: period share for %s does not match the summed yearly values",
+            v$label, slug)
+    }
+  }
+
+  # The reference-year headline must equal the reference-year row it is taken
+  # from. metrics and the yearly table are written from the same fetch, but
+  # nothing tied them together, so a slip in the derivation would show up on the
+  # site as two different numbers for the same thing.
+  if (!is.null(snap$ca_oa_by_year) && nrow(snap$ca_oa_by_year) > 0) {
+    oy <- snap$ca_oa_by_year
+    for (i in seq_len(nrow(m))) {
+      slug <- m$slug[i]
+      r <- oy[oy$slug == slug & n(oy$year) == n(m$ref_year[i]), , drop = FALSE]
+      if (nrow(r) != 1) next  # reported by check 6
+      for (pair in list(c("ca_works_ref", "ca_works"),
+                        c("ca_oa_works_ref", "ca_oa_works"),
+                        c("ca_oa_share_ref", "ca_oa_share"))) {
+        if (!isTRUE(all.equal(n(m[[pair[1]]][i]), n(r[[pair[2]]]))))
+          add("metrics %s (%s) disagrees with ca_oa_by_year %s (%s) for %s",
+              pair[1], m[[pair[1]]][i], pair[2], r[[pair[2]]], slug)
       }
     }
+  }
+
+  # Consolidating ORs the university with its component affiliates, so it can
+  # only add works -- the site states this as a property of the data. It is also
+  # the invariant whose violation started this: the consolidated total once came
+  # out below the single-institution total and nothing objected.
+  if (!is.null(snap$consolidated) && nrow(snap$consolidated) > 0 &&
+      !is.null(snap$ca_oa_by_year) && nrow(snap$ca_oa_by_year) > 0) {
+    single <- setNames(n(snap$ca_oa_by_year$ca_works),
+                       paste(snap$ca_oa_by_year$slug, snap$ca_oa_by_year$year, sep = "|"))
+    for (i in seq_len(nrow(snap$consolidated))) {
+      key <- paste(snap$consolidated$tu9_slug[i], snap$consolidated$year[i], sep = "|")
+      s <- single[key]
+      if (is.na(s)) {
+        add("consolidated row for %s year %s has no single-institution counterpart",
+            snap$consolidated$tu9_slug[i], snap$consolidated$year[i])
+      } else if (n(snap$consolidated$ca_works[i]) < s) {
+        add("consolidated ca_works (%s) is below the single-institution value (%s) for %s year %s",
+            snap$consolidated$ca_works[i], s,
+            snap$consolidated$tu9_slug[i], snap$consolidated$year[i])
+      }
+    }
+  }
+
+  # OA statuses are a closed vocabulary and the composition is fetched for the
+  # reference year alone. An unknown category would silently join the totals.
+  if (!is.null(snap$ca_oa_status) && nrow(snap$ca_oa_status) > 0) {
+    allowed <- c("gold", "hybrid", "green", "bronze", "diamond", "closed")
+    seen <- setdiff(unique(snap$ca_oa_status$oa_status), allowed)
+    if (length(seen) > 0)
+      add("ca_oa_status: unexpected category/categories: %s", paste(seen, collapse = ", "))
+    off_year <- setdiff(unique(n(snap$ca_oa_status$year)), ref_year)
+    if (length(off_year) > 0)
+      add("ca_oa_status: row(s) for year(s) other than the reference year %d: %s",
+          ref_year, paste(off_year, collapse = ", "))
+  }
+
+  # DOAJ counts ride along in the single-institution table; their share is
+  # computed the same way as the OA share and was never checked.
+  if (!is.null(snap$ca_oa_by_year) && nrow(snap$ca_oa_by_year) > 0 &&
+      "ca_doaj_share" %in% names(snap$ca_oa_by_year)) {
+    d <- snap$ca_oa_by_year
+    w <- n(d$ca_works); dj <- n(d$ca_doaj_works); sh <- n(d$ca_doaj_share)
+    if (any(dj < 0, na.rm = TRUE)) add("ca_oa_by_year: negative ca_doaj_works")
+    expect <- ifelse(w > 0, round(dj / w, 4), NA_real_)
+    off <- which(!is.na(sh) & !is.na(expect) & abs(sh - expect) > 1e-9)
+    if (length(off) > 0)
+      add("ca_oa_by_year: ca_doaj_share does not match round(ca_doaj_works/ca_works, 4) in %d row(s)",
+          length(off))
   }
 
   # OA-status categories must add up to the reference-year CA works.

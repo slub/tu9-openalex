@@ -360,7 +360,11 @@ openalex_ca_doaj_by_year <- function(inst_ids, start_year) {
     "publication_year")
   if (is.null(g)) return(NULL)
   yr <- suppressWarnings(as.integer(g$key))
-  keep <- !is.na(yr) & yr >= start_year
+  # Same bound at both ends as every other yearly view. These counts are aligned
+  # to the (already bounded) OA years in fetch.R, so an unbounded year could not
+  # reach the output today -- but leaving one code path with a different notion
+  # of a valid publication year is how the 2035 row got in.
+  keep <- !is.na(yr) & yr >= start_year & yr <= openalex_year_cap()
   data.frame(year = yr[keep], ca_doaj_works = g$count[keep], stringsAsFactors = FALSE)
 }
 
@@ -380,8 +384,49 @@ openalex_ca_oa_status <- function(inst_ids, year) {
 
 # Read the institution configuration (name, openalex_id, ror_id, slug)
 # and add a bare OpenAlex id column.
+#
+# This file is the root of trust for the whole pipeline: fetch.R queries what it
+# lists, and validate.R derives its expectations from it -- so a corrupted config
+# would be validated against its own corruption, exactly as an incomplete Leiden
+# mapping would be. Check it here, where the damage is still visible, rather than
+# trusting it everywhere downstream.
 read_institutions <- function(path = "data-raw/institutions.csv") {
+  if (!file.exists(path))
+    stop("institution configuration not found: ", path, call. = FALSE)
   inst <- read_csv(path, col_types = cols(.default = col_character()))
+  req <- c("name", "openalex_id", "ror_id", "slug")
+  gone <- setdiff(req, names(inst))
+  if (length(gone) > 0)
+    stop("institution configuration lacks column(s): ", paste(gone, collapse = ", "),
+         call. = FALSE)
+  if (nrow(inst) == 0)
+    stop("institution configuration is empty: ", path, call. = FALSE)
+
+  problems <- character()
+  for (col in req) {
+    blank <- which(is.na(inst[[col]]) | !nzchar(trimws(inst[[col]])))
+    if (length(blank) > 0)
+      problems <- c(problems, sprintf("blank %s in row(s) %s", col,
+                                      paste(blank, collapse = ", ")))
+  }
+  dup_slug <- unique(inst$slug[duplicated(inst$slug)])
+  if (length(dup_slug) > 0)
+    problems <- c(problems, paste("duplicate slug(s):", paste(dup_slug, collapse = ", ")))
+  dup_oa <- unique(inst$openalex_id[duplicated(openalex_bare(inst$openalex_id))])
+  if (length(dup_oa) > 0)
+    problems <- c(problems, paste("duplicate openalex_id(s):", paste(dup_oa, collapse = ", ")))
+  # An id in the wrong shape yields a 404 per institution rather than an obvious
+  # configuration error, so check the shape here.
+  bad_oa <- inst$openalex_id[!grepl("^I[0-9]+$", openalex_bare(inst$openalex_id))]
+  if (length(bad_oa) > 0)
+    problems <- c(problems, paste("malformed openalex_id(s):", paste(bad_oa, collapse = ", ")))
+  bad_ror <- inst$ror_id[!grepl("^0[a-z0-9]{8}$", inst$ror_id)]
+  if (length(bad_ror) > 0)
+    problems <- c(problems, paste("malformed ror_id(s):", paste(bad_ror, collapse = ", ")))
+  if (length(problems) > 0)
+    stop("institution configuration is unusable (", path, "):\n  - ",
+         paste(problems, collapse = "\n  - "), call. = FALSE)
+
   inst$openalex_bare <- openalex_bare(inst$openalex_id)
   inst
 }
@@ -393,11 +438,28 @@ read_institutions <- function(path = "data-raw/institutions.csv") {
 read_leiden_components <- function(path = "data-raw/leiden_affiliations.csv") {
   if (!file.exists(path)) return(NULL)
   la <- read_csv(path, col_types = cols(.default = col_character()))
+  req <- c("tu9_slug", "relation_type", "weight", "affiliated_openalex_id")
+  gone <- setdiff(req, names(la))
+  if (length(gone) > 0)
+    stop("Leiden mapping lacks column(s): ", paste(gone, collapse = ", "),
+         " (", path, ")", call. = FALSE)
   # `component` implies weight 1 in the Leiden data, but check it explicitly so
   # the code enforces the contract the comment claims rather than assuming it.
   w <- suppressWarnings(as.numeric(la$weight))
-  la[la$relation_type == "component" & !is.na(w) & w == 1 &
-     !is.na(la$affiliated_openalex_id) & nzchar(la$affiliated_openalex_id), ]
+  is_comp <- la$relation_type == "component" & !is.na(w) & w == 1
+  has_id <- !is.na(la$affiliated_openalex_id) & nzchar(la$affiliated_openalex_id)
+  # A weight-1 component without an OpenAlex id used to be filtered out here in
+  # silence, which shrinks a university's member set without any signal -- and
+  # validation would then agree, because it reads the same file. The generator
+  # refuses to write such a row; this catches a file that predates that guard or
+  # was edited by hand.
+  orphan <- which(is_comp & !has_id)
+  if (length(orphan) > 0)
+    stop(sprintf("Leiden mapping has %d weight-1 component(s) without an OpenAlex id (%s): %s",
+                 length(orphan), path,
+                 paste(utils::head(la$tu9_slug[orphan], 5), collapse = ", ")),
+         call. = FALSE)
+  la[is_comp, ]
 }
 
 # Pull the entity-level aggregated metrics out of a parsed institution entity.
