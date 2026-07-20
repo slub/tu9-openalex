@@ -9,9 +9,10 @@
 # everything that is wrong rather than one issue at a time.
 
 # Required products for every configured institution. The consolidated view is
-# required only for universities that actually have Leiden `component`
-# affiliates -- for the others it is not merely optional, it must be ABSENT,
-# because a leftover file would otherwise be mistaken for a current product.
+# required for ALL of them: a university without Leiden `component` affiliates
+# consolidates to itself, which is its correct consolidated value, and producing
+# it keeps the three views summable over the same universities. The member set
+# is checked against the Leiden mapping rather than merely being present.
 validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
                               prev_metrics = NULL, guard_threshold = 0.20,
                               force = FALSE, period_start = NULL) {
@@ -151,6 +152,15 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   check_oa <- function(d, label) {
     if (is.null(d) || nrow(d) == 0) return(invisible(NULL))
     w <- n(d$ca_works); o <- n(d$ca_oa_works); s <- n(d$ca_oa_share)
+    # A blank count or share must never be published. Every check below skips NA
+    # (via na.rm or an explicit !is.na guard), so without this a row of blanks
+    # would pass all of them -- and period_ca() sums with na.rm = TRUE, so the
+    # totals would come out quietly understated rather than empty. The group
+    # reader now rejects such rows at the source; this catches any other route.
+    blank <- which(is.na(w) | is.na(o) | (!is.na(w) & w > 0 & is.na(s)))
+    if (length(blank) > 0)
+      add("%s: missing ca_works/ca_oa_works/ca_oa_share in %d row(s)",
+          label, length(blank))
     if (any(o > w, na.rm = TRUE))
       add("%s: ca_oa_works exceeds ca_works in %d row(s)", label, sum(o > w, na.rm = TRUE))
     if (any(w < 0 | o < 0, na.rm = TRUE))

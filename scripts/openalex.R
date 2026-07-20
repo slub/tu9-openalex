@@ -181,6 +181,17 @@ openalex_group_reader <- function(filter, group_by, include_xpac = FALSE) {
         count = vapply(g, function(x) as.integer(x$count %||% NA), integer(1)),
         stringsAsFactors = FALSE
       )
+      # `key` and `count` are required group fields. Carrying a missing one as NA
+      # would make a degraded-but-successful response indistinguishable from a
+      # legitimately absent group downstream: openalex_ca_oa_by_year() maps an
+      # absent numerator year to 0, so an NA count would be published as "no OA
+      # works" rather than as a failure. Reject the whole response instead --
+      # openalex_get()'s caller then fails the institution, which is the
+      # fail-loud behaviour the pipeline promises.
+      # https://developers.openalex.org/guides/grouping
+      bad <- which(is.na(df$key) | is.na(df$count))
+      if (length(bad) > 0)
+        stop(sprintf("%d of %d groups lack a key or count", length(bad), nrow(df)))
       attr(df, "total") <- as.integer(obj$meta$count %||% NA)
       df
     },
