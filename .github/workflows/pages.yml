@@ -19,6 +19,7 @@ on:
       - "scripts/openalex.R"
       - "scripts/gen_variables.R"
       - "scripts/publish_data.R"
+      - "scripts/validate.R"
       - "scripts/validate_products.R"
       - ".github/workflows/pages.yml"
 
