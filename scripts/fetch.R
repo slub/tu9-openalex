@@ -51,12 +51,19 @@ PERIOD_START    <- 2020  # start of the headline CA period (end = REF_YEAR)
 # Only an explicit affirmative enables the override; a stray FORCE=0 must not.
 force <- tolower(trimws(Sys.getenv("FORCE"))) %in% c("1", "true", "yes", "y")
 
-snapshot_date <- Sys.getenv("SNAPSHOT_DATE")
-if (!nzchar(snapshot_date)) snapshot_date <- format(Sys.Date())
+# The date is read once and everything downstream derives from it: the reference
+# year, the year bound applied to every query, and the bound validation checks.
+# There is deliberately no override. OpenAlex serves only its current state, so
+# a backdated run would not reconstruct an earlier snapshot -- it would stamp
+# today's data with a date it does not belong to, which is precisely what the
+# time series must not contain.
+snapshot_date <- format(Sys.Date())
+SNAPSHOT_YEAR <- as.integer(format(as.Date(snapshot_date), "%Y"))
+openalex_set_year_cap(SNAPSHOT_YEAR)
 
 # Reference year for the oa_status composition: the latest complete calendar
 # year (the current year is still filling up).
-REF_YEAR <- as.integer(format(as.Date(snapshot_date), "%Y")) - 1L
+REF_YEAR <- SNAPSHOT_YEAR - 1L
 
 # Sum corresponding-author works and OA works over the headline period
 # [PERIOD_START, REF_YEAR] from a per-year OA table (year, ca_works, ca_oa_works).
