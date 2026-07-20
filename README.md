@@ -69,11 +69,17 @@ usage without a key and ten times that ($1/day) with a
 [free key](https://developers.openalex.org/api-reference/authentication), which
 covers 10,000 list+filter calls a day; single-entity lookups are not metered.
 
-One refresh makes about 75 requests — 9 institution lookups plus 66 `group_by`
-calls (works-by-year, corresponding-author OA denominator and numerator, OA-status
-composition, Leiden-consolidated CA-OA, and Core-source CA-OA for all nine
-universities) — so roughly 0.75 % of a single day's free-key allowance, once a
-week. The free tier is ample; the paid plans are not needed for this workload.
+One refresh makes on the order of a hundred requests: one entity lookup per
+university plus a handful of `group_by` calls each (works-by-year, lineage
+works, corresponding-author OA denominator and numerator, DOAJ, OA-status
+composition, and the same denominator/numerator pair again for the
+Leiden-consolidated and the Core-source view). The count scales linearly with
+the nine universities and the number of views, so adding a view moves it by
+tens, not orders of magnitude — it stays far below 1 % of a single day's
+free-key allowance, once a week. The free tier is ample; the paid plans are not
+needed for this workload. To measure the current figure rather than estimate it,
+count the calls through `curl::curl_fetch_memory`, which is the only place this
+code touches the network.
 
 The key is read from `OPENALEX_API_KEY` and must **not** be committed:
 
