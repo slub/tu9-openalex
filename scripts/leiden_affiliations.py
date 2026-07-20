@@ -212,6 +212,17 @@ def main():
     cores = [r for r in our_rows if r["ror_id"] in uni]
     print("TU9 core universities matched in Leiden: %d/%d" % (
         len(cores), len(our_rows)))
+    # Everything downstream treats this file as authoritative: fetch.R builds the
+    # consolidated and Core member sets from it and validate.R derives its
+    # expectations from the same file, so a university silently missing here
+    # would be validated against its own absence. fetch.R rejects only a
+    # completely empty mapping, which a partial one sails past.
+    if len(cores) != len(our_rows):
+        missed = sorted(r["slug"] for r in our_rows if r["ror_id"] not in uni)
+        sys.exit("Refusing to write %s: %d of %d configured universities are "
+                 "absent from Leiden's university table (%s). Check for a schema "
+                 "or edition change before regenerating."
+                 % (OUT_CSV, len(missed), len(our_rows), ", ".join(missed)))
 
     rank = {"component": 0, "joint": 1, "associated": 2}
     cache = {}
@@ -246,11 +257,31 @@ def main():
                 "affiliated_openalex_id": oid,
             })
 
+    # read_leiden_components() in scripts/openalex.R keeps weight-1 `component`
+    # rows that carry an OpenAlex id and silently drops the rest. A lookup that
+    # failed transiently therefore does not surface as an error downstream -- it
+    # just shrinks a university's consolidated member set, and validation agrees
+    # because it reads the same shrunken file. Fail here instead, while the
+    # cause is still visible, and leave the previous file in place.
+    unresolved = sorted(
+        "%s/%s (%s)" % (r["tu9_slug"], r["affiliated_ror_id"], r["affiliated_name"])
+        for r in out_rows
+        if r["relation_type"] == "component"
+        and float(r["weight"] or 0) == 1
+        and not r["affiliated_openalex_id"])
+    if unresolved:
+        sys.exit("Refusing to write %s: %d weight-1 component(s) have no "
+                 "OpenAlex id:\n  %s"
+                 % (OUT_CSV, len(unresolved), "\n  ".join(unresolved)))
+
     fields = ["tu9_slug", "university_ror_id", "university_name",
               "relation_type", "weight", "affiliated_ror_id",
               "affiliated_name", "affiliated_openalex_id"]
+    # csv defaults to CRLF, which every other file here (all written by R) does
+    # not use -- and neither does the committed version of this one. Left as is,
+    # a regeneration rewrites all 78 lines and hides real changes in the noise.
     with open(OUT_CSV, "w", newline="", encoding="utf-8") as fh:
-        w = csv.DictWriter(fh, fieldnames=fields)
+        w = csv.DictWriter(fh, fieldnames=fields, lineterminator="\n")
         w.writeheader()
         w.writerows(out_rows)
 

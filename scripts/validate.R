@@ -21,6 +21,10 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   add <- function(...) issues <<- c(issues, sprintf(...))
 
   expected <- sort(inst$slug)
+  m <- snap$metrics
+  n <- function(x) suppressWarnings(as.numeric(x))
+  # The reference year is the latest complete calendar year, as in fetch.R.
+  ref_year <- as.integer(format(as.Date(snapshot_date), "%Y")) - 1L
 
   # --- 0. fetch failures ---------------------------------------------------
   if (length(snap$failures) > 0) {
@@ -114,7 +118,55 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
       add("core/cons member mismatch for %s", slug)
   }
 
-  # --- 6. one consistent snapshot_date everywhere --------------------------
+  # --- 6. the reference year is present in every view ----------------------
+  # Presence of *some* rows is not enough: every headline figure on the site is
+  # either the reference year or the period ending in it. A view that came back
+  # without that year would leave ca_works_ref as NA, which the arithmetic
+  # checks skip and the OA-status cross-check used to skip explicitly -- so an
+  # incomplete snapshot could be published with blanks where the headline
+  # belongs. Require exactly one row: none means missing, more than one means
+  # the year was fetched or bound twice.
+  ref_views <- list(ca_oa_by_year = list(d = snap$ca_oa_by_year, key = "slug"),
+                    consolidated  = list(d = snap$consolidated,  key = "tu9_slug"),
+                    core          = list(d = snap$core,          key = "tu9_slug"))
+  for (nm in names(ref_views)) {
+    d <- ref_views[[nm]]$d
+    key <- ref_views[[nm]]$key
+    if (is.null(d) || nrow(d) == 0) next  # absence already reported by 2/3/4
+    for (slug in expected) {
+      k <- sum(d[[key]] == slug & n(d$year) == ref_year, na.rm = TRUE)
+      if (k != 1)
+        add("%s: expected exactly 1 row for %s in reference year %d, found %d",
+            nm, slug, ref_year, k)
+    }
+  }
+  # No view may carry a publication year beyond the snapshot year. OpenAlex has
+  # mis-dated records (a 2035 stamp turned up at RWTH); the works queries always
+  # bounded the window, the corresponding-author queries did not, so the two
+  # paths disagreed. Assert the bound rather than trusting each call site.
+  snap_year <- as.integer(format(as.Date(snapshot_date), "%Y"))
+  for (nm in c("counts_by_year", "ca_oa_by_year", "consolidated", "core")) {
+    d <- snap[[nm]]
+    if (is.null(d) || nrow(d) == 0) next
+    ahead <- sort(unique(n(d$year)[n(d$year) > snap_year]))
+    if (length(ahead) > 0)
+      add("%s: publication year(s) beyond the snapshot year %d: %s",
+          nm, snap_year, paste(ahead, collapse = ", "))
+  }
+
+  # ... and the headline figures derived from it must be populated.
+  for (i in seq_len(nrow(m))) {
+    w <- n(m$ca_works_ref[i]); p <- n(m$ca_works_period[i])
+    if (is.na(w)) add("ca_works_ref is missing for %s", m$slug[i])
+    if (is.na(p)) add("ca_works_period is missing for %s", m$slug[i])
+    # A share may only be blank where there is nothing to divide by.
+    if (!is.na(w) && w > 0 && is.na(n(m$ca_oa_share_ref[i])))
+      add("ca_oa_share_ref is missing for %s", m$slug[i])
+    if (!is.na(p) && p > 0 && is.na(n(m$ca_oa_share_period[i])))
+      add("ca_oa_share_period is missing for %s", m$slug[i])
+  }
+
+  # --- 7. one consistent snapshot_date everywhere --------------------------
   for (nm in c("metrics", "counts_by_year", "ca_oa_by_year", "ca_oa_status",
                "consolidated", "core")) {
     d <- snap[[nm]]
@@ -124,9 +176,7 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
       add("%s carries foreign snapshot_date(s): %s", nm, paste(bad, collapse = ", "))
   }
 
-  # --- 7. numeric invariants ----------------------------------------------
-  m <- snap$metrics
-  n <- function(x) suppressWarnings(as.numeric(x))
+  # --- 8. numeric invariants ----------------------------------------------
   if (any(n(m$works_count) <= 0, na.rm = TRUE))
     add("non-positive works_count for: %s",
         paste(m$slug[n(m$works_count) <= 0], collapse = ", "))
@@ -227,7 +277,6 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   }
 
   # Core headline-period totals must equal the sum of their yearly Core values.
-  ref_year <- as.integer(format(as.Date(snapshot_date), "%Y")) - 1L
   period_years <- seq(period_start, ref_year)
   for (slug in expected) {
     core_slug <- snap$core[snap$core$tu9_slug == slug, ]
@@ -254,14 +303,14 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
     for (slug in names(tot)) {
       # A slug with status rows but no metrics row is already reported above as
       # a missing institution; skip it rather than index out of bounds.
-      if (!(slug %in% names(ref)) || is.na(ref[[slug]])) next
+      if (!(slug %in% names(ref))) next
       if (!isTRUE(all.equal(unname(tot[[slug]]), unname(ref[[slug]]))))
         add("ca_oa_status total (%s) != ca_works_ref (%s) for %s",
             tot[[slug]], ref[[slug]], slug)
     }
   }
 
-  # --- 8. guard rail against a collapse in coverage ------------------------
+  # --- 9. guard rail against a collapse in coverage ------------------------
   if (!is.null(prev_metrics) && nrow(prev_metrics) > 0 && !force) {
     prev <- prev_metrics[prev_metrics$snapshot_date != snapshot_date, , drop = FALSE]
     if (nrow(prev) > 0) {

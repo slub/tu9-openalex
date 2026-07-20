@@ -286,14 +286,27 @@ inst_page <- function(slug) {
     members <- leiden_component_names(slug)
     leiden_link <- tags$a(href = "https://open.leidenranking.com/",
                           target = "_blank", "CWTS Leiden Ranking Open Edition")
-    # Universities without components consolidate to themselves, so the "raises
-    # X to Y" wording would read "from 1,809 to 1,809". Say what actually
-    # happened instead, and why the view is shown at all for them.
+    # "Adding those raises X to Y" only holds where the components actually
+    # contribute in the reference year. Two cases do not: a university with no
+    # components at all, and one whose components published nothing with a
+    # corresponding author that year. Both would otherwise render as "from
+    # 1,804 to 1,804", so each gets its own sentence.
+    cons_gained <- nrow(cref) > 0 &&
+      !is.na(suppressWarnings(as.numeric(cref$ca_works))) &&
+      !is.na(suppressWarnings(as.numeric(latest$ca_works_ref))) &&
+      as.numeric(cref$ca_works) > as.numeric(latest$ca_works_ref)
     cons_intro <- if (length(members) == 0) inline_p(
       "The ", leiden_link, " counts a university together with its ",
       tags$strong("component"), " organisations. This university has none, so it ",
       "consolidates to itself: the figures below repeat the entity view. It is ",
       "reported so that all nine universities can be read on the same basis.")
+    else if (nrow(cref) > 0 && !cons_gained) inline_p(
+      "The ", leiden_link, " counts a university together with its ",
+      tags$strong("component"), " organisations. Its components added no further ",
+      "corresponding-author works in ", tags$strong(latest$ref_year), ", so the ",
+      "consolidated count stays at ", tags$strong(fmt_int(cref$ca_works)),
+      ", OA share ", tags$strong(fmt_pct(cref$ca_oa_share)),
+      ". Earlier years may still differ.")
     else if (nrow(cref) > 0) inline_p(
       "The ", leiden_link, " counts a university together with its ",
       tags$strong("component"), " organisations. Adding those raises ",

@@ -304,7 +304,15 @@ openalex_ca_oa_by_year <- function(inst_ids, start_year, extra_filter = NULL) {
 
   denom$year <- suppressWarnings(as.integer(denom$key))
   numer$year <- suppressWarnings(as.integer(numer$key))
-  denom <- denom[!is.na(denom$year) & denom$year >= start_year, ]
+  # Bound the window at both ends, as openalex_works_by_year() already does.
+  # OpenAlex carries occasional mis-dated records -- one RWTH work is stamped
+  # 2035 -- and without an upper bound they end up as stray rows in the yearly
+  # tables and charts. They never reached the headline figures, which sum
+  # [PERIOD_START, REF_YEAR], so the two code paths simply disagreed about what
+  # a publication year may be.
+  this_year <- as.integer(format(Sys.Date(), "%Y"))
+  denom <- denom[!is.na(denom$year) & denom$year >= start_year &
+                 denom$year <= this_year, ]
   if (nrow(denom) == 0) return(NULL)
 
   oa <- numer$count[match(denom$year, numer$year)]

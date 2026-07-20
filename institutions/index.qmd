@@ -24,8 +24,9 @@ at the institution) and the **CA OA share** among them:
 - **Single institution (ROR/OpenAlex)** — the one OpenAlex institution
   identified by the university's [ROR](https://ror.org/) id.
 - **Consolidated (OpenAlex/Leiden)** — the university grouped with its Leiden
-  `component` affiliates (e.g. its university hospital). Blank where a university
-  has no components, so the two readings would be identical.
+  `component` affiliates (e.g. its university hospital). A university without
+  components consolidates to itself, so all nine carry a value and the readings
+  stay comparable across the alliance.
 - **Core sources (Leiden/Core)** — the same Leiden-consolidated member set,
   additionally restricted to sources on the CWTS Core sources allow-list
   (`primary_location.source.is_core:true`). Populated for all nine universities,
