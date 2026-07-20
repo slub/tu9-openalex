@@ -6,12 +6,16 @@ name: Refresh OpenAlex metrics
 # Can also be run on demand from the Actions tab (use "force" to bypass the
 # guard rail if a legitimate, large change has occurred upstream).
 #
-# Running unattended is safe because scripts/fetch.R is fail-loud: it fetches
-# everything into memory, validates the snapshot (exact institution set, every
-# required product, one consistent snapshot date, the OA arithmetic and the
-# coverage guard rail) and only then writes. The refreshed data is committed
-# only after the site has rendered, so a failed fetch, a failed validation or a
-# broken render aborts the run without publishing anything.
+# Running unattended is safe because scripts/fetch.R is fail-loud. It fetches
+# everything into memory and validates the snapshot there -- exact institution
+# set, every required product, the reference year, required numeric fields,
+# composite-key uniqueness, publication-year bounds, one consistent snapshot
+# date, the OA/DOAJ arithmetic, the lens ordering and the coverage guard rail --
+# and only then writes. It then re-validates what it wrote (scripts/
+# validate_products.R): the published files, the per-institution slices,
+# meta.json and the raw archive. The refreshed data is committed only after the
+# site has rendered, so a failed fetch, a failed validation or a broken render
+# aborts the run without publishing anything.
 on:
   schedule:
     - cron: "0 5 * * 1"   # every Monday at 05:00 UTC

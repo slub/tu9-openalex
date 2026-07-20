@@ -14,21 +14,41 @@ read_data <- function(...) {
   read_csv(file.path("data", ...), col_types = cols(.default = col_character()))
 }
 
-# Read a per-institution product only if it belongs to the CURRENT snapshot.
-# A file left behind by an earlier run must never be rendered underneath a newer
-# headline, so a missing file, a missing snapshot_date column, or any row from a
-# different snapshot is treated as "product absent".
+# Read a per-institution product and require it to belong to the CURRENT
+# snapshot. These products were best-effort once, and a missing or stale one
+# simply dropped its section from the page. They are all mandatory now -- the
+# alliance table sums the three OA views over the same nine universities -- so
+# silently omitting one produces a wrong page rather than a thinner one. Fail the
+# build instead; scripts/validate_products.R checks the same contract up front.
 read_current <- function(slug, file, snapshot_date) {
   path <- file.path("data", slug, file)
-  if (!file.exists(path)) return(NULL)
+  if (!file.exists(path))
+    stop("required product missing: ", path, call. = FALSE)
   d <- read_data(slug, file)
-  if (nrow(d) == 0 || !"snapshot_date" %in% names(d)) return(NULL)
-  if (!all(d$snapshot_date == snapshot_date)) return(NULL)
+  if (nrow(d) == 0)
+    stop("required product is empty: ", path, call. = FALSE)
+  if (!"snapshot_date" %in% names(d))
+    stop("required product has no snapshot_date column: ", path, call. = FALSE)
+  stale <- setdiff(unique(as.character(d$snapshot_date)), as.character(snapshot_date))
+  if (length(stale) > 0)
+    stop(sprintf("stale product %s: carries snapshot_date %s, published is %s",
+                 path, paste(stale, collapse = ", "), snapshot_date), call. = FALSE)
   d
 }
 
 read_meta <- function() {
   jsonlite::read_json("data/meta.json", simplifyVector = FALSE)
+}
+
+# The published snapshot date, taken from meta.json. This is the one anchor for
+# "current" on the site: reading it from each institution's own metrics.csv
+# instead would let a house left behind at an older date render as if it were
+# up to date, because every staleness check would then compare it with itself.
+published_snapshot <- function() {
+  u <- read_meta()$updated
+  if (is.null(u) || !nzchar(as.character(u)))
+    stop("data/meta.json has no `updated` date; refusing to render", call. = FALSE)
+  as.character(u)
 }
 
 # Format an integer count for display, with a thousands separator (e.g. 12874 ->
@@ -267,19 +287,26 @@ code_link <- function(href, file) {
 # Full body of a per-institution page. Reads the institution's metric time
 # series and yearly counts, and links to its OpenAlex entity and raw snapshots.
 inst_page <- function(slug) {
-  m   <- read_data(slug, "metrics.csv")
+  # Anchor everything on the published snapshot rather than on this institution's
+  # own newest row: a house left behind at an older date would otherwise pass
+  # every staleness check, because it would be compared against itself.
+  published <- published_snapshot()
+  m <- read_data(slug, "metrics.csv")
+  if (nrow(m) == 0)
+    stop("required product is empty: data/", slug, "/metrics.csv", call. = FALSE)
   latest <- m[nrow(m), ]
-  # counts_by_year carries a snapshot_date too, so read it with the same
-  # staleness guard as the OA products rather than trusting mere existence.
-  cby <- read_current(slug, "counts_by_year.csv", latest$snapshot_date)
+  if (!identical(as.character(latest$snapshot_date), published))
+    stop(sprintf("stale metrics for %s: newest row is %s, published is %s",
+                 slug, latest$snapshot_date, published), call. = FALSE)
 
-  # OA views are best-effort in the pipeline, so a page must render even if they
-  # are absent for this institution.
-  oa     <- read_current(slug, "ca_oa_by_year.csv", latest$snapshot_date)
-  status <- read_current(slug, "ca_oa_status.csv", latest$snapshot_date)
+  # Every product below is mandatory; read_current() fails the build if one is
+  # missing, empty or stale.
+  cby    <- read_current(slug, "counts_by_year.csv", published)
+  oa     <- read_current(slug, "ca_oa_by_year.csv", published)
+  status <- read_current(slug, "ca_oa_status.csv", published)
 
   # Leiden-consolidated view (university + component affiliates), universities only.
-  cons <- read_current(slug, "consolidated_ca_oa_by_year.csv", latest$snapshot_date)
+  cons <- read_current(slug, "consolidated_ca_oa_by_year.csv", published)
   cons_section <- NULL
   if (!is.null(cons) && nrow(cons) > 0) {
     cref <- cons[cons$year == latest$ref_year, ]
@@ -327,7 +354,7 @@ inst_page <- function(slug) {
 
   # CWTS Core-source-filtered view: same member set as consolidated, restricted
   # to primary_location.source.is_core:true.
-  core <- read_current(slug, "leiden_core_ca_oa_by_year.csv", latest$snapshot_date)
+  core <- read_current(slug, "leiden_core_ca_oa_by_year.csv", published)
   core_section <- NULL
   if (!is.null(core) && nrow(core) > 0) {
     coref <- core[core$year == latest$ref_year, ]

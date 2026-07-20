@@ -19,6 +19,7 @@ on:
       - "scripts/openalex.R"
       - "scripts/gen_variables.R"
       - "scripts/publish_data.R"
+      - "scripts/validate_products.R"
       - ".github/workflows/pages.yml"
 
 permissions:
@@ -51,6 +52,14 @@ jobs:
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
+
+      # This workflow renders whatever data is committed, without running
+      # fetch.R -- so it is the one path on which no validation used to happen
+      # at all. Check the published products before building anything from them:
+      # a missing, empty, stale or inconsistent product must fail the build
+      # rather than be deployed.
+      - name: Validate committed data products
+        run: Rscript scripts/validate_products.R
 
       - name: Generate institution pages
         run: Rscript scripts/gen_pages.R

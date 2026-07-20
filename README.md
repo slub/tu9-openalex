@@ -55,7 +55,8 @@ Rscript -e 'renv::restore()'      # once, to materialise the R library
 source ./secret
 export OPENALEX_MAILTO="you@example.org"   # polite pool (optional)
 
-Rscript scripts/fetch.R           # fetch + append a snapshot
+Rscript scripts/fetch.R           # fetch + append a snapshot (validates, then writes)
+Rscript scripts/validate_products.R  # check the committed data products on their own
 Rscript scripts/gen_pages.R       # regenerate per-institution pages
 quarto render                     # build the site into _site/
 ```

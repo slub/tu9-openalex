@@ -15,41 +15,45 @@
 
 out <- Sys.getenv("QUARTO_PROJECT_OUTPUT_DIR", "_site")
 
+# Every file below is linked from the Downloads page, so skipping a missing one
+# publishes a site with dead links. These products are all mandatory now, so
+# absence is a failure rather than a reason to publish less.
 publish <- function(from, to) {
+  if (!file.exists(from))
+    stop("publish_data.R: required file missing: ", from, call. = FALSE)
   dest <- file.path(out, to)
   dir.create(dirname(dest), recursive = TRUE, showWarnings = FALSE)
   if (!file.copy(from, dest, overwrite = TRUE))
-    stop("publish_data.R: failed to copy ", from, " -> ", dest)
+    stop("publish_data.R: failed to copy ", from, " -> ", dest, call. = FALSE)
 }
+
+PRODUCTS <- c("metrics.csv", "counts_by_year.csv",
+              "ca_oa_by_year.csv", "ca_oa_status.csv",
+              "consolidated_ca_oa_by_year.csv", "leiden_core_ca_oa_by_year.csv")
 
 # Top-level data products, metadata and the data licence.
-for (f in c("metrics.csv", "counts_by_year.csv",
-            "ca_oa_by_year.csv", "ca_oa_status.csv",
-            "consolidated_ca_oa_by_year.csv", "leiden_core_ca_oa_by_year.csv",
-            "meta.json")) {
-  src <- file.path("data", f)
-  if (file.exists(src)) publish(src, f)
-}
-if (file.exists("data/LICENSE")) publish("data/LICENSE", "DATA-LICENSE")
+for (f in c(PRODUCTS, "meta.json")) publish(file.path("data", f), f)
+publish("data/LICENSE", "DATA-LICENSE")
 
-# Build inputs.
+# Build inputs. The Leiden mapping is required: fetch.R refuses to publish a
+# snapshot without it, so a site without it would not match its own data.
 publish("data-raw/institutions.csv", "institutions.csv")
-if (file.exists("data-raw/leiden_affiliations.csv"))
-  publish("data-raw/leiden_affiliations.csv", "leiden_affiliations.csv")
+publish("data-raw/leiden_affiliations.csv", "leiden_affiliations.csv")
 
 # Per-institution views + raw snapshots, under /institutions/<slug>/ to mirror
-# the page paths.
-slugs <- list.dirs("data", recursive = FALSE, full.names = FALSE)
-slugs <- setdiff(slugs[nzchar(slugs)], "snapshots")
+# the page paths. Driven by the institution configuration rather than by whatever
+# directories happen to exist: listing directories would silently publish a house
+# that is no longer configured, and silently omit one whose directory is missing.
+source("scripts/openalex.R")
+slugs <- sort(read_institutions()$slug)
 for (slug in slugs) {
-  for (f in c("metrics.csv", "counts_by_year.csv",
-              "ca_oa_by_year.csv", "ca_oa_status.csv",
-              "consolidated_ca_oa_by_year.csv", "leiden_core_ca_oa_by_year.csv")) {
-    src <- file.path("data", slug, f)
-    if (file.exists(src)) publish(src, file.path("institutions", slug, f))
+  for (f in PRODUCTS) {
+    publish(file.path("data", slug, f), file.path("institutions", slug, f))
   }
   snaps <- list.files(file.path("data", "snapshots", slug), pattern = "\\.json$",
                       full.names = TRUE)
+  if (length(snaps) == 0)
+    stop("publish_data.R: no raw snapshots for ", slug, call. = FALSE)
   for (s in snaps) {
     publish(s, file.path("institutions", slug, "snapshots", basename(s)))
   }

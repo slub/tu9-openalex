@@ -41,6 +41,7 @@ suppressPackageStartupMessages({
 
 source("scripts/openalex.R")
 source("scripts/validate.R")
+source("scripts/validate_products.R")
 
 # --- configuration ---------------------------------------------------------
 GUARD_THRESHOLD <- 0.20  # abort if the total works count drops by more than
@@ -451,6 +452,16 @@ meta <- list(
   institutions    = meta_inst
 )
 write_json(meta, "data/meta.json", auto_unbox = TRUE, pretty = TRUE, null = "null")
+
+# ===========================================================================
+# 4. RE-VALIDATE -- what was actually written, as a reader will see it
+# ===========================================================================
+# Everything above this line was checked in memory. The write itself, the
+# per-institution slices, meta.json and the raw archive are produced afterwards,
+# so a defect there used to reach the site unopposed. This cannot un-write the
+# files -- but the workflow commits only after validation AND a successful
+# render, so a failure here still keeps bad data out of main and off the site.
+validate_products(inst = inst)
 
 message("Wrote metrics for ", nrow(snap$metrics), " institutions (snapshot ",
         snapshot_date, "); ", length(unique(all_metrics$snapshot_date)),
