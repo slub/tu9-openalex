@@ -1,0 +1,6 @@
+/* Reactable tables render as HTML widgets inside Quarto cell-output containers,
+   so blank lines in the QMD add no space after them. Give the widget itself a
+   small bottom margin so the following prose is not flush against the table. */
+.reactable.html-widget {
+  margin-bottom: 1.25rem;
+}
