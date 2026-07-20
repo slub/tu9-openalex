@@ -192,6 +192,14 @@ openalex_group_reader <- function(filter, group_by, include_xpac = FALSE) {
       bad <- which(is.na(df$key) | is.na(df$count))
       if (length(bad) > 0)
         stop(sprintf("%d of %d groups lack a key or count", length(bad), nrow(df)))
+      # A group_by is a partition: one row per distinct key. A repeated key would
+      # survive as two rows of the same year, which period_ca() sums -- so the
+      # headline works figure would come out too high with nothing to show for
+      # it. There is no reading under which a duplicate key is meaningful.
+      dup <- unique(df$key[duplicated(df$key)])
+      if (length(dup) > 0)
+        stop(sprintf("duplicate group key(s): %s",
+                     paste(utils::head(dup, 5), collapse = ", ")))
       attr(df, "total") <- as.integer(obj$meta$count %||% NA)
       df
     },
@@ -250,7 +258,7 @@ openalex_works_by_year <- function(inst_ids) {
     "publication_year")
   if (is.null(g)) return(NULL)
   yr <- suppressWarnings(as.integer(g$key))
-  keep <- !is.na(yr) & yr <= as.integer(format(Sys.Date(), "%Y"))
+  keep <- !is.na(yr) & yr <= openalex_year_cap()
   list(
     total = attr(g, "total"),
     by_year = data.frame(year = yr[keep], works_count = g$count[keep],
@@ -271,7 +279,7 @@ openalex_works_lineage_by_year <- function(inst_id) {
                              "publication_year", include_xpac = TRUE)
   if (is.null(g)) return(NULL)
   yr <- suppressWarnings(as.integer(g$key))
-  keep <- !is.na(yr) & yr <= as.integer(format(Sys.Date(), "%Y"))
+  keep <- !is.na(yr) & yr <= openalex_year_cap()
   list(total = attr(g, "total"),
        by_year = data.frame(year = yr[keep], works_count = g$count[keep],
                             stringsAsFactors = FALSE))
@@ -310,9 +318,8 @@ openalex_ca_oa_by_year <- function(inst_ids, start_year, extra_filter = NULL) {
   # tables and charts. They never reached the headline figures, which sum
   # [PERIOD_START, REF_YEAR], so the two code paths simply disagreed about what
   # a publication year may be.
-  this_year <- as.integer(format(Sys.Date(), "%Y"))
   denom <- denom[!is.na(denom$year) & denom$year >= start_year &
-                 denom$year <= this_year, ]
+                 denom$year <= openalex_year_cap(), ]
   if (nrow(denom) == 0) return(NULL)
 
   oa <- numer$count[match(denom$year, numer$year)]
@@ -432,8 +439,29 @@ openalex_counts_by_year <- function(obj) {
   # OpenAlex occasionally carries a stray future year (a work with a wrong
   # publication date). Drop anything past the current year so the yearly view
   # stays clean; the raw JSON snapshot still preserves the original values.
-  df[!is.na(df$year) & df$year <= as.integer(format(Sys.Date(), "%Y")), , drop = FALSE]
+  df[!is.na(df$year) & df$year <= openalex_year_cap(), , drop = FALSE]
 }
 
 # Small null-coalescing helper (base R has none).
 `%||%` <- function(a, b) if (is.null(a)) b else a
+
+# The latest publication year any view may contain. OpenAlex carries mis-dated
+# records, so every yearly view drops anything past it.
+#
+# This is deliberately ONE value for a whole run rather than an argument on each
+# helper: fetch.R fixes the snapshot date once and validate.R checks the year
+# bound against it, so a second clock is a source of disagreement, not of
+# flexibility. Reading Sys.Date() per query meant a run crossing midnight could
+# fetch a year its own validation then rejected. Callers set it once via
+# openalex_set_year_cap(); unset, it is the current year, which is what every
+# call site did before.
+.openalex_year_cap <- new.env(parent = emptyenv())
+openalex_set_year_cap <- function(year) {
+  assign("year", as.integer(year), envir = .openalex_year_cap)
+}
+openalex_year_cap <- function() {
+  if (exists("year", envir = .openalex_year_cap))
+    get("year", envir = .openalex_year_cap)
+  else
+    as.integer(format(Sys.Date(), "%Y"))
+}

@@ -140,6 +140,34 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
             nm, slug, ref_year, k)
     }
   }
+  # Every output table has a composite key that must identify a row uniquely.
+  # Check 6 above pins this down for the reference year only; a repeated row in
+  # any other year is just as wrong and worse to spot, because period_ca() sums
+  # the window and would silently inflate the headline works figure. The group
+  # reader rejects duplicate keys at the source; this holds for the tables as
+  # assembled, including the per-slug binding the reader never sees.
+  keys <- list(
+    counts_by_year = c("slug", "year"),
+    ca_oa_by_year  = c("slug", "year"),
+    ca_oa_status   = c("slug", "year", "oa_status"),
+    consolidated   = c("tu9_slug", "year"),
+    core           = c("tu9_slug", "year"))
+  for (nm in names(keys)) {
+    d <- snap[[nm]]
+    if (is.null(d) || nrow(d) == 0) next
+    k <- keys[[nm]]
+    if (!all(k %in% names(d))) {
+      add("%s: expected key column(s) %s are absent", nm, paste(k, collapse = ", "))
+      next
+    }
+    id <- do.call(paste, c(lapply(k, function(x) as.character(d[[x]])), sep = "\r"))
+    dup <- unique(id[duplicated(id)])
+    if (length(dup) > 0)
+      add("%s: %d duplicate row(s) for key (%s): %s", nm, length(dup),
+          paste(k, collapse = ", "),
+          paste(gsub("\r", "/", utils::head(dup, 5)), collapse = "; "))
+  }
+
   # No view may carry a publication year beyond the snapshot year. OpenAlex has
   # mis-dated records (a 2035 stamp turned up at RWTH); the works queries always
   # bounded the window, the corresponding-author queries did not, so the two
