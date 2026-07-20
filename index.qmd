@@ -1,5 +1,5 @@
 ---
-title: "TU9 OpenAlex Metrics"
+title: "TU9 Open Access Monitoring with OpenAlex"
 ---
 
 ```{r}
@@ -8,20 +8,13 @@ source("scripts/site_helpers.R")
 meta <- read_meta()
 ```
 
-Open-access monitoring for the [TU9](https://www.tu9.de/) universities,
-built from [OpenAlex](https://openalex.org/) and snapshotted over time. The
-headline is the **open-access share on the corresponding-author lens**
-(`corresponding_institution_ids`) — the fraction of a university's
-corresponding-author output that is open access. That is the view which matches
-[OpenAPC](https://openapc.net/) and transformative-agreement accounting, and the
-one relevant to OA monitoring.
+Open-access monitoring for the [TU9](https://www.tu9.de/) universities, built from [OpenAlex](https://openalex.org/) and snapshotted over time.
+The headline is the open-access share on the corresponding-author lens — the fraction of a university's corresponding-author output that is open access.
+That is the view which matches [OpenAPC](https://openapc.net/) and transformative-agreement accounting, and the one relevant to OA monitoring.
 
-Each university is shown three ways: as the single OpenAlex institution,
-grouped with its affiliated organisations the way the
-[Leiden Ranking](https://open.leidenranking.com/) defines (e.g. with its
-university hospital), and that same Leiden member set restricted to CWTS Core
-sources via `primary_location.source.is_core:true`. See [Background](background.qmd)
-for method and sources and [Downloads](downloads.qmd) for the raw files.
+Each university is shown three ways: as the single OpenAlex institution, grouped with its affiliated organisations the way the [Leiden Ranking](https://open.leidenranking.com/) defines (e.g. with its university hospital), and that same Leiden member set restricted to CWTS Core sources via `primary_location.source.is_core:true`.
+See [Background](background.qmd) for method and sources and [Downloads](downloads.qmd) for the raw files.
+
 Refreshed on a schedule and released under CC0.
 
 ```{r}
@@ -41,12 +34,9 @@ cat(sprintf(
 alliance_summary_table(meta)
 ```
 
-All three readings cover the same nine universities, so the totals are directly
-comparable. Consolidating adds the weight-1 Leiden `component` affiliates and can
-therefore only raise a university's count; three universities have no such
-affiliates and consolidate to themselves. Core sources uses the consolidated
-member set with publications restricted to CWTS Core sources, so it is always the
-smallest of the three.
 
-The [Institutions](institutions/index.qmd) page breaks the same three readings
-down per university.
+All three readings cover the same nine universities, so the totals are directly comparable.
+Consolidating adds the weight-1 Leiden `component` affiliates and can therefore only raise a university's count; three universities have no such affiliates and consolidate to themselves.
+Core sources uses the consolidated member set with publications restricted to CWTS Core sources, so it is always the smallest of the three.
+
+The [Institutions](institutions/index.qmd) page breaks the same three readings down per university.
