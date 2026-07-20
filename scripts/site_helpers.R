@@ -286,7 +286,15 @@ inst_page <- function(slug) {
     members <- leiden_component_names(slug)
     leiden_link <- tags$a(href = "https://open.leidenranking.com/",
                           target = "_blank", "CWTS Leiden Ranking Open Edition")
-    cons_intro <- if (nrow(cref) > 0) inline_p(
+    # Universities without components consolidate to themselves, so the "raises
+    # X to Y" wording would read "from 1,809 to 1,809". Say what actually
+    # happened instead, and why the view is shown at all for them.
+    cons_intro <- if (length(members) == 0) inline_p(
+      "The ", leiden_link, " counts a university together with its ",
+      tags$strong("component"), " organisations. This university has none, so it ",
+      "consolidates to itself: the figures below repeat the entity view. It is ",
+      "reported so that all nine universities can be read on the same basis.")
+    else if (nrow(cref) > 0) inline_p(
       "The ", leiden_link, " counts a university together with its ",
       tags$strong("component"), " organisations. Adding those raises ",
       "corresponding-author works in ", tags$strong(latest$ref_year), " from ",

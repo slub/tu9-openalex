@@ -75,8 +75,8 @@ works, corresponding-author OA denominator and numerator, DOAJ, OA-status
 composition, and the same denominator/numerator pair again for the
 Leiden-consolidated and the Core-source view). The count scales linearly with
 the nine universities and the number of views, so adding a view moves it by
-tens, not orders of magnitude — it stays far below 1 % of a single day's
-free-key allowance, once a week. The free tier is ample; the paid plans are not
+tens, not orders of magnitude — about 1 % of a single day's free-key
+allowance, once a week. The free tier is ample; the paid plans are not
 needed for this workload. To measure the current figure rather than estimate it,
 count the calls through `curl::curl_fetch_memory`, which is the only place this
 code touches the network.

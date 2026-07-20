@@ -48,8 +48,8 @@ snapshot):
 #| output: asis
 for (x in meta$institutions) {
   cat(sprintf(
-    "- `institutions/%s/` — [metrics.csv](institutions/%s/metrics.csv) · [counts_by_year.csv](institutions/%s/counts_by_year.csv) · [ca_oa_by_year.csv](institutions/%s/ca_oa_by_year.csv) · [ca_oa_status.csv](institutions/%s/ca_oa_status.csv) · [leiden_core_ca_oa_by_year.csv](institutions/%s/leiden_core_ca_oa_by_year.csv)\n",
-    x$slug, x$slug, x$slug, x$slug, x$slug, x$slug))
+    "- `institutions/%s/` — [metrics.csv](institutions/%s/metrics.csv) · [counts_by_year.csv](institutions/%s/counts_by_year.csv) · [ca_oa_by_year.csv](institutions/%s/ca_oa_by_year.csv) · [ca_oa_status.csv](institutions/%s/ca_oa_status.csv) · [consolidated_ca_oa_by_year.csv](institutions/%s/consolidated_ca_oa_by_year.csv) · [leiden_core_ca_oa_by_year.csv](institutions/%s/leiden_core_ca_oa_by_year.csv)\n",
+    x$slug, x$slug, x$slug, x$slug, x$slug, x$slug, x$slug))
 }
 ```
 

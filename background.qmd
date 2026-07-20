@@ -84,8 +84,9 @@ instance, the
 [University Hospital Carl Gustav Carus](https://openalex.org/I4210162051) is
 counted inside TU Dresden and the
 [Universitätsklinikum Aachen](https://openalex.org/I4210120689) inside RWTH.
-Fractional `joint` affiliates are not (yet) included — only full components, and
-universities without any keep an empty consolidated value.
+Fractional `joint` affiliates are not (yet) included — only full components. A
+university without any consolidates to itself, so all nine have a consolidated
+value and the two views stay comparable across the alliance.
 
 ## Core-source-filtered view (CWTS Core sources)
 
