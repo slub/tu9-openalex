@@ -7,6 +7,11 @@ suppressPackageStartupMessages({
   library(htmltools)
 })
 
+# The configuration and mapping readers, so the site reads its build inputs
+# through exactly the same validated code as the fetch and the validators.
+# Sourcing is side-effect-free: openalex.R only defines functions.
+if (!exists("read_leiden_components")) source("scripts/openalex.R")
+
 # Null-coalescing helper (base R has none); also used to guard missing OA fields.
 `%||%` <- function(a, b) if (is.null(a)) b else a
 
@@ -259,15 +264,19 @@ counts_by_year_table <- function(cby) {
   )
 }
 
-# Names of the weight-1 component affiliates Leiden merges into a university,
-# read from the build-input mapping (data-raw/leiden_affiliations.csv).
+# Names of the weight-1 component affiliates Leiden merges into a university.
+#
+# This used to re-implement the component filter inline, which meant the SITE
+# parsed the mapping under weaker rules than the fetch and the validators: a row
+# with a malformed weight, an unconfigured slug or an identity that had drifted
+# from the configuration would be listed on the page while every validator
+# rejected it. Go through the one validated reader instead, so the names shown
+# are exactly the members the consolidated figures were computed from.
 leiden_component_names <- function(slug,
                                    path = "data-raw/leiden_affiliations.csv") {
-  if (!file.exists(path)) return(character(0))
-  la <- read_csv(path, col_types = cols(.default = col_character()))
-  la <- la[la$tu9_slug == slug & la$relation_type == "component" &
-           !is.na(la$affiliated_openalex_id) & nzchar(la$affiliated_openalex_id), ]
-  la$affiliated_name
+  la <- read_leiden_components(path)
+  if (is.null(la)) return(character(0))
+  la$affiliated_name[la$tu9_slug == slug]
 }
 
 # Compose an inline paragraph from text and tag pieces as a single HTML node

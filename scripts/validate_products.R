@@ -175,7 +175,8 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
   # its consolidated and Core headlines are then checked against the yearly rows
   # in the CSVs, which is what nothing verified before.
   if (length(issues) == 0) {
-    leiden <- read_leiden_components(file.path(raw_dir, "leiden_affiliations.csv"))
+    leiden <- read_leiden_components(file.path(raw_dir, "leiden_affiliations.csv"),
+                                     inst = inst)
     if (is.null(leiden))
       add("Leiden mapping is missing; cannot verify the consolidated member sets")
 
@@ -187,7 +188,12 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
         e <- Filter(function(x) identical(as.character(x$slug %or% ""), s),
                     meta$institutions %or% list())
         e <- if (length(e) > 0) e[[1]] else list()
-        list(n_members       = length(members_of(s)),
+        # `members` can only come from the Leiden mapping -- meta.json does not
+        # list them -- but `n_members` is a published field, so take it from
+        # meta.json and let validate_snapshot() reconcile the two. Recomputing it
+        # here from the same mapping the member list comes from would have made
+        # the check unfalsifiable.
+        list(n_members       = n(e[[paste0(meta_prefix, "_n_members")]] %or% NA),
              members         = members_of(s),
              ca_works_ref    = n(e[[paste0(meta_prefix, "_ca_works_ref")]] %or% NA),
              ca_oa_share_ref = n(e[[paste0(meta_prefix, "_ca_oa_share_ref")]] %or% NA),
@@ -237,17 +243,9 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
       add("semantic validation of the published products failed:\n    %s",
           gsub("\n", "\n    ", sem))
 
-    # The published member count must match the mapping the members come from.
-    for (nm in c("consolidated_ca_oa_by_year.csv", "leiden_core_ca_oa_by_year.csv")) {
-      d <- loaded[[nm]]
-      if (is.null(d)) next
-      for (slug in expected) {
-        got_nm <- unique(n(d$n_members[d$tu9_slug == slug]))
-        if (length(got_nm) != 1 || !identical(as.integer(got_nm), length(members_of(slug))))
-          add("%s: n_members for %s is %s, the Leiden mapping gives %d", nm, slug,
-              paste(got_nm, collapse = "/"), length(members_of(slug)))
-      }
-    }
+    # (The n_members columns in the two yearly products are checked inside
+    # validate_snapshot() against the same member sets, so they are not restated
+    # here -- one copy of the rule, exercised on both paths.)
 
     # meta.json fields that no product check touched.
     if (!is.null(mt)) {
@@ -261,6 +259,17 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
             add("meta.json %s for %s is '%s', metrics.csv says '%s'", f, slug,
                 as.character(e[[f]] %or% ""), as.character(r[[f]]))
         }
+        # The site prints these as the span of the time series. metrics.csv keeps
+        # the whole history, so both are reconstructible -- and neither was read.
+        hist <- sort(as.character(mt$snapshot_date[mt$slug == slug]))
+        if (length(hist) > 0) {
+          for (fld in list(c("first_snapshot", hist[1]),
+                           c("latest_snapshot", hist[length(hist)]))) {
+            if (!identical(as.character(e[[fld[1]]] %or% ""), fld[2]))
+              add("meta.json %s for %s is '%s', metrics.csv history says '%s'",
+                  fld[1], slug, as.character(e[[fld[1]]] %or% ""), fld[2])
+          }
+        }
       }
       for (pair in list(c("oa_ref_year", "ref_year"),
                         c("oa_period_start", "period_start"),
@@ -270,6 +279,13 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
           add("meta.json %s is %s, metrics.csv %s is %s", pair[1],
               paste(meta[[pair[1]]], collapse = ""), pair[2], want)
       }
+      # The provenance line printed under every table. It is a constant, so the
+      # only way it can be wrong is by having been changed in one place and not
+      # the other; pin it rather than leaving the one free-text field unchecked.
+      want_source <- "OpenAlex (corresponding-author works, CC0)"
+      if (!identical(as.character(meta$source %or% ""), want_source))
+        add("meta.json source is '%s', expected '%s'",
+            as.character(meta$source %or% ""), want_source)
       n_snap <- length(unique(as.character(mt$snapshot_date)))
       if (!identical(as.integer(meta$n_snapshots %or% NA_integer_), n_snap))
         add("meta.json n_snapshots is %s, metrics.csv holds %d",

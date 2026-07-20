@@ -406,12 +406,15 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   period_views <- list(
     list(label = "single-institution", rows = snap$ca_oa_by_year, key = "slug",
          works = function(s) n(m$ca_works_period[m$slug == s]),
+         oa_works = function(s) n(m$ca_oa_works_period[m$slug == s]),
          share = function(s) n(m$ca_oa_share_period[m$slug == s])),
     list(label = "consolidated", rows = snap$consolidated, key = "tu9_slug",
          works = function(s) n(snap$cons_members[[s]]$ca_works_period),
+         oa_works = NULL,  # not published for this view
          share = function(s) n(snap$cons_members[[s]]$ca_oa_share_period)),
     list(label = "core", rows = snap$core, key = "tu9_slug",
          works = function(s) n(snap$core_members[[s]]$ca_works_period),
+         oa_works = NULL,
          share = function(s) n(snap$core_members[[s]]$ca_oa_share_period)))
   for (v in period_views) {
     d <- v$rows
@@ -420,8 +423,8 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
       p <- d[d[[v$key]] == slug & n(d$year) %in% period_years, , drop = FALSE]
       if (nrow(p) == 0) next
       want_w <- sum(n(p$ca_works), na.rm = TRUE)
-      want_s <- if (want_w > 0)
-        round(sum(n(p$ca_oa_works), na.rm = TRUE) / want_w, 4) else NA_real_
+      want_o <- sum(n(p$ca_oa_works), na.rm = TRUE)
+      want_s <- if (want_w > 0) round(want_o / want_w, 4) else NA_real_
       got_w <- v$works(slug); got_s <- v$share(slug)
       if (length(got_w) != 1 || !isTRUE(all.equal(want_w, got_w)))
         add("%s: period works for %s do not sum the yearly values (headline %s, sum %s)",
@@ -429,6 +432,15 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
       if (length(got_s) != 1 || !isTRUE(all.equal(want_s, got_s)))
         add("%s: period share for %s does not match the summed yearly values",
             v$label, slug)
+      # The OA numerator is published beside the denominator and the share, but
+      # was itself derived from nothing: checking works and share left the middle
+      # column free to be any number at all.
+      if (!is.null(v$oa_works)) {
+        got_o <- v$oa_works(slug)
+        if (length(got_o) != 1 || !isTRUE(all.equal(want_o, got_o)))
+          add("%s: period OA works for %s do not sum the yearly values (headline %s, sum %s)",
+              v$label, slug, paste(got_o, collapse = "/"), want_o)
+      }
     }
   }
 
@@ -442,13 +454,144 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
       slug <- m$slug[i]
       r <- oy[oy$slug == slug & n(oy$year) == n(m$ref_year[i]), , drop = FALSE]
       if (nrow(r) != 1) next  # reported by check 6
+      # The DOAJ pair rides in the same row and is shown on the same page, but was
+      # only ever checked for internal arithmetic -- the yearly row and the
+      # headline could disagree and both remain self-consistent.
       for (pair in list(c("ca_works_ref", "ca_works"),
                         c("ca_oa_works_ref", "ca_oa_works"),
-                        c("ca_oa_share_ref", "ca_oa_share"))) {
+                        c("ca_oa_share_ref", "ca_oa_share"),
+                        c("ca_doaj_works_ref", "ca_doaj_works"),
+                        c("ca_doaj_share_ref", "ca_doaj_share"))) {
         if (!isTRUE(all.equal(n(m[[pair[1]]][i]), n(r[[pair[2]]]))))
           add("metrics %s (%s) disagrees with ca_oa_by_year %s (%s) for %s",
               pair[1], m[[pair[1]]][i], pair[2], r[[pair[2]]], slug)
       }
+    }
+  }
+
+  # The same tie for the other two views. Their reference-year headlines live in
+  # the member summaries -- which is what meta.json publishes and what every
+  # institution page shows -- and nothing derived them from the yearly rows
+  # underneath. Only the period figures were tied down, so a consolidated
+  # reference headline could be off by any amount and pass.
+  ref_headlines <- list(
+    list(label = "consolidated", rows = snap$consolidated, sum = snap$cons_members),
+    list(label = "core",         rows = snap$core,         sum = snap$core_members))
+  for (v in ref_headlines) {
+    d <- v$rows
+    if (is.null(d) || nrow(d) == 0) next
+    for (slug in expected) {
+      r <- d[d$tu9_slug == slug & n(d$year) == ref_year, , drop = FALSE]
+      if (nrow(r) != 1) next  # reported by check 6
+      s <- v$sum[[slug]]
+      for (pair in list(c("ca_works_ref", "ca_works"),
+                        c("ca_oa_share_ref", "ca_oa_share"))) {
+        got <- n(s[[pair[1]]])
+        if (length(got) != 1 || !isTRUE(all.equal(got, n(r[[pair[2]]]))))
+          add("%s %s for %s (%s) disagrees with its reference-year row (%s)",
+              v$label, pair[1], slug, paste(got, collapse = "/"), r[[pair[2]]])
+      }
+      # n_members is published beside those figures as the count of what was
+      # OR-ed together. The member LIST is checked against the Leiden mapping;
+      # the number shown next to it was never checked against that list.
+      if (!is.null(s$members) &&
+          !isTRUE(all.equal(n(s$n_members), length(s$members))))
+        add("%s n_members for %s is %s, the member set has %d",
+            v$label, slug, paste(s$n_members, collapse = "/"), length(s$members))
+      if ("n_members" %in% names(d)) {
+        rows_n <- unique(n(d$n_members[d$tu9_slug == slug]))
+        if (!is.null(s$members) &&
+            !identical(rows_n, as.numeric(length(s$members))))
+          add("%s: n_members in the yearly rows for %s is %s, the member set has %d",
+              v$label, slug, paste(rows_n, collapse = "/"), length(s$members))
+      }
+    }
+  }
+
+  # The reference year and the period window are published as columns, and every
+  # check above that mentions them reads them back out of the same row. Anchor
+  # them to the snapshot date instead, which is the only thing that determines
+  # them: fetch.R derives ref_year from it and sets period_end to the same value.
+  for (i in seq_len(nrow(m))) {
+    for (fld in list(c("ref_year", ref_year), c("period_end", ref_year),
+                     c("period_start", period_start))) {
+      if (!isTRUE(all.equal(n(m[[fld[1]]][i]), as.numeric(fld[2]))))
+        add("metrics %s for %s is %s, expected %s",
+            fld[1], m$slug[i], m[[fld[1]]][i], fld[2])
+    }
+  }
+
+  # The archived entity is the provenance behind the context indicators, and its
+  # presence was the whole check -- an empty object satisfied it. Reconcile the
+  # figures actually taken from it, so a truncated or substituted archive can no
+  # longer sit under numbers it does not support.
+  for (i in seq_len(nrow(m))) {
+    slug <- m$slug[i]
+    obj <- snap$entities[[slug]]
+    if (is.null(obj)) next  # reported by check 2
+    got_id <- openalex_bare(as.character(obj$id %||% ""))
+    want_id <- openalex_bare(as.character(inst$openalex_id[inst$slug == slug]))
+    if (!identical(got_id, want_id)) {
+      add("raw entity for %s is id '%s', the configuration says '%s'",
+          slug, got_id, want_id)
+      next  # the wrong entity: comparing its figures would report noise
+    }
+    em <- openalex_metrics(obj)
+    # The counts are integers and must match exactly. The mean-citedness is not:
+    # write_json() serialises doubles at its default four significant digits, so
+    # the ARCHIVE is a rounded copy of what metrics.csv carries at full
+    # precision. Comparing exactly would fail on every institution, on a
+    # serialisation property rather than a defect.
+    for (pair in list(c("works_count_incl_xpac", "works_count"),
+                      c("cited_by_count", "cited_by_count"),
+                      c("h_index", "h_index"), c("i10_index", "i10_index"))) {
+      if (!isTRUE(all.equal(n(m[[pair[1]]][i]), n(em[[pair[2]]]))))
+        add("metrics %s for %s is %s, the archived entity says %s",
+            pair[1], slug, m[[pair[1]]][i], paste(em[[pair[2]]], collapse = ""))
+    }
+    if (!isTRUE(all.equal(n(m$two_yr_mean_citedness[i]), n(em$two_yr_mean_cited),
+                          tolerance = 1e-4)))
+      add("metrics two_yr_mean_citedness for %s is %s, the archived entity says %s",
+          slug, m$two_yr_mean_citedness[i], paste(em$two_yr_mean_cited, collapse = ""))
+
+    # counts_by_year takes its year range, its XPAC-inclusive works column and
+    # its citations straight from the same entity, so all three are
+    # reconstructible. Only the XPAC-EXCLUDED and lineage columns come from the
+    # unarchived works API; comparing those against the entity would be the
+    # cross-definition substitution this pipeline exists to prevent.
+    cb <- snap$counts_by_year
+    if (!is.null(cb) && nrow(cb) > 0 && "year" %in% names(cb)) {
+      ecb <- openalex_counts_by_year(obj)  # applies the same year cap
+      rows <- cb[cb$slug == slug, , drop = FALSE]
+      if (!identical(sort(n(rows$year)), sort(n(ecb$year)))) {
+        add("counts_by_year years for %s do not match the archived entity (%d vs %d row(s))",
+            slug, nrow(rows), nrow(ecb))
+      } else {
+        j <- match(n(rows$year), n(ecb$year))
+        for (pair in list(c("works_count_incl_xpac", "works_count"),
+                          c("cited_by_count", "cited_by_count"))) {
+          off <- which(n(rows[[pair[1]]]) != n(ecb[[pair[2]]])[j])
+          if (length(off) > 0)
+            add("counts_by_year %s for %s disagrees with the archived entity in %d year(s) (first: %s)",
+                pair[1], slug, length(off), rows$year[off[1]])
+        }
+      }
+    }
+  }
+
+  # The consolidated and Core products restate the university's name beside every
+  # row. metrics.name was checked against the configuration; these were not, so
+  # the same drift would show up unopposed on exactly the pages that carry the
+  # consolidated headline.
+  for (nm in c("consolidated", "core")) {
+    d <- snap[[nm]]
+    if (is.null(d) || nrow(d) == 0 || !("university_name" %in% names(d))) next
+    for (slug in expected) {
+      got <- unique(as.character(d$university_name[d$tu9_slug == slug]))
+      want <- as.character(inst$name[inst$slug == slug])
+      if (length(got) > 0 && !identical(got, want))
+        add("%s university_name for %s is '%s', the configuration says '%s'",
+            nm, slug, paste(got, collapse = "/"), want)
     }
   }
 

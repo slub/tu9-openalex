@@ -448,10 +448,18 @@ read_institutions <- function(path = "data-raw/institutions.csv") {
 # and keep only the weight-1 `component` affiliates that carry an OpenAlex id --
 # the members that make up a "university incl. its components" consolidated view.
 # Returns NULL if the mapping is absent (the pipeline then skips consolidation).
-read_leiden_components <- function(path = "data-raw/leiden_affiliations.csv") {
+# `inst` defaults to the configuration rather than to NULL on purpose: the
+# mapping is only meaningful relative to it, and an optional cross-check is one
+# a future call site forgets to ask for.
+read_leiden_components <- function(path = "data-raw/leiden_affiliations.csv",
+                                   inst = read_institutions()) {
   if (!file.exists(path)) return(NULL)
   la <- read_csv(path, col_types = cols(.default = col_character()))
-  req <- c("tu9_slug", "relation_type", "weight", "affiliated_openalex_id")
+  # The identity columns are required too: they are what makes the mapping
+  # checkable against the configuration at all, and the site prints
+  # affiliated_name. Without them the join key would again be taken on trust.
+  req <- c("tu9_slug", "university_ror_id", "university_name", "relation_type",
+           "weight", "affiliated_name", "affiliated_openalex_id")
   gone <- setdiff(req, names(la))
   if (length(gone) > 0)
     stop("Leiden mapping lacks column(s): ", paste(gone, collapse = ", "),
@@ -479,7 +487,65 @@ read_leiden_components <- function(path = "data-raw/leiden_affiliations.csv") {
                  length(orphan), path,
                  paste(utils::head(la$tu9_slug[orphan], 5), collapse = ", ")),
          call. = FALSE)
-  la[claims_comp, ]
+  comp <- la[claims_comp, ]
+
+  # The two fields that decide WHERE a component goes were still taken on trust.
+  # `tu9_slug` is the join key: a slug naming no configured institution makes the
+  # component vanish from every member set, and validation then derives the same
+  # reduced expectation from the same mapping -- the original circularity, intact.
+  # `affiliated_openalex_id` is pasted into the consolidated filter, so a value in
+  # the wrong shape narrows the query instead of failing it. Neither is checkable
+  # against the mapping alone, so validate them JOINTLY with institutions.csv.
+  problems <- character()
+  for (col in c("tu9_slug", "university_ror_id", "university_name",
+                "affiliated_name", "affiliated_openalex_id")) {
+    blank <- which(is.na(comp[[col]]) | !nzchar(trimws(comp[[col]])))
+    if (length(blank) > 0)
+      problems <- c(problems, sprintf("blank %s in %d component row(s)", col,
+                                      length(blank)))
+  }
+  bad_id <- unique(comp$affiliated_openalex_id[
+    !grepl("^I[0-9]+$", openalex_bare(comp$affiliated_openalex_id))])
+  if (length(bad_id) > 0)
+    problems <- c(problems, paste("malformed affiliated_openalex_id(s):",
+                                  paste(utils::head(bad_id, 5), collapse = ", ")))
+  unknown <- unique(comp$tu9_slug[!(comp$tu9_slug %in% inst$slug)])
+  if (length(unknown) > 0)
+    problems <- c(problems, paste("component(s) assigned to unconfigured slug(s):",
+                                  paste(utils::head(unknown, 5), collapse = ", ")))
+  # The mapping restates each university's identity. If those columns have
+  # drifted from the configuration, the two files describe different houses and
+  # the slug join is a coincidence rather than a fact.
+  ident <- c(university_ror_id = "ror_id", university_name = "name")
+  for (col in names(ident)) {
+    for (s in intersect(unique(comp$tu9_slug), inst$slug)) {
+      want <- as.character(inst[[ident[[col]]]][inst$slug == s])
+      got <- unique(as.character(comp[[col]][comp$tu9_slug == s]))
+      if (!identical(got, want))
+        problems <- c(problems, sprintf(
+          "%s for %s is '%s', the configuration says '%s'",
+          col, s, paste(got, collapse = "/"), want))
+    }
+  }
+  # The member set is built with unique(), so a repeated component or one equal
+  # to the university itself would be absorbed silently -- and n_members, which
+  # is published, would then disagree with the row count in the mapping. Neither
+  # is a legitimate shape for the mapping to have.
+  for (s in intersect(unique(comp$tu9_slug), inst$slug)) {
+    ids <- openalex_bare(comp$affiliated_openalex_id[comp$tu9_slug == s])
+    dup <- unique(ids[duplicated(ids)])
+    if (length(dup) > 0)
+      problems <- c(problems, sprintf("duplicate component(s) for %s: %s", s,
+                                      paste(utils::head(dup, 5), collapse = ", ")))
+    own <- openalex_bare(inst$openalex_id[inst$slug == s])
+    if (own %in% ids)
+      problems <- c(problems, sprintf(
+        "component for %s is the university itself (%s)", s, own))
+  }
+  if (length(problems) > 0)
+    stop("Leiden mapping disagrees with the institution configuration (", path,
+         "):\n  - ", paste(problems, collapse = "\n  - "), call. = FALSE)
+  comp
 }
 
 # Pull the entity-level aggregated metrics out of a parsed institution entity.

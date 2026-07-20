@@ -82,7 +82,7 @@ inst   <- read_institutions()
 # university would silently lose its components, the consolidated products would
 # be dropped as "not applicable", and validation would agree -- because it
 # derives its expectations from that same empty mapping.
-leiden <- read_leiden_components()
+leiden <- read_leiden_components(inst = inst)
 if (is.null(leiden))
   stop("data-raw/leiden_affiliations.csv is missing or unreadable; refusing to ",
        "publish without the Leiden consolidation mapping.", call. = FALSE)
