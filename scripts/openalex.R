@@ -572,7 +572,14 @@ openalex_metrics <- function(obj) {
 
 # Turn an entity's counts_by_year list into a data frame
 # (year, works_count, cited_by_count), newest year first.
-openalex_counts_by_year <- function(obj) {
+#
+# `year_cap` defaults to the run-wide cap, which is what the fetch wants. A
+# VALIDATOR must pass the year of the snapshot it is checking instead: reading
+# the process clock there means the same committed snapshot reconstructs
+# differently depending on when validation runs. The 2026 archives already carry
+# 2027-dated rows, so in 2027 the default would have admitted them and then
+# failed against the correctly capped 2026 CSV.
+openalex_counts_by_year <- function(obj, year_cap = openalex_year_cap()) {
   cby <- obj$counts_by_year
   if (is.null(cby) || length(cby) == 0) {
     return(data.frame(year = integer(), works_count = integer(),
@@ -587,7 +594,7 @@ openalex_counts_by_year <- function(obj) {
   # OpenAlex occasionally carries a stray future year (a work with a wrong
   # publication date). Drop anything past the current year so the yearly view
   # stays clean; the raw JSON snapshot still preserves the original values.
-  df[!is.na(df$year) & df$year <= openalex_year_cap(), , drop = FALSE]
+  df[!is.na(df$year) & df$year <= year_cap, , drop = FALSE]
 }
 
 # Small null-coalescing helper (base R has none).

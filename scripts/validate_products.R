@@ -62,7 +62,9 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
          call. = FALSE)
   meta <- jsonlite::read_json(meta_path, simplifyVector = FALSE)
   updated <- as.character(meta$updated %or% "")
-  if (!nzchar(updated) || is.na(suppressWarnings(as.Date(updated))))
+  # Explicit format: bare as.Date() errors on an unparseable string instead of
+  # returning NA, which would abort here rather than report the bad value.
+  if (!nzchar(updated) || is.na(as.Date(updated, format = "%Y-%m-%d")))
     add("meta.json has no usable `updated` date: '%s'", updated)
 
   loaded <- list()
@@ -242,6 +244,83 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
     if (length(sem) > 0 && nzchar(sem))
       add("semantic validation of the published products failed:\n    %s",
           gsub("\n", "\n    ", sem))
+
+    # --- the published metrics HISTORY ------------------------------------
+    # Only the rows of the current snapshot went through validate_snapshot()
+    # above, but metrics.csv is published whole: the institution pages plot the
+    # full series and the file is offered for download. A corrupted older row is
+    # therefore just as visible as a current one, and nothing looked at it.
+    #
+    # This is deliberately a light contract -- shape, identity, and the row-level
+    # invariants that hold regardless of age. Historical figures are NOT
+    # re-derived from the archives: the grouped responses behind them were never
+    # stored, so there is nothing to re-derive them from.
+    if (!is.null(mt) && nrow(mt) > 0) {
+      gone <- setdiff(c("snapshot_date", "slug", "name", "openalex_id", "ror_id",
+                        "works_count", "works_count_incl_xpac",
+                        "works_count_lineage_incl_xpac", "cited_by_count",
+                        "h_index", "i10_index", "ca_works_ref", "ca_oa_share_ref",
+                        "ca_works_period", "ca_oa_share_period"), names(mt))
+      if (length(gone) > 0)
+        add("metrics.csv lacks required column(s): %s", paste(gone, collapse = ", "))
+
+      dates <- as.character(mt$snapshot_date)
+      # Parse with an explicit format: bare as.Date() raises an error on an
+      # unparseable string rather than returning NA, so it would abort with a
+      # stack trace instead of reporting the bad value alongside every other
+      # issue. The format is also the one the pipeline writes, so this pins the
+      # shape as well as the validity.
+      parsed <- as.Date(dates, format = "%Y-%m-%d")
+      bad_date <- unique(dates[is.na(parsed)])
+      if (length(bad_date) > 0)
+        add("metrics.csv has unusable snapshot_date(s): %s",
+            paste(utils::head(bad_date, 5), collapse = ", "))
+      # A row dated after the published snapshot would render as a point beyond
+      # the end of the series -- the time-series equivalent of the future-year
+      # rows already rejected in the yearly views.
+      up_date <- if (nzchar(updated)) as.Date(updated, format = "%Y-%m-%d") else NA
+      if (!is.na(up_date)) {
+        ahead <- unique(dates[!is.na(parsed) & parsed > up_date])
+        if (length(ahead) > 0)
+          add("metrics.csv has snapshot_date(s) beyond the published %s: %s",
+              updated, paste(utils::head(ahead, 5), collapse = ", "))
+      }
+      id <- paste(mt$slug, dates, sep = "\r")
+      dup <- unique(id[duplicated(id)])
+      if (length(dup) > 0)
+        add("metrics.csv has %d duplicate (slug, snapshot_date) row(s): %s",
+            length(dup), paste(gsub("\r", "/", utils::head(dup, 5)), collapse = "; "))
+
+      for (dt in sort(unique(dates))) {
+        h <- mt[dates == dt, , drop = FALSE]
+        got_h <- sort(unique(h$slug))
+        if (!identical(got_h, expected))
+          add("metrics.csv snapshot %s covers [%s], expected [%s]", dt,
+              paste(got_h, collapse = ", "), paste(expected, collapse = ", "))
+        for (i in seq_len(nrow(h))) {
+          cfg <- inst[inst$slug == h$slug[i], , drop = FALSE]
+          if (nrow(cfg) != 1) next  # already reported as a coverage problem
+          for (f in c("name", "openalex_id", "ror_id")) {
+            if (!identical(as.character(h[[f]][i]), as.character(cfg[[f]])))
+              add("metrics.csv %s: %s for %s is '%s', the configuration says '%s'",
+                  dt, f, h$slug[i], h[[f]][i], cfg[[f]])
+          }
+        }
+        # Fields the pages actually display must be real numbers, in every row
+        # of the series and not only the newest one.
+        for (col in c("works_count", "works_count_incl_xpac",
+                      "works_count_lineage_incl_xpac", "cited_by_count",
+                      "h_index", "i10_index", "ca_works_ref", "ca_works_period")) {
+          if (!(col %in% names(h))) next
+          v <- n(h[[col]])
+          bad <- which(is.na(v) | !is.finite(v) | v < 0)
+          if (length(bad) > 0)
+            add("metrics.csv %s: %s is missing, non-finite or negative for: %s",
+                dt, col, paste(h$slug[bad], collapse = ", "))
+        }
+        metrics_row_invariants(h, add, prefix = sprintf("metrics.csv %s: ", dt))
+      }
+    }
 
     # (The n_members columns in the two yearly products are checked inside
     # validate_snapshot() against the same member sets, so they are not restated

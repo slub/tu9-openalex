@@ -8,6 +8,55 @@
 # All problems are collected and reported together, so one run tells you
 # everything that is wrong rather than one issue at a time.
 
+# Ordering and arithmetic invariants that hold for ANY row of metrics.csv,
+# current or historical. Factored out so the published history is checked by the
+# same code as the current snapshot rather than by a second copy of the rules
+# that could drift from it. `add` is the caller's issue collector; `prefix`
+# labels the rows being checked (e.g. "history 2026-07-18: ").
+metrics_row_invariants <- function(m, add, prefix = "") {
+  if (is.null(m) || nrow(m) == 0) return(invisible(NULL))
+  n <- function(x) suppressWarnings(as.numeric(x))
+  slugs <- function(i) paste(m$slug[i], collapse = ", ")
+
+  if (any(n(m$works_count) <= 0, na.rm = TRUE))
+    add("%snon-positive works_count for: %s", prefix,
+        slugs(which(n(m$works_count) <= 0)))
+  # XPAC-excluded can never exceed the XPAC-inclusive entity count. This is the
+  # invariant that catches a cross-definition fallback slipping back in.
+  bad_xpac <- which(n(m$works_count) > n(m$works_count_incl_xpac))
+  if (length(bad_xpac) > 0)
+    add("%sworks_count exceeds works_count_incl_xpac for: %s", prefix, slugs(bad_xpac))
+  # Widening the lens can only add works: the same id including XPAC cannot
+  # exceed that id PLUS its lineage, also including XPAC.
+  bad_lin <- which(n(m$works_count_incl_xpac) > n(m$works_count_lineage_incl_xpac))
+  if (length(bad_lin) > 0)
+    add("%sworks_count_incl_xpac exceeds works_count_lineage_incl_xpac for: %s",
+        prefix, slugs(bad_lin))
+  # The period window contains the reference year, so it cannot be smaller.
+  bad_period <- which(n(m$ca_works_period) < n(m$ca_works_ref))
+  if (length(bad_period) > 0)
+    add("%sca_works_period < ca_works_ref for: %s", prefix, slugs(bad_period))
+
+  # Numerator <= denominator, and each published share is the quotient it claims
+  # to be. These are properties of a single metrics row, so they hold for the
+  # history too -- where nothing checked them before.
+  for (tri in list(c("ca_oa_works_ref", "ca_works_ref", "ca_oa_share_ref"),
+                   c("ca_oa_works_period", "ca_works_period", "ca_oa_share_period"),
+                   c("ca_doaj_works_ref", "ca_works_ref", "ca_doaj_share_ref"))) {
+    if (!all(tri %in% names(m))) next
+    num <- n(m[[tri[1]]]); den <- n(m[[tri[2]]]); sh <- n(m[[tri[3]]])
+    over <- which(!is.na(num) & !is.na(den) & num > den)
+    if (length(over) > 0)
+      add("%s%s exceeds %s for: %s", prefix, tri[1], tri[2], slugs(over))
+    expect <- ifelse(!is.na(den) & den > 0, round(num / den, 4), NA_real_)
+    off <- which(!is.na(sh) & !is.na(expect) & abs(sh - expect) > 1e-9)
+    if (length(off) > 0)
+      add("%s%s does not match round(%s/%s, 4) for: %s", prefix, tri[3], tri[1],
+          tri[2], slugs(off))
+  }
+  invisible(NULL)
+}
+
 # Required products for every configured institution. The consolidated view is
 # required for ALL of them: a university without Leiden `component` affiliates
 # consolidates to itself, which is its correct consolidated value, and producing
@@ -295,26 +344,7 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
           paste(early, collapse = ", "))
   }
 
-  if (any(n(m$works_count) <= 0, na.rm = TRUE))
-    add("non-positive works_count for: %s",
-        paste(m$slug[n(m$works_count) <= 0], collapse = ", "))
-  # XPAC-excluded can never exceed the XPAC-inclusive entity count. This is the
-  # invariant that catches a cross-definition fallback slipping back in.
-  bad_xpac <- which(n(m$works_count) > n(m$works_count_incl_xpac))
-  if (length(bad_xpac) > 0)
-    add("works_count exceeds works_count_incl_xpac for: %s",
-        paste(m$slug[bad_xpac], collapse = ", "))
-  # Widening the lens can only add works: the same id including XPAC cannot
-  # exceed that id PLUS its lineage, also including XPAC.
-  bad_lin <- which(n(m$works_count_incl_xpac) > n(m$works_count_lineage_incl_xpac))
-  if (length(bad_lin) > 0)
-    add("works_count_incl_xpac exceeds works_count_lineage_incl_xpac for: %s",
-        paste(m$slug[bad_lin], collapse = ", "))
-  # The period window contains the reference year, so it cannot be smaller.
-  bad_period <- which(n(m$ca_works_period) < n(m$ca_works_ref))
-  if (length(bad_period) > 0)
-    add("ca_works_period < ca_works_ref for: %s",
-        paste(m$slug[bad_period], collapse = ", "))
+  metrics_row_invariants(m, add)
 
   # OA numerator/denominator and share arithmetic, in all OA tables.
   check_oa <- function(d, label) {
@@ -561,7 +591,9 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
     # cross-definition substitution this pipeline exists to prevent.
     cb <- snap$counts_by_year
     if (!is.null(cb) && nrow(cb) > 0 && "year" %in% names(cb)) {
-      ecb <- openalex_counts_by_year(obj)  # applies the same year cap
+      # Anchored to the snapshot under validation, never to the process clock,
+      # so a committed snapshot reconstructs identically whenever it is checked.
+      ecb <- openalex_counts_by_year(obj, year_cap = snap_year)
       rows <- cb[cb$slug == slug, , drop = FALSE]
       if (!identical(sort(n(rows$year)), sort(n(ecb$year)))) {
         add("counts_by_year years for %s do not match the archived entity (%d vs %d row(s))",
