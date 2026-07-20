@@ -23,7 +23,7 @@ execute:
   message: false
 
 website:
-  title: "TU9 Open Access Monitoring with OpenAlex"
+  title: "TU9 OpenAlex"
   description: >-
     Open-access monitoring for the TU9 universities with OpenAlex,
     including corresponding-author and Leiden-consolidated views
