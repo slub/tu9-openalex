@@ -1,2 +1,3 @@
 snapshot_date,slug,name,openalex_id,ror_id,works_count,works_count_incl_xpac,works_count_lineage_incl_xpac,cited_by_count,h_index,i10_index,two_yr_mean_citedness,ref_year,ca_works_ref,ca_oa_works_ref,ca_oa_share_ref,ca_doaj_works_ref,ca_doaj_share_ref,period_start,period_end,ca_works_period,ca_oa_works_period,ca_oa_share_period
 2026-07-18,leibniz-hannover,Leibniz University Hannover,I114112103,0304hq317,69790,75980,79296,6290427,945,64028,3.64498761354253,2025,1579,1082,0.6852,285,0.1805,2020,2025,10098,6664,0.6599
+2026-07-20,leibniz-hannover,Leibniz University Hannover,I114112103,0304hq317,69797,75996,79303,6292080,946,64040,3.65030169145043,2025,1579,1082,0.6852,285,0.1805,2020,2025,10098,6664,0.6599

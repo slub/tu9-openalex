@@ -1,2 +1,3 @@
 snapshot_date,slug,name,openalex_id,ror_id,works_count,works_count_incl_xpac,works_count_lineage_incl_xpac,cited_by_count,h_index,i10_index,two_yr_mean_citedness,ref_year,ca_works_ref,ca_oa_works_ref,ca_oa_share_ref,ca_doaj_works_ref,ca_doaj_share_ref,period_start,period_end,ca_works_period,ca_oa_works_period,ca_oa_share_period
 2026-07-18,tu-dresden,Technische Universität Dresden,I78650965,042aqky30,129281,139032,148325,10151009,767,146710,3.59341640319881,2025,2492,1903,0.7636,543,0.2179,2020,2025,17848,12340,0.6914
+2026-07-20,tu-dresden,Technische Universität Dresden,I78650965,042aqky30,129287,139072,148332,10154484,767,146764,3.59937271495648,2025,2492,1903,0.7636,543,0.2179,2020,2025,17848,12341,0.6915
