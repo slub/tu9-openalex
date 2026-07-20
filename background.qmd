@@ -2,253 +2,119 @@
 title: "Background"
 ---
 
-This site monitors **open-access publishing** at the
-[TU9](https://www.tu9.de/) universities of technology, using
-[OpenAlex](https://openalex.org/) and snapshotting the figures over time. The
-headline metric is the open-access share of each university's
-**corresponding-author** output; a few entity-level indicators are kept as
-context. Nothing is scraped work by work — the counts come from OpenAlex's
-server-side aggregation.
+This site monitors open-access publishing at the [TU9](https://www.tu9.de/) universities of technology, using [OpenAlex](https://openalex.org/) and snapshotting the figures over time.
+The headline metric is the open-access share of each university's corresponding-author output; a few entity-level indicators are kept as context.
+Nothing is scraped work by work — the counts come from OpenAlex's server-side aggregation.
 
 ## Which institutions
 
-The tracked institutions are the nine universities of the TU9 alliance — one
-OpenAlex institution each. Affiliated organisations such as university hospitals
-and research institutes are **not** tracked as separate institutions; where they
-belong to a university they enter only through the
-[consolidated view](#consolidated-view-leiden-ranking) below. The full list,
-with OpenAlex and [ROR](https://ror.org/) IDs, is in
-[`data-raw/institutions.csv`](https://github.com/slub/tu9-openalex/blob/main/data-raw/institutions.csv)
-and can be edited to change the selection.
+The tracked institutions are the nine universities of the TU9 alliance — one OpenAlex institution each. Affiliated organisations such as university hospitals and research institutes are **not** tracked as separate institutions; where they belong to a university they enter only through the [consolidated view](#consolidated-view-leiden-ranking) below.
+The full list, with OpenAlex and [ROR](https://ror.org/) IDs, is in [`data-raw/institutions.csv`](https://github.com/slub/tu9-openalex/blob/main/data-raw/institutions.csv) and can be edited to change the selection.
 
 ## Open access on the corresponding-author lens
 
-The denominator is not a university's whole output but the works whose
-*corresponding author* is affiliated with it — OpenAlex's
-[`corresponding_institution_ids`](https://blog.openalex.org/a-big-improvement-to-our-corresponding-author-data/)
-filter, recently much improved. This is the lens that matches
-[OpenAPC](https://openapc.net/) and transformative-agreement accounting, where
-the corresponding author's institution carries the article charge, and it is the
-figure relevant to a possible OA monitoring.
+The denominator is not a university's whole output but the works whose *corresponding author* is affiliated with it, identified through OpenAlex's [`corresponding_institution_ids`](https://developers.openalex.org/api-reference/works#top-level) filter. This corresponding-author lens aligns with the institutional attribution commonly used in [OpenAPC](https://openapc.net/) and transformative-agreement reporting.
 
-Every OA figure is prefixed `ca_` to mark it as corresponding-author-level:
+The site reports the following corresponding-author figures, identified by the `ca_` prefix:
 
-- **`ca_works`** — works with a corresponding author at the university, by
-  publication year;
-- **`ca_oa_works`** / **`ca_oa_share`** — of those, how many (and what fraction)
-  are open access (`is_oa:true`);
-- a **headline** over a multi-year period (works published in the last complete
-  years) — a more robust number than any single year — plus the single-year
-  reference figure;
-- the **OA-status composition** for the reference year — the gold / hybrid /
-  green / bronze / diamond / closed split, which shows how much of the OA share
-  runs through the hybrid and gold routes that transformative agreements target.
+- **`ca_works`** — works with a corresponding author at the university;
+- **`ca_oa_works`** / **`ca_oa_share`** — how many of those works are open access (`is_oa:true`) and the corresponding share;
+- **`ca_doaj_works`** / **`ca_doaj_share`** — how many of those works appeared in a journal listed in [DOAJ](https://doaj.org/), using `primary_location.source.is_in_doaj:true`.
 
-- **`ca_doaj_works`** / **`ca_doaj_share`** — of the corresponding-author works,
-  how many appeared in a journal listed in the
-  [DOAJ](https://doaj.org/), via `primary_location.source.is_in_doaj:true`.
+These figures are reported by publication year.
+Corresponding-author works and OA share are also summarized for the published multi-year period and reference year, while DOAJ figures have a reference-year summary.
+For the reference year, the site also reports the mutually exclusive OA-status composition: gold, hybrid, green, bronze, diamond, and closed.
 
-DOAJ is reported **separately from the OA-status composition**, not as one of its
-categories — though not because it sits at a different level. `gold` and
-`diamond` are themselves journal properties: both mean the work appeared in a
-fully open-access journal, which is close to what the DOAJ flag records
-(`diamond` adds that the journal levies no APC). Only `hybrid`, `bronze`, `green`
-and `closed` turn on the individual record — its licence, and whether a free copy
-exists anywhere.
+All of this comes from OpenAlex's server-side `group_by` aggregation (per-year and per-status counts), so no individual works are downloaded.
 
-The reason to keep DOAJ out is structural rather than conceptual: the OA statuses
-are a **partition** — every work has exactly one, and they sum to the works total
-— whereas DOAJ listing is an independent yes/no that cuts across them. A
-DOAJ-listed work is normally gold or diamond, yet the two do not coincide even
-where they overlap most: for TU Dresden in 2025, 543 corresponding-author works
-appeared in DOAJ-listed journals while 788 were classified gold or diamond. The
-gap runs in the direction one would expect if OpenAlex treats more journals as
-fully open access than DOAJ currently lists, but we have not traced it
-title by title. Folding DOAJ in as a seventh row would count those works twice —
-once under the status they already hold — and break the sum that validation
-enforces.
-
-All of this comes from OpenAlex's server-side `group_by` aggregation (per-year
-and per-status counts), so no individual works are downloaded.
-
-Whether this corresponding-author OA share is a reliable enough basis for
-routine OA monitoring is exactly the question this dataset is meant to help
-answer.
+Whether this corresponding-author OA share is a reliable enough basis for routine OA monitoring is exactly the question this dataset is meant to help answer.
 
 ## Consolidated view (Leiden Ranking)
 
-Whether a university hospital or an affiliated institute counts as part of "the
-university" is a judgement call. The
-[CWTS Leiden Ranking Open Edition](https://open.leidenranking.com/) makes that
-judgement explicitly: it links affiliated organisations to a core university as
-`component` (weight 1, counted fully — e.g. the university hospital), `joint`
-(fractional), or `associated` (listed but not counted). The TU9 slice of that
-mapping is extracted, reproducibly, by `scripts/leiden_affiliations.py` into
-[`data-raw/leiden_affiliations.csv`](https://github.com/slub/tu9-openalex/blob/main/data-raw/leiden_affiliations.csv)
-(source: CWTS Leiden Ranking Open Edition 2025 — Data,
-[Zenodo](https://zenodo.org/records/17471989), CC0; OpenAlex snapshot 08/2025).
+Whether a university hospital or an affiliated institute counts as part of "the university" is a judgement call.
+The [CWTS Leiden Ranking Open Edition](https://open.leidenranking.com/) makes that judgement explicitly: it links affiliated organisations to a core university as `component` (weight 1, counted fully — e.g. the university hospital), `joint` (fractional), or `associated` (listed but not counted).
+The TU9 slice of that mapping is extracted, reproducibly, by `scripts/leiden_affiliations.py` into [`data-raw/leiden_affiliations.csv`](https://github.com/slub/tu9-openalex/blob/main/data-raw/leiden_affiliations.csv) (source: CWTS Leiden Ranking Open Edition 2025 — Data, [Zenodo](https://zenodo.org/records/17471989), CC0; OpenAlex snapshot 08/2025).
 
-So each university appears **two ways**: as the single OpenAlex institution
-(identified by its ROR id), and *consolidated* — its OpenAlex id OR-ed with those
-of its weight-1 `component` affiliates in one `corresponding_institution_ids`
-filter, so a work still counts once. The consolidated unit is where, for
-instance, the
-[University Hospital Carl Gustav Carus](https://openalex.org/I4210162051) is
-counted inside TU Dresden and the
-[Universitätsklinikum Aachen](https://openalex.org/I4210120689) inside RWTH.
-Fractional `joint` affiliates are not (yet) included — only full components. A
-university without any consolidates to itself, so all nine have a consolidated
-value and the two views stay comparable across the alliance.
+So each university appears two ways: as the single OpenAlex institution (identified by its ROR id), and *consolidated* — its OpenAlex id OR-ed with those of its weight-1 `component` affiliates in one `corresponding_institution_ids` filter, so a work still counts once.
+The consolidated unit is where, for instance, the [University Hospital Carl Gustav Carus](https://openalex.org/I4210162051) is counted inside TU Dresden and the [Universitätsklinikum Aachen](https://openalex.org/I4210120689) inside RWTH.
+Fractional `joint` affiliates are not (yet) included — only full components.
+A university without any consolidates to itself, so all nine have a consolidated value and the two views stay comparable across the alliance.
 
 ## Core-source-filtered view (CWTS Core sources)
 
-A third view keeps the same Leiden-consolidated member set — the university's
-OpenAlex institution id OR-ed with its weight-1 `component` affiliates — but
-additionally restricts works to sources on the CWTS Core sources allow-list using
-OpenAlex's `primary_location.source.is_core:true` filter. This gives
-**corresponding-author works in CWTS Core sources** and their open-access share.
+A third view keeps the same Leiden-consolidated member set — the university's OpenAlex institution id OR-ed with its weight-1 `component` affiliates — but additionally restricts works to sources on the CWTS Core sources allow-list using
+OpenAlex's `primary_location.source.is_core:true` filter.
+This gives corresponding-author works in CWTS Core sources and their open-access share.
 
-The OpenAlex filter is applied literally as:
+The OpenAlex filter combines the corresponding-author lens (`corresponding_institution_ids:<university-and-component-ids>`) with the usual XPAC exclusion (`is_xpac:false`) and `primary_location.source.is_core:true`; the numerator additionally requires `is_oa:true`.
+Because the filter is on `primary_location`, a work qualifies when its primary venue is a Core source and not when only a secondary or repository location is associated with one.
 
-```
-primary_location.source.is_core:true
-```
+This view is meaningful even for universities without Leiden components because the source filter itself narrows the publication universe.
+It is populated for all nine TU9 universities.
 
-combined with the corresponding-author lens
-(`corresponding_institution_ids:<university-and-component-ids>`) and the usual
-XPAC exclusion (`is_xpac:false`). The numerator additionally requires
-`is_oa:true`. The `primary_location` form is used deliberately so a work
-qualifies only when its primary venue is a Core source, not because a secondary
-or repository location is associated with one.
-
-This view is meaningful even for universities without Leiden components
-because the source filter itself narrows the publication universe. It is
-populated for all nine TU9 universities.
-
-Important caveat: this is a **source-only Core filter**, not a reproduction of
-the official Leiden Ranking `core publication` set. The official CWTS definition
-of a core publication applies additional publication-level criteria, including
-language, work type, source type, references, affiliation availability and
-retraction status. The Zenodo records below provide the versioned source list
-and methodology; the live OpenAlex `is_core` flag may evolve after the August
-2025 snapshot.
+Important caveat: this is a **source-only Core filter**, not a reproduction of the official Leiden Ranking `core publication` set.
+The official CWTS definition of a core publication applies additional publication-level criteria, including language, work type, source type, references, affiliation availability and retraction status.
+The Zenodo records below provide the versioned source list and methodology; the live OpenAlex `is_core` flag may evolve after the August 2025 snapshot.
 
 ### Provenance
 
-- "Core sources and core publications in OpenAlex", CWTS, 2025.
-  DOI: <https://doi.org/10.5281/zenodo.17200868>. Standalone source list
-  (`source.tsv`) including `source_id`, `source`, `source_type`, `issn_l`,
-  `is_core_source`, `n_works` and `n_core_works`, based on the August 2025
-  OpenAlex snapshot.
-- "A methodology for identifying core sources and core publications in OpenAlex",
-  CWTS, 2025. DOI: <https://doi.org/10.5281/zenodo.17200830>. Methodology report
-  plus the supplementary source spreadsheet (`Supplementary material -
-  Sources.ods`).
-- CWTS Leiden Ranking Open Edition 2025 — Data.
-  DOI: <https://doi.org/10.5281/zenodo.17471989>. The `pub.tsv` table includes an
-  `is_core_pub` publication-level field, but the standalone, auditable source
-  list is the separate Core-sources dataset above.
+- "Core sources and core publications in OpenAlex", CWTS, 2025. DOI: <https://doi.org/10.5281/zenodo.17200868>. Standalone source list (`source.tsv`) including `source_id`, `source`, `source_type`, `issn_l`, `is_core_source`, `n_works` and `n_core_works`, based on the August 2025 OpenAlex snapshot.
+- "A methodology for identifying core sources and core publications in OpenAlex", CWTS, 2025. DOI: <https://doi.org/10.5281/zenodo.17200830>. Methodology report plus the supplementary source spreadsheet (`Supplementary material - Sources.ods`).
+- CWTS Leiden Ranking Open Edition 2025 — Data. DOI: <https://doi.org/10.5281/zenodo.17471989>. The `pub.tsv` table includes an `is_core_pub` publication-level field, but the standalone, auditable source list is the separate Core-sources dataset above.
 
-## Context metrics from the institution entity
+## Context metrics
 
-Beside the OA figures, each snapshot keeps a few entity-level indicators for
-context. They appear only on an individual university's own page; neither the
-per-university table on the home page nor the alliance summary under
-Institutions uses them:
+Beside the OA figures, each snapshot keeps output counts from the Works API and institution entity, together with entity-level citation indicators.
+The output counts preserve XPAC-excluded, XPAC-inclusive, and lineage-inclusive lenses for comparison.
 
-- **works_count** and **works per year** — the university's total output;
-- **cited_by_count**, **h-index**, **i10-index**, **2-year mean citedness**.
+- **Output** — total works and works by publication year under the applicable lenses;
+- **Citation context** — cited-by count, h-index, i10-index, and 2-year mean citedness.
 
-The complete OpenAlex entity is also archived as raw JSON per snapshot
-(`data/snapshots/<slug>/<date>.json`) for anything not surfaced in the CSVs.
+The fetched OpenAlex institution entity is also archived as JSON per snapshot (`data/snapshots/<slug>/<date>.json`) for source fields not surfaced in the CSVs.
 
 ### Why these figures differ from the OpenAlex profile
 
-An institution's page on openalex.org links to its works with
-`authorships.institutions.lineage:<id>&include_xpac=true`. That is a wider
-population than the one counted here, in two independent ways, so the numbers
-will not match unless both are accounted for. For TU Dresden:
+An institution's page on openalex.org links to its works with `authorships.institutions.lineage:<id>&include_xpac=true`.
+That is a wider population than the one counted here, in two independent ways, so the numbers will not match unless both are accounted for. For TU Dresden:
 
 | Lens | Works |
 |------|------:|
-| `authorships.institutions.id`, XPAC excluded — **published here** | 129,281 |
+| `authorships.institutions.id`, XPAC excluded — published here | 129,281 |
 | `authorships.institutions.id`, XPAC included — the entity's `works_count` | 139,032 |
-| `authorships.institutions.lineage`, XPAC included — **what openalex.org links to** | 148,325 |
+| `authorships.institutions.lineage`, XPAC included — what openalex.org links to | 148,325 |
 
-The first step is the Expansion Pack. The second is **lineage**: OpenAlex's
-parent/child hierarchy, which rolls a university's child institutions into it.
-This dataset counts the institution itself — `corresponding_institution_ids` and
-`authorships.institutions.id` match one entity and perform no lineage expansion
-(verified: adding a child institution to the filter increases the count).
+The first step is the Expansion Pack. The second is lineage: OpenAlex's parent/child hierarchy, which rolls a university's child institutions into it.
+This dataset counts the institution itself — `corresponding_institution_ids` and `authorships.institutions.id` match one entity and perform no lineage expansion.
 
-The lineage figure is carried in `metrics.csv` as
-`works_count_lineage_incl_xpac` purely so the two can be reconciled; no metric on
-this site is derived from it.
+The lineage figure is carried in `metrics.csv` as `works_count_lineage_incl_xpac` purely so the two can be reconciled; no metric on this site is derived from it.
 
-Lineage is also **not** interchangeable with the Leiden consolidation. They
-overlap but diverge exactly where it matters: the
-[University Hospital Carl Gustav Carus](https://openalex.org/I4210162051) is
-*not* in TU Dresden's OpenAlex lineage (OpenAlex links it as `related`, not
-`child`), yet Leiden counts it as a `component`. Conversely an institute such as
-[NaMLab](https://openalex.org/I4210122489) *is* in the lineage. Using lineage
-would therefore quietly drop the university hospital — which is why the
-consolidated view is built from the Leiden mapping instead.
+Leiden consolidation and OpenAlex lineage define different sets.
+They overlap but diverge exactly where it matters: the [University Hospital Carl Gustav Carus](https://openalex.org/I4210162051) is *not* in TU Dresden's OpenAlex lineage (OpenAlex links it as `related`, not `child`), yet Leiden counts it as a `component`.
+Conversely an institute such as [NaMLab](https://openalex.org/I4210122489) *is* in the lineage.
+This project's consolidated view uses the Leiden `component` mapping, which counts the university hospital.
 
 ### Expansion Pack (XPAC) is excluded
 
-In November 2025 OpenAlex added ~190 million works as the
-[Expansion Pack](https://developers.openalex.org/guides/key-concepts#xpac-expansion-pack)
-(XPAC) — mainly datasets and repository records with lower average data quality.
-Every works query here appends `is_xpac:false`, so `works_count`, the
-works-per-year counts and all open-access figures exclude XPAC explicitly rather
-than by relying on OpenAlex's current default. Because the institution *entity*'s
-own aggregates include XPAC, `works_count` and works-per-year are taken from the
-works API (not the entity). The citation-based indicators (`cited_by_count`,
-h-index, i10-index, 2-year mean citedness) are the exception: OpenAlex publishes
-them only as an entity aggregate, so those figures **include** XPAC.
+In November 2025 OpenAlex added ~190 million works as the [Expansion Pack](https://developers.openalex.org/guides/key-concepts#xpac-expansion-pack) (XPAC) — mainly datasets and repository records with lower average data quality.
+Every works query here appends `is_xpac:false`, so `works_count`, the works-per-year counts and all open-access figures exclude XPAC explicitly rather than by relying on OpenAlex's current default.
+Because the institution *entity*'s own aggregates include XPAC, `works_count` and works-per-year are taken from the works API (not the entity).
+The citation-based indicators (`cited_by_count`, h-index, i10-index, 2-year mean citedness) are the exception: OpenAlex publishes them only as an entity aggregate, so those figures **include** XPAC.
 
 ### Entity aggregates lag the live API
 
-The institution entity's own figures — `works_count`, `counts_by_year`,
-`cited_by_count` and the summary statistics — are precomputed aggregates, while
-every works query here is answered live. The two are therefore not from the same
-moment. For a year that is still filling up this is visible: in July 2026 the live
-XPAC-*excluded* count of TU Munich's 2026 works (9,497) already exceeded the
-entity's precomputed XPAC-*inclusive* figure for the same year (9,431).
+The institution entity's own figures — `works_count`, `counts_by_year`, `cited_by_count` and the summary statistics — are precomputed aggregates, while every works query here is answered live. The two are therefore not from the same moment.
+For a year that is still filling up this is visible: in July 2026 the live XPAC-*excluded* count of TU Munich's 2026 works (9,497) already exceeded the entity's precomputed XPAC-*inclusive* figure for the same year (9,431).
 
-That is a property of the data, not an error, but it means the two sources should
-not be compared as though they were simultaneous. The consistency checks in
-`scripts/validate.R` compare live figures with live figures for exactly this
-reason.
+That is a property of the data, not an error, but it means the two sources should not be compared as though they were simultaneous. The consistency checks in `scripts/validate.R` compare live figures with live figures for exactly this reason.
 
 ## How it is assembled
 
-1. For every university in `data-raw/institutions.csv`, the pipeline runs a
-   handful of OpenAlex
-   [works](https://developers.openalex.org/api-reference/works) `group_by`
-   queries — corresponding-author works by year and OA status, total works
-   by year, the Leiden-consolidated corresponding-author view, and the
-   Leiden-consolidated view restricted to CWTS Core sources
-   (`primary_location.source.is_core:true`) — and reads the
-   [institution entity](https://developers.openalex.org/api-reference/institutions)
-   for the citation indicators, using the polite pool and, where configured, a
-   free OpenAlex API key.
-2. Everything is fetched into memory first and only then validated: the exact
-   configured institution set, every required product per university, a single
-   consistent snapshot date, and the arithmetic behind each OA share. A coverage
-   guard rail additionally aborts if the total works count drops sharply against
-   the previous snapshot. If any check fails, nothing is written and the
-   published data is left untouched — a degraded run never publishes.
-3. Only after that are the files written: a dated row per university is appended
-   to `data/metrics.csv` (re-running on the same day replaces that day's rows
-   rather than duplicating them), the publication-year and OA views are rewritten
-   for the latest snapshot, and `meta.json` is regenerated. Products that no
-   longer apply are removed rather than left behind as stale files.
+1. For every university in `data-raw/institutions.csv`, the pipeline runs a handful of OpenAlex [works](https://developers.openalex.org/api-reference/works) `group_by` queries — corresponding-author works by year and OA status, total works by year, the Leiden-consolidated corresponding-author view, and the Leiden-consolidated view restricted to CWTS Core sources (`primary_location.source.is_core:true`) — and reads the [institution entity](https://developers.openalex.org/api-reference/institutions) for the citation indicators, using the polite pool and, where configured, a free OpenAlex API key.
+2. Everything is fetched into memory first and only then validated: the exact configured institution set, every required product per university, a single consistent snapshot date, and the arithmetic behind each OA share. A coverage guard rail additionally aborts if the total works count drops sharply against the previous snapshot. If this pre-write validation fails, nothing is written.
+3. Only after that are the files written: a dated row per university is appended to `data/metrics.csv` (re-running on the same day replaces that day's rows rather than duplicating them), the publication-year and OA views are rewritten for the latest snapshot, and `meta.json` is regenerated. Products that no longer apply are removed rather than left behind as stale files. The stored products are then read back and validated again before they are committed or deployed.
 
 ## Caveats
 
-OpenAlex coverage and attribution evolve continuously — affiliation strings are
-disambiguated over time, and works are added or reassigned. A change between two
-snapshots therefore reflects both real publishing activity and improvements in
-OpenAlex's own data. Figures are best read as a consistent, reproducible series
-rather than as an authoritative count.
+OpenAlex coverage and attribution evolve continuously — affiliation strings are disambiguated over time, and works are added or reassigned.
+A change between two snapshots therefore reflects both real publishing activity and improvements in OpenAlex's own data.
+Figures are best read as a consistent, reproducible series rather than as an authoritative count.

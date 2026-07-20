@@ -8,40 +8,20 @@ source("scripts/site_helpers.R")
 meta <- read_meta()
 ```
 
-All data is hosted on this site and mirrored in the
-[GitHub repository](https://github.com/slub/tu9-openalex) — outputs under
-[`data/`](https://github.com/slub/tu9-openalex/tree/main/data), the pipeline
-input under
-[`data-raw/`](https://github.com/slub/tu9-openalex/tree/main/data-raw).
+All data is hosted on this site and mirrored in the [GitHub repository](https://github.com/slub/tu9-openalex) — outputs under [`data/`](https://github.com/slub/tu9-openalex/tree/main/data), the pipeline input under [`data-raw/`](https://github.com/slub/tu9-openalex/tree/main/data-raw).
 
 ## Files
 
 Alliance-wide views:
 
-- [`metrics.csv`](metrics.csv) — one row per university per snapshot: the
-  corresponding-author OA headline (period `ca_works_period` / `ca_oa_share_period`
-  and the reference-year `ca_*_ref`) plus context indicators (works, citations,
-  h-index, i10-index, 2-year mean citedness). Works come under three lenses:
-  `works_count` (institution only, XPAC excluded), `works_count_incl_xpac` (same
-  institution, XPAC included) and `works_count_lineage_incl_xpac` (additionally
-  its OpenAlex child institutions — the figure openalex.org links to)
-- [`counts_by_year.csv`](counts_by_year.csv) — works and citations by
-  publication year, for the most recent snapshot
-- [`ca_oa_by_year.csv`](ca_oa_by_year.csv) — **corresponding-author** OA share
-  by publication year (`ca_works`, `ca_oa_works`, `ca_oa_share`) plus DOAJ-listed
-  journal counts (`ca_doaj_works`, `ca_doaj_share`)
-- [`ca_oa_status.csv`](ca_oa_status.csv) — corresponding-author OA-status split
-  (gold/hybrid/green/bronze/diamond/closed) for the reference year
-- [`consolidated_ca_oa_by_year.csv`](consolidated_ca_oa_by_year.csv) —
-  **Leiden-consolidated** CA OA share by year: each TU9 university counted
-  together with its weight-1 `component` affiliates (e.g. its university hospital)
-- [`leiden_core_ca_oa_by_year.csv`](leiden_core_ca_oa_by_year.csv) —
-  **Core-source-filtered** CA OA share by year: same Leiden-consolidated member
-  set, restricted to CWTS Core sources via
-  `primary_location.source.is_core:true`
+- [`metrics.csv`](metrics.csv) — one row per university per snapshot: the corresponding-author OA headline (period `ca_works_period` / `ca_oa_share_period` and the reference-year `ca_*_ref`) plus context indicators (works, citations, h-index, i10-index, 2-year mean citedness). Works come under three lenses: `works_count` (institution only, XPAC excluded), `works_count_incl_xpac` (same institution, XPAC included) and `works_count_lineage_incl_xpac` (additionally its OpenAlex child institutions — the figure openalex.org links to)
+- [`counts_by_year.csv`](counts_by_year.csv) — works and citations by publication year, for the most recent snapshot
+- [`ca_oa_by_year.csv`](ca_oa_by_year.csv) — corresponding-author OA share by publication year (`ca_works`, `ca_oa_works`, `ca_oa_share`) plus DOAJ-listed journal counts (`ca_doaj_works`, `ca_doaj_share`)
+- [`ca_oa_status.csv`](ca_oa_status.csv) — corresponding-author OA-status split (gold/hybrid/green/bronze/diamond/closed) for the reference year
+- [`consolidated_ca_oa_by_year.csv`](consolidated_ca_oa_by_year.csv) — Leiden-consolidated CA OA share by year: each TU9 university counted together with its weight-1 `component` affiliates (e.g. its university hospital)
+- [`leiden_core_ca_oa_by_year.csv`](leiden_core_ca_oa_by_year.csv) — Core-source-filtered CA OA share by year: same Leiden-consolidated member set, restricted to CWTS Core sources via `primary_location.source.is_core:true`
 
-Per institution (metric history + yearly counts + OA views, plus every raw
-snapshot):
+Per institution (metric history + yearly counts + OA views, plus every raw snapshot):
 
 ```{r}
 #| echo: false
@@ -53,16 +33,12 @@ for (x in meta$institutions) {
 }
 ```
 
-Each institution's raw OpenAlex entity is archived per snapshot under
-`institutions/<slug>/snapshots/<date>.json`.
+Each institution's raw OpenAlex entity is archived per snapshot under `institutions/<slug>/snapshots/<date>.json`.
 
 Pipeline inputs:
 
-- [`institutions.csv`](institutions.csv) — the tracked institutions with their
-  OpenAlex and ROR IDs
-- [`leiden_affiliations.csv`](leiden_affiliations.csv) — the TU9 slice of the
-  Leiden Ranking institution-consolidation mapping (which affiliated
-  organisations are counted into each university, with relation type and weight)
+- [`institutions.csv`](institutions.csv) — the tracked institutions with their OpenAlex and ROR IDs
+- [`leiden_affiliations.csv`](leiden_affiliations.csv) — the TU9 slice of the Leiden Ranking institution-consolidation mapping (which affiliated organisations are counted into each university, with relation type and weight)
 
 Other:
 

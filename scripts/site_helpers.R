@@ -178,6 +178,7 @@ institutions_table <- function(meta, path_prefix = "institutions/") {
 alliance_summary_table <- function(meta) {
   ca_num <- function(x) if (is.null(x)) NA_real_ else as.numeric(x)
   inst <- meta$institutions
+  period <- sprintf("%s–%s", meta$oa_period_start, meta$oa_period_end)
 
   single_works <- vapply(inst, function(x) as.integer(x$ca_works_period %||% NA), integer(1))
   single_share <- vapply(inst, function(x) ca_num(x$ca_oa_share_period), numeric(1))
@@ -188,16 +189,10 @@ alliance_summary_table <- function(meta) {
   core_works <- vapply(inst, function(x) as.integer(x$core_ca_works_period %||% NA), integer(1))
   core_share <- vapply(inst, function(x) ca_num(x$core_ca_oa_share_period), numeric(1))
 
-  # Carry the number of universities behind each figure. The totals are only
-  # comparable across rows while these agree, so the count is shown in the
-  # table rather than left to a footnote underneath it.
   df <- data.frame(
     View          = c("Single institution (ROR/OpenAlex)",
                        "Consolidated (OpenAlex/Leiden)",
                        "Core sources (Leiden/Core)"),
-    Universities  = c(sum(!is.na(single_works)),
-                       sum(!is.na(cons_works)),
-                       sum(!is.na(core_works))),
     CA_works      = c(sum(single_works, na.rm = TRUE),
                        sum(cons_works, na.rm = TRUE),
                        sum(core_works, na.rm = TRUE)),
@@ -211,11 +206,10 @@ alliance_summary_table <- function(meta) {
     df,
     sortable = FALSE, highlight = TRUE,
     columns = list(
-      View         = colDef(minWidth = 230),
-      Universities = colDef(minWidth = 110),
-      CA_works    = colDef(name = "Total CA works",
+      View        = colDef(minWidth = 230),
+      CA_works    = colDef(name = sprintf("Total CA works %s", period),
                            format = colFormat(separators = TRUE, locales = "en-US")),
-      CA_OA_share = colDef(name = "Median CA OA share", minWidth = 160,
+      CA_OA_share = colDef(name = sprintf("Median CA OA share %s", period), minWidth = 160,
                            cell = share_bar_cell("#2a9d4a"), html = TRUE)
     )
   )
@@ -378,31 +372,31 @@ inst_page <- function(slug) {
       cref_row <- cons[cons$year == latest$ref_year, ]
       inline_p(
         "This view uses the same ", leiden_link, " member set as the ",
-      "consolidated view, but restricts works to sources on the ",
-      core_sources_link, " via ", tags$code("primary_location.source.is_core:true"),
+      "consolidated view, but keeps only works whose primary venue is a source ",
+      "on the ", core_sources_link,
       ". In ", tags$strong(latest$ref_year), " this leaves ",
       tags$strong(fmt_int(coref$ca_works)), " corresponding-author works (down from ",
       tags$strong(fmt_int(cref_row$ca_works)), " across all sources), with an OA share of ",
       tags$strong(fmt_pct(coref$ca_oa_share)), ".")
     } else if (nrow(coref) > 0) inline_p(
       "This view uses the same ", leiden_link, " member set as the ",
-      "consolidated view, but restricts works to sources on the ",
-      core_sources_link, " via ", tags$code("primary_location.source.is_core:true"),
+      "consolidated view, but keeps only works whose primary venue is a source ",
+      "on the ", core_sources_link,
       ". In ", tags$strong(latest$ref_year), " this leaves ",
       tags$strong(fmt_int(coref$ca_works)), " corresponding-author works, with an OA share of ",
       tags$strong(fmt_pct(coref$ca_oa_share)), ".")
     else inline_p(
       "This view uses the same ", leiden_link, " member set as the ",
-      "consolidated view, but restricts works to sources on the ",
-      core_sources_link, " via ", tags$code("primary_location.source.is_core:true"), ".")
+      "consolidated view, but keeps only works whose primary venue is a source ",
+      "on the ", core_sources_link, ".")
     core_section <- tagList(
       tags$h2(id = "core", "Leiden/Core sources"),
       core_intro,
       inline_p(
         "CWTS Core is a curated allow-list of international scientific sources ",
         "in fields suitable for citation analysis; a source not on the list is not ",
-        "necessarily predatory or low quality. XPAC records remain excluded ",
-        "(", tags$code("is_xpac:false"), "). This is a source-only filter, not the ",
+        "necessarily predatory or low quality. XPAC records remain excluded. ",
+        "This is a source-only filter, not the ",
         "complete official Leiden ", tags$em("core publication"), " definition, which adds ",
         "publication-level criteria such as work type, language and references."),
       if (length(core_members))
@@ -426,13 +420,14 @@ inst_page <- function(slug) {
         "Share of open-access works among those whose ",
         tags$strong("corresponding author"),
         " is affiliated with this institution — the lens used for OpenAPC and ",
-        "transformative agreements. Denominator and numerator both come from ",
-        "OpenAlex ", tags$code("corresponding_institution_ids"), ". ",
-        tags$strong("CA DOAJ"), " counts those works whose journal is listed in ",
+        "transformative agreements. Both the denominator and the numerator are ",
+        "counted on this corresponding-author basis. ",
+        tags$strong("CA DOAJ"), " counts those works whose primary journal is ",
+        "listed in ",
         tags$a(href = "https://doaj.org/", target = "_blank", "DOAJ"),
-        ". It cuts across the OA statuses below rather than being one of them: ",
-        "those partition the works, DOAJ listing is an independent yes/no that ",
-        "overlaps mainly with gold and diamond."),
+        ". DOAJ listing describes the work's primary journal, not an additional ",
+        "OA status. Each work belongs to exactly one OA-status category below, so ",
+        "DOAJ counts are shown separately rather than added to the status totals."),
       if (!is.null(oa)) ca_oa_by_year_table(oa),
       if (!is.null(status)) tagList(
         tags$h3(sprintf("OA-status composition (%s)", latest$ref_year)),
