@@ -103,8 +103,9 @@ metrics_row_invariants <- function(m, add, prefix = "") {
 # Required products for every configured institution. The consolidated view is
 # required for ALL of them: a university without Leiden `component` affiliates
 # consolidates to itself, which is its correct consolidated value, and producing
-# it keeps the three views summable over the same universities. The member set
-# is checked against the Leiden mapping rather than merely being present.
+# it keeps the alliance views summable over the same universities. The member set
+# is checked against the Leiden mapping rather than merely being present. Both
+# CWTS Core readings (primary venue and any location) share that member set.
 validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
                               prev_metrics = NULL, guard_threshold = 0.20,
                               force = FALSE, period_start = NULL) {
@@ -180,7 +181,9 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
     consolidated = c("snapshot_date", "tu9_slug", "university_name", "n_members",
                      "year", "ca_works", "ca_oa_works", "ca_oa_share"),
     core = c("snapshot_date", "tu9_slug", "university_name", "n_members",
-             "year", "ca_works", "ca_oa_works", "ca_oa_share"))
+             "year", "ca_works", "ca_oa_works", "ca_oa_share"),
+    core_any = c("snapshot_date", "tu9_slug", "university_name", "n_members",
+                 "year", "ca_works", "ca_oa_works", "ca_oa_share"))
   for (nm in names(schemas)) {
     d <- snap[[nm]]
     if (is.null(d)) { add("%s is absent from the snapshot", nm); next }
@@ -192,12 +195,13 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   need <- list(counts_by_year = snap$counts_by_year,
                ca_oa_by_year  = snap$ca_oa_by_year,
                ca_oa_status   = snap$ca_oa_status,
-               core           = snap$core)
+               core           = snap$core,
+               core_any       = snap$core_any)
   for (nm in names(need)) {
     d <- need[[nm]]
     have <- if (is.null(d) || nrow(d) == 0) {
       character()
-    } else if (nm == "core") {
+    } else if (nm %in% c("core", "core_any")) {
       unique(d$tu9_slug)
     } else {
       unique(d$slug)
@@ -236,28 +240,35 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
       add("consolidated member set for %s does not match the Leiden mapping", slug)
   }
 
-  # --- 4. core view is present for every university -------------------------
-  core_got <- if (nrow(snap$core) > 0) sort(unique(snap$core$tu9_slug)) else character()
-  missing_core <- setdiff(expected, core_got)
-  unexpected_core <- setdiff(core_got, expected)
-  if (length(missing_core) > 0)
-    add("core view missing for: %s", paste(missing_core, collapse = ", "))
-  if (length(unexpected_core) > 0)
-    add("unexpected universities in core view: %s", paste(unexpected_core, collapse = ", "))
+  # --- 4. both Core views are present for every university ------------------
+  # The primary-venue and any-location Core readings each cover all nine, so the
+  # four alliance views stay summable over the same universities.
+  for (view in c("core", "core_any")) {
+    got <- if (nrow(snap[[view]]) > 0) sort(unique(snap[[view]]$tu9_slug)) else character()
+    missing_v <- setdiff(expected, got)
+    unexpected_v <- setdiff(got, expected)
+    if (length(missing_v) > 0)
+      add("%s view missing for: %s", view, paste(missing_v, collapse = ", "))
+    if (length(unexpected_v) > 0)
+      add("unexpected universities in %s view: %s", view, paste(unexpected_v, collapse = ", "))
+  }
 
-  # --- 5. core member set equals consolidated member set ---------------------
-  # Both views now cover every university, so this holds unconditionally: core
-  # is the consolidated set with a source filter, never a different set.
-  for (slug in expected) {
-    core_mem <- snap$core_members[[slug]]$members
-    cons_mem <- snap$cons_members[[slug]]$members
-    if (is.null(core_mem)) {
-      add("core member list missing for: %s", slug)
-      next
+  # --- 5. both Core member sets equal the consolidated member set ------------
+  # All three cover every university, so this holds unconditionally: each Core
+  # reading is the consolidated set with a source filter, never a different set.
+  for (view in c("core", "core_any")) {
+    members_of_view <- snap[[paste0(view, "_members")]]
+    for (slug in expected) {
+      view_mem <- members_of_view[[slug]]$members
+      cons_mem <- snap$cons_members[[slug]]$members
+      if (is.null(view_mem)) {
+        add("%s member list missing for: %s", view, slug)
+        next
+      }
+      if (is.null(cons_mem)) next  # already reported by check 3
+      if (!identical(sort(view_mem), sort(cons_mem)))
+        add("%s/cons member mismatch for %s", view, slug)
     }
-    if (is.null(cons_mem)) next  # already reported by check 3
-    if (!identical(sort(core_mem), sort(cons_mem)))
-      add("core/cons member mismatch for %s", slug)
   }
 
   # --- 6. the reference year is present in every view ----------------------
@@ -270,7 +281,8 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   # the year was fetched or bound twice.
   ref_views <- list(ca_oa_by_year = list(d = snap$ca_oa_by_year, key = "slug"),
                     consolidated  = list(d = snap$consolidated,  key = "tu9_slug"),
-                    core          = list(d = snap$core,          key = "tu9_slug"))
+                    core          = list(d = snap$core,          key = "tu9_slug"),
+                    core_any      = list(d = snap$core_any,      key = "tu9_slug"))
   for (nm in names(ref_views)) {
     d <- ref_views[[nm]]$d
     key <- ref_views[[nm]]$key
@@ -293,7 +305,8 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
     ca_oa_by_year  = c("slug", "year"),
     ca_oa_status   = c("slug", "year", "oa_status"),
     consolidated   = c("tu9_slug", "year"),
-    core           = c("tu9_slug", "year"))
+    core           = c("tu9_slug", "year"),
+    core_any       = c("tu9_slug", "year"))
   for (nm in names(keys)) {
     d <- snap[[nm]]
     if (is.null(d) || nrow(d) == 0) next
@@ -315,7 +328,7 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   # bounded the window, the corresponding-author queries did not, so the two
   # paths disagreed. Assert the bound rather than trusting each call site.
   snap_year <- as.integer(format(as.Date(snapshot_date), "%Y"))
-  for (nm in c("counts_by_year", "ca_oa_by_year", "consolidated", "core")) {
+  for (nm in c("counts_by_year", "ca_oa_by_year", "consolidated", "core", "core_any")) {
     d <- snap[[nm]]
     if (is.null(d) || nrow(d) == 0) next
     ahead <- sort(unique(n(d$year)[n(d$year) > snap_year]))
@@ -340,7 +353,7 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
 
   # --- 7. one consistent snapshot_date everywhere --------------------------
   for (nm in c("metrics", "counts_by_year", "ca_oa_by_year", "ca_oa_status",
-               "consolidated", "core")) {
+               "consolidated", "core", "core_any")) {
     d <- snap[[nm]]
     if (is.null(d) || nrow(d) == 0) next
     bad <- setdiff(unique(as.character(d$snapshot_date)), snapshot_date)
@@ -361,7 +374,7 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
               "counts_by_year")
   require_num(snap$ca_oa_status, c("year", "ca_works"), "ca_oa_status")
   # A publication year below this is a parsing accident, not a record.
-  for (nm in c("counts_by_year", "ca_oa_by_year", "consolidated", "core")) {
+  for (nm in c("counts_by_year", "ca_oa_by_year", "consolidated", "core", "core_any")) {
     d <- snap[[nm]]
     if (is.null(d) || nrow(d) == 0) next
     early <- sort(unique(n(d$year)[!is.na(n(d$year)) & n(d$year) < 1800]))
@@ -423,34 +436,44 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   }
   check_oa(snap$consolidated, "consolidated_ca_oa_by_year")
   check_oa(snap$core, "leiden_core_ca_oa_by_year")
+  check_oa(snap$core_any, "leiden_core_any_location_ca_oa_by_year")
 
-  # Core draws from the same member set as the consolidated view, so it can never
-  # be larger than the set it is filtered out of. Consolidated now covers every
-  # university, so it supplies the bound in all cases; the single-institution
-  # fallback below is kept only so a missing consolidated row degrades to a
-  # weaker check instead of skipping the comparison silently.
-  if (nrow(snap$core) > 0) {
-    upper <- setNames(n(snap$ca_oa_by_year$ca_works),
-                      paste(snap$ca_oa_by_year$slug, snap$ca_oa_by_year$year, sep = "|"))
-    source_of <- setNames(rep("single-institution", length(upper)), names(upper))
-    if (nrow(snap$consolidated) > 0) {
-      ck <- paste(snap$consolidated$tu9_slug, snap$consolidated$year, sep = "|")
-      upper[ck] <- n(snap$consolidated$ca_works)
-      source_of[ck] <- "consolidated"
-    }
-    for (i in seq_len(nrow(snap$core))) {
-      key <- paste(snap$core$tu9_slug[i], snap$core$year[i], sep = "|")
-      ub <- upper[key]
-      if (is.na(ub)) {
-        add("core row for %s year %s has no %s counterpart to check against",
-            snap$core$tu9_slug[i], snap$core$year[i], "single-institution")
-      } else if (n(snap$core$ca_works[i]) > ub) {
-        add("core ca_works (%s) exceeds its %s upper bound (%s) for %s year %s",
-            snap$core$ca_works[i], source_of[[key]], ub,
-            snap$core$tu9_slug[i], snap$core$year[i])
+  # Nested subset invariants across the Core readings and the consolidated view.
+  # Every filter genuinely narrows the previous one, over the same member set:
+  #   primary-venue Core (primary_location.source.is_core:true)
+  #     is a subset of
+  #   any-location Core  (locations.source.is_core:true -- the primary location
+  #     is one of the locations, so any work with a Core primary venue also has a
+  #     Core location)
+  #     is a subset of
+  #   the unconstrained consolidated view.
+  # is_oa:true narrows numerator and denominator identically, so the relationship
+  # holds for the OA-works count as well as the works count. Checked per
+  # (university, year); the error names both the affected view and institution.
+  subset_le <- function(inner, inner_label, outer, outer_label) {
+    if (is.null(inner) || nrow(inner) == 0 ||
+        is.null(outer) || nrow(outer) == 0) return(invisible(NULL))
+    ub_w  <- setNames(n(outer$ca_works),    paste(outer$tu9_slug, outer$year, sep = "|"))
+    ub_oa <- setNames(n(outer$ca_oa_works), paste(outer$tu9_slug, outer$year, sep = "|"))
+    for (i in seq_len(nrow(inner))) {
+      key <- paste(inner$tu9_slug[i], inner$year[i], sep = "|")
+      if (!(key %in% names(ub_w))) {
+        add("%s row for %s year %s has no %s counterpart to check against",
+            inner_label, inner$tu9_slug[i], inner$year[i], outer_label)
+        next
       }
+      if (n(inner$ca_works[i]) > ub_w[[key]])
+        add("%s ca_works (%s) exceeds %s ca_works (%s) for %s year %s",
+            inner_label, inner$ca_works[i], outer_label, ub_w[[key]],
+            inner$tu9_slug[i], inner$year[i])
+      if (n(inner$ca_oa_works[i]) > ub_oa[[key]])
+        add("%s ca_oa_works (%s) exceeds %s ca_oa_works (%s) for %s year %s",
+            inner_label, inner$ca_oa_works[i], outer_label, ub_oa[[key]],
+            inner$tu9_slug[i], inner$year[i])
     }
   }
+  subset_le(snap$core,     "primary-venue Core", snap$core_any,     "any-location Core")
+  subset_le(snap$core_any, "any-location Core",  snap$consolidated, "consolidated")
 
   # Headline period totals must equal the sum of the yearly values they are
   # derived from -- in every view, not only in Core, which was the only one
@@ -471,7 +494,11 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
     list(label = "core", rows = snap$core, key = "tu9_slug",
          works = function(s) n(snap$core_members[[s]]$ca_works_period),
          oa_works = NULL,
-         share = function(s) n(snap$core_members[[s]]$ca_oa_share_period)))
+         share = function(s) n(snap$core_members[[s]]$ca_oa_share_period)),
+    list(label = "core_any", rows = snap$core_any, key = "tu9_slug",
+         works = function(s) n(snap$core_any_members[[s]]$ca_works_period),
+         oa_works = NULL,
+         share = function(s) n(snap$core_any_members[[s]]$ca_oa_share_period)))
   for (v in period_views) {
     d <- v$rows
     if (is.null(d) || nrow(d) == 0) next
@@ -532,7 +559,8 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   # reference headline could be off by any amount and pass.
   ref_headlines <- list(
     list(label = "consolidated", rows = snap$consolidated, sum = snap$cons_members),
-    list(label = "core",         rows = snap$core,         sum = snap$core_members))
+    list(label = "core",         rows = snap$core,         sum = snap$core_members),
+    list(label = "core_any",     rows = snap$core_any,     sum = snap$core_any_members))
   for (v in ref_headlines) {
     d <- v$rows
     if (is.null(d) || nrow(d) == 0) next

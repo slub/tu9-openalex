@@ -337,11 +337,24 @@ openalex_ca_oa_by_year <- function(inst_ids, start_year, extra_filter = NULL) {
 
 # CWTS Core-source-filtered corresponding-author OA share by publication year.
 # Uses the same member set as the Leiden-consolidated view but restricts works
-# to sources on the CWTS Core sources allow-list via OpenAlex's
-# primary_location.source.is_core:true filter.
+# to sources on the CWTS Core sources allow-list. Two distinct readings of the
+# same allow-list, computed as separate queries and never combined:
+#
+#   primary venue  -- primary_location.source.is_core:true: the work's PRIMARY
+#                     venue is a Core source (the narrower reading);
+#   any location   -- locations.source.is_core:true: AT LEAST ONE recorded
+#                     location of the work is a Core source (the wider reading).
+#
+# Both share openalex_ca_oa_by_year()'s CA/OA arithmetic through extra_filter, so
+# there is one implementation of the calculation and only the filter differs.
 openalex_ca_oa_by_year_core <- function(inst_ids, start_year) {
   openalex_ca_oa_by_year(inst_ids, start_year,
                          extra_filter = "primary_location.source.is_core:true")
+}
+
+openalex_ca_oa_by_year_core_any_location <- function(inst_ids, start_year) {
+  openalex_ca_oa_by_year(inst_ids, start_year,
+                         extra_filter = "locations.source.is_core:true")
 }
 
 # Corresponding-author works published in DOAJ-listed journals, by publication

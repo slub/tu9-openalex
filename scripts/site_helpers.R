@@ -22,7 +22,7 @@ read_data <- function(...) {
 # Read a per-institution product and require it to belong to the CURRENT
 # snapshot. These products were best-effort once, and a missing or stale one
 # simply dropped its section from the page. They are all mandatory now -- the
-# alliance table sums the three OA views over the same nine universities -- so
+# alliance table sums the four OA views over the same nine universities -- so
 # silently omitting one produces a wrong page rather than a thinner one. Fail the
 # build instead; scripts/validate_products.R checks the same contract up front.
 read_current <- function(slug, file, snapshot_date) {
@@ -122,16 +122,19 @@ institutions_table <- function(meta, path_prefix = "institutions/") {
   inst   <- meta$institutions
   period <- sprintf("%s–%s", meta$oa_period_start, meta$oa_period_end)
   ca_num <- function(x) if (is.null(x)) NA_real_ else as.numeric(x)
-  # Three side-by-side readings, each with its own CA-works denominator and OA
+  # Four side-by-side readings, each with its own CA-works denominator and OA
   # share: the single OpenAlex institution (ROR), the same university grouped
-  # with its Leiden `component` affiliates, and that same member set restricted
-  # to CWTS Core sources.
+  # with its Leiden `component` affiliates, and that consolidated member set
+  # restricted to CWTS Core sources under two readings -- any recorded location
+  # a Core source, and the narrower primary-venue-only reading.
   df <- data.frame(
     Institution     = vapply(inst, function(x) x$name, character(1)),
     CA_works        = vapply(inst, function(x) as.integer(x$ca_works_period %||% NA), integer(1)),
     CA_OA_ror       = vapply(inst, function(x) ca_num(x$ca_oa_share_period), numeric(1)),
     CA_works_leiden = vapply(inst, function(x) as.integer(x$cons_ca_works_period %||% NA), integer(1)),
     CA_OA_leiden    = vapply(inst, function(x) ca_num(x$cons_ca_oa_share_period), numeric(1)),
+    CA_works_core_any = vapply(inst, function(x) as.integer(x$core_any_ca_works_period %||% NA), integer(1)),
+    CA_OA_core_any    = vapply(inst, function(x) ca_num(x$core_any_ca_oa_share_period), numeric(1)),
     CA_works_core   = vapply(inst, function(x) as.integer(x$core_ca_works_period %||% NA), integer(1)),
     CA_OA_core      = vapply(inst, function(x) ca_num(x$core_ca_oa_share_period), numeric(1)),
     slug            = vapply(inst, function(x) x$slug, character(1)),
@@ -147,7 +150,9 @@ institutions_table <- function(meta, path_prefix = "institutions/") {
                columns = c("CA_works", "CA_OA_ror")),
       colGroup(name = sprintf("Consolidated %s (OpenAlex/Leiden)", period),
                columns = c("CA_works_leiden", "CA_OA_leiden")),
-      colGroup(name = sprintf("Core sources %s (Leiden/Core)", period),
+      colGroup(name = sprintf("Core sources (any location) %s", period),
+               columns = c("CA_works_core_any", "CA_OA_core_any")),
+      colGroup(name = sprintf("Core sources (primary venue) %s", period),
                columns = c("CA_works_core", "CA_OA_core"))
     ),
     columns = list(
@@ -162,6 +167,10 @@ institutions_table <- function(meta, path_prefix = "institutions/") {
                                format = colFormat(separators = TRUE, locales = "en-US")),
       CA_OA_leiden = colDef(name = "CA OA share", minWidth = 130,
                             cell = share_bar_cell("#7059b8"), html = TRUE),
+      CA_works_core_any = colDef(name = "CA works", minWidth = 90,
+                             format = colFormat(separators = TRUE, locales = "en-US")),
+      CA_OA_core_any = colDef(name = "CA OA share", minWidth = 130,
+                          cell = share_bar_cell("#e6ab02"), html = TRUE),
       CA_works_core = colDef(name = "CA works", minWidth = 90,
                              format = colFormat(separators = TRUE, locales = "en-US")),
       CA_OA_core = colDef(name = "CA OA share", minWidth = 130,
@@ -173,7 +182,7 @@ institutions_table <- function(meta, path_prefix = "institutions/") {
   )
 }
 
-# Alliance-level summary across the three corresponding-author OA views.
+# Alliance-level summary across the four corresponding-author OA views.
 # Computes total CA works and the median CA OA share for each lens.
 alliance_summary_table <- function(meta) {
   ca_num <- function(x) if (is.null(x)) NA_real_ else as.numeric(x)
@@ -189,15 +198,21 @@ alliance_summary_table <- function(meta) {
   core_works <- vapply(inst, function(x) as.integer(x$core_ca_works_period %||% NA), integer(1))
   core_share <- vapply(inst, function(x) ca_num(x$core_ca_oa_share_period), numeric(1))
 
+  core_any_works <- vapply(inst, function(x) as.integer(x$core_any_ca_works_period %||% NA), integer(1))
+  core_any_share <- vapply(inst, function(x) ca_num(x$core_any_ca_oa_share_period), numeric(1))
+
   df <- data.frame(
     View          = c("Single institution (ROR/OpenAlex)",
                        "Consolidated (OpenAlex/Leiden)",
-                       "Core sources (Leiden/Core)"),
+                       "Core sources (any location)",
+                       "Core sources (primary venue)"),
     CA_works      = c(sum(single_works, na.rm = TRUE),
                        sum(cons_works, na.rm = TRUE),
+                       sum(core_any_works, na.rm = TRUE),
                        sum(core_works, na.rm = TRUE)),
     CA_OA_share   = c(median(single_share, na.rm = TRUE),
                        median(cons_share, na.rm = TRUE),
+                       median(core_any_share, na.rm = TRUE),
                        median(core_share, na.rm = TRUE)),
     stringsAsFactors = FALSE
   )
@@ -355,52 +370,66 @@ inst_page <- function(slug) {
       ca_oa_by_year_table(cons))
   }
 
-  # CWTS Core-source-filtered view: same member set as consolidated, restricted
-  # to primary_location.source.is_core:true.
-  core <- read_current(slug, "leiden_core_ca_oa_by_year.csv", published)
+  # CWTS Core-source views: same member set as the consolidated view, restricted
+  # to the CWTS Core sources allow-list under two readings. Any-location keeps a
+  # work when at least one recorded location is a Core source; primary-venue
+  # keeps it only when its primary venue is. Both are mandatory products, so
+  # read_current() fails the build if either is missing, empty or stale.
+  core     <- read_current(slug, "leiden_core_ca_oa_by_year.csv", published)
+  core_any <- read_current(slug, "leiden_core_any_location_ca_oa_by_year.csv", published)
   core_section <- NULL
   if (!is.null(core) && nrow(core) > 0) {
-    coref <- core[core$year == latest$ref_year, ]
     core_members <- leiden_component_names(slug)
     leiden_link <- tags$a(href = "https://open.leidenranking.com/",
                           target = "_blank", "CWTS Leiden Ranking Open Edition")
     core_sources_link <- tags$a(
       href = "https://doi.org/10.5281/zenodo.17200868",
       target = "_blank", "CWTS Core sources allow-list")
-    has_cons_ref <- !is.null(cons) && nrow(cons) > 0 && nrow(cons[cons$year == latest$ref_year, ]) > 0
-    core_intro <- if (nrow(coref) > 0 && has_cons_ref) {
-      cref_row <- cons[cons$year == latest$ref_year, ]
-      inline_p(
-        "This view uses the same ", leiden_link, " member set as the ",
-      "consolidated view, but keeps only works whose primary venue is a source ",
-      "on the ", core_sources_link,
-      ". In ", tags$strong(latest$ref_year), " this leaves ",
-      tags$strong(fmt_int(coref$ca_works)), " corresponding-author works (down from ",
-      tags$strong(fmt_int(cref_row$ca_works)), " across all sources), with an OA share of ",
-      tags$strong(fmt_pct(coref$ca_oa_share)), ".")
-    } else if (nrow(coref) > 0) inline_p(
-      "This view uses the same ", leiden_link, " member set as the ",
-      "consolidated view, but keeps only works whose primary venue is a source ",
-      "on the ", core_sources_link,
-      ". In ", tags$strong(latest$ref_year), " this leaves ",
-      tags$strong(fmt_int(coref$ca_works)), " corresponding-author works, with an OA share of ",
-      tags$strong(fmt_pct(coref$ca_oa_share)), ".")
-    else inline_p(
-      "This view uses the same ", leiden_link, " member set as the ",
-      "consolidated view, but keeps only works whose primary venue is a source ",
-      "on the ", core_sources_link, ".")
+    cons_ref_works <- {
+      r <- if (!is.null(cons) && nrow(cons) > 0) cons[cons$year == latest$ref_year, ] else NULL
+      if (!is.null(r) && nrow(r) > 0) suppressWarnings(as.numeric(r$ca_works)) else NA_real_
+    }
+    # One reference-year sentence per reading. "down from N across all sources"
+    # holds only where the consolidated reference row is available to compare to.
+    core_reading <- function(d, keep_phrase) {
+      dref <- d[d$year == latest$ref_year, ]
+      if (nrow(dref) > 0 && !is.na(cons_ref_works)) inline_p(
+        "Keeping only works ", keep_phrase, " leaves ",
+        tags$strong(fmt_int(dref$ca_works)), " corresponding-author works in ",
+        tags$strong(latest$ref_year), " (down from ",
+        tags$strong(fmt_int(cons_ref_works)), " across all sources), OA share ",
+        tags$strong(fmt_pct(dref$ca_oa_share)), ".")
+      else if (nrow(dref) > 0) inline_p(
+        "Keeping only works ", keep_phrase, " leaves ",
+        tags$strong(fmt_int(dref$ca_works)), " corresponding-author works in ",
+        tags$strong(latest$ref_year), ", OA share ",
+        tags$strong(fmt_pct(dref$ca_oa_share)), ".")
+      else inline_p("Keeping only works ", keep_phrase, ".")
+    }
     core_section <- tagList(
-      tags$h2(id = "core", "Leiden/Core sources"),
-      core_intro,
+      tags$h2(id = "core", "Core sources (CWTS)"),
+      inline_p(
+        "These two views use the same ", leiden_link, " member set as the ",
+        "consolidated view, but keep only works on the ", core_sources_link,
+        ". They are two readings of the same allow-list: ",
+        tags$strong("any location"), " keeps a work when at least one of its ",
+        "recorded locations is a Core source, while ", tags$strong("primary venue"),
+        " keeps it only when its primary venue is a Core source — so primary venue ",
+        "is never larger than any location."),
       inline_p(
         "CWTS Core is a curated allow-list of international scientific sources ",
         "in fields suitable for citation analysis; a source not on the list is not ",
-        "necessarily predatory or low quality. XPAC records remain excluded. ",
-        "This is a source-only filter, not the ",
-        "complete official Leiden ", tags$em("core publication"), " definition, which adds ",
-        "publication-level criteria such as work type, language and references."),
+        "necessarily predatory or low quality. XPAC records remain excluded. Both ",
+        "are source-only filters, not the complete official Leiden ",
+        tags$em("core publication"), " definition, which adds publication-level ",
+        "criteria such as work type, language and references."),
       if (length(core_members))
         inline_p("Component members included: ", tags$em(paste(core_members, collapse = "; ")), "."),
+      tags$h3("Any location"),
+      core_reading(core_any, "with at least one location a Core source"),
+      ca_oa_by_year_table(core_any),
+      tags$h3("Primary venue"),
+      core_reading(core, "whose primary venue is a Core source"),
       ca_oa_by_year_table(core))
   }
 
@@ -466,6 +495,9 @@ inst_page <- function(slug) {
       if (!is.null(core)) HTML(paste0(" · ",
         as.character(code_link(paste0(slug, "/leiden_core_ca_oa_by_year.csv"),
                                "leiden_core_ca_oa_by_year.csv")))),
+      if (!is.null(core_any)) HTML(paste0(" · ",
+        as.character(code_link(paste0(slug, "/leiden_core_any_location_ca_oa_by_year.csv"),
+                               "leiden_core_any_location_ca_oa_by_year.csv")))),
       "."),
     oa_section,
     cons_section,

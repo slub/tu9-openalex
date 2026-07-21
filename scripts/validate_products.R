@@ -46,7 +46,7 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
   }
 
   # Every product below is mandatory. There is no best-effort product left: the
-  # alliance table sums all three OA views over the same nine universities, so a
+  # alliance table sums all four OA views over the same nine universities, so a
   # missing one yields a wrong page, not a thinner one.
   products <- list(
     list(file = "metrics.csv",                    key = "slug",     series = TRUE),
@@ -54,7 +54,8 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
     list(file = "ca_oa_by_year.csv",              key = "slug",     series = FALSE),
     list(file = "ca_oa_status.csv",               key = "slug",     series = FALSE),
     list(file = "consolidated_ca_oa_by_year.csv", key = "tu9_slug", series = FALSE),
-    list(file = "leiden_core_ca_oa_by_year.csv",  key = "tu9_slug", series = FALSE))
+    list(file = "leiden_core_ca_oa_by_year.csv",  key = "tu9_slug", series = FALSE),
+    list(file = "leiden_core_any_location_ca_oa_by_year.csv", key = "tu9_slug", series = FALSE))
 
   meta_path <- file.path(data_dir, "meta.json")
   if (!file.exists(meta_path))
@@ -225,8 +226,10 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
       ca_oa_status   = loaded[["ca_oa_status.csv"]],
       consolidated   = loaded[["consolidated_ca_oa_by_year.csv"]],
       core           = loaded[["leiden_core_ca_oa_by_year.csv"]],
+      core_any       = loaded[["leiden_core_any_location_ca_oa_by_year.csv"]],
       cons_members   = by_slug("cons"),
       core_members   = by_slug("core"),
+      core_any_members = by_slug("core_any"),
       entities       = ents,
       failures       = character())
 

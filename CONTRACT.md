@@ -8,11 +8,14 @@ The R scripts implement the contract; the README and website explain the project
 
 The project monitors open access for the configured TU9 universities using OpenAlex and stores snapshots over time.
 Its headline is the open-access share of works whose corresponding author is affiliated with a university, using OpenAlex `corresponding_institution_ids`.
-Each university is represented through three views:
+Each university is represented through four views:
 
 1. the single configured OpenAlex institution;
 2. that institution consolidated with the weight-1 `component` affiliates in the Leiden mapping;
-3. the same consolidated member set restricted to CWTS Core sources with `primary_location.source.is_core:true`.
+3. the same consolidated member set restricted to works with any CWTS Core-source location, using `locations.source.is_core:true`;
+4. the same consolidated member set restricted to works whose primary venue is a CWTS Core source, using `primary_location.source.is_core:true`.
+
+Views 3 and 4 are two distinct readings of the same allow-list, computed as separate queries and never combined. They nest: view 4 ⊆ view 3 ⊆ view 2, for both the works count and its open-access subset.
 
 The project is a prototype, but it publishes committed data through a public static website.
 The appropriate standard is therefore strong validation at the commit and deployment boundaries, not independent proof of every upstream value or production-grade operational resilience.
@@ -31,7 +34,7 @@ A guard belongs in the current contract when it protects a public claim or commi
 | `data-raw/leiden_affiliations.csv` | Consolidated member assignments after joint validation against the institution configuration |
 | The run's snapshot date | Snapshot year, reference year, maximum publication year, and period end |
 | Archived OpenAlex institution entities | Entity ID, XPAC-inclusive works, citations, h-index, i10-index, 2-year mean citedness, and their reconstructible yearly entity counts |
-| OpenAlex grouped works responses | XPAC-excluded, lineage, corresponding-author, OA, DOAJ, status, consolidated, and Core-source figures for the current fetch |
+| OpenAlex grouped works responses | XPAC-excluded, lineage, corresponding-author, OA, DOAJ, status, consolidated, and both Core-source (primary-venue and any-location) figures for the current fetch |
 | Global files under `data/` | Canonical written products from which per-institution exports are sliced |
 | `data/metrics.csv` | Snapshot history and the source for reconstructible historical metadata such as first/latest snapshot |
 
@@ -51,6 +54,7 @@ Their published values can be checked for completeness, arithmetic, ordering, co
 | `data/ca_oa_status.csv` | `(slug, year, oa_status)` | Latest snapshot only |
 | `data/consolidated_ca_oa_by_year.csv` | `(tu9_slug, year)` | Latest snapshot only |
 | `data/leiden_core_ca_oa_by_year.csv` | `(tu9_slug, year)` | Latest snapshot only |
+| `data/leiden_core_any_location_ca_oa_by_year.csv` | `(tu9_slug, year)` | Latest snapshot only |
 | `data/meta.json` | One site summary plus one entry per institution | Latest snapshot plus history-derived summary fields |
 | `data/snapshots/<slug>/<date>.json` | `(slug, snapshot date)` | Raw institution entity archive |
 
@@ -88,8 +92,8 @@ It requires:
 - finite, non-negative required numeric values;
 - numerator, denominator, and share arithmetic for OA and DOAJ values;
 - reference-year and period headlines that agree with their yearly rows;
-- consolidated and Core member sets that agree with the validated mapping;
-- valid lens ordering, including consolidated counts not falling below the single-institution view;
+- consolidated and both Core member sets that agree with the validated mapping;
+- valid lens ordering, including consolidated counts not falling below the single-institution view, and the nested Core subset invariants (primary-venue Core ≤ any-location Core ≤ consolidated) on both the works count and its open-access subset;
 - reconstructible entity metrics that agree with the archived entity;
 - protection against an unexpectedly large drop from the previous snapshot.
 

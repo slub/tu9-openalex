@@ -19,7 +19,8 @@ Alliance-wide views:
 - [`ca_oa_by_year.csv`](ca_oa_by_year.csv) — corresponding-author OA share by publication year (`ca_works`, `ca_oa_works`, `ca_oa_share`) plus DOAJ-listed journal counts (`ca_doaj_works`, `ca_doaj_share`)
 - [`ca_oa_status.csv`](ca_oa_status.csv) — corresponding-author OA-status split (gold/hybrid/green/bronze/diamond/closed) for the reference year
 - [`consolidated_ca_oa_by_year.csv`](consolidated_ca_oa_by_year.csv) — Leiden-consolidated CA OA share by year: each TU9 university counted together with its weight-1 `component` affiliates (e.g. its university hospital)
-- [`leiden_core_ca_oa_by_year.csv`](leiden_core_ca_oa_by_year.csv) — Core-source-filtered CA OA share by year: same Leiden-consolidated member set, restricted to CWTS Core sources via `primary_location.source.is_core:true`
+- [`leiden_core_ca_oa_by_year.csv`](leiden_core_ca_oa_by_year.csv) — Core-source-filtered CA OA share by year (**primary Core venue**): same Leiden-consolidated member set, restricted to works whose primary venue is a Core source via `primary_location.source.is_core:true`
+- [`leiden_core_any_location_ca_oa_by_year.csv`](leiden_core_any_location_ca_oa_by_year.csv) — Core-source-filtered CA OA share by year (**any Core location**): same Leiden-consolidated member set, restricted to works with at least one location on the Core allow-list via `locations.source.is_core:true`
 
 Per institution (metric history + yearly counts + OA views, plus every raw snapshot):
 
@@ -28,8 +29,8 @@ Per institution (metric history + yearly counts + OA views, plus every raw snaps
 #| output: asis
 for (x in meta$institutions) {
   cat(sprintf(
-    "- `institutions/%s/` — [metrics.csv](institutions/%s/metrics.csv) · [counts_by_year.csv](institutions/%s/counts_by_year.csv) · [ca_oa_by_year.csv](institutions/%s/ca_oa_by_year.csv) · [ca_oa_status.csv](institutions/%s/ca_oa_status.csv) · [consolidated_ca_oa_by_year.csv](institutions/%s/consolidated_ca_oa_by_year.csv) · [leiden_core_ca_oa_by_year.csv](institutions/%s/leiden_core_ca_oa_by_year.csv)\n",
-    x$slug, x$slug, x$slug, x$slug, x$slug, x$slug, x$slug))
+    "- `institutions/%s/` — [metrics.csv](institutions/%s/metrics.csv) · [counts_by_year.csv](institutions/%s/counts_by_year.csv) · [ca_oa_by_year.csv](institutions/%s/ca_oa_by_year.csv) · [ca_oa_status.csv](institutions/%s/ca_oa_status.csv) · [consolidated_ca_oa_by_year.csv](institutions/%s/consolidated_ca_oa_by_year.csv) · [leiden_core_ca_oa_by_year.csv](institutions/%s/leiden_core_ca_oa_by_year.csv) · [leiden_core_any_location_ca_oa_by_year.csv](institutions/%s/leiden_core_any_location_ca_oa_by_year.csv)\n",
+    x$slug, x$slug, x$slug, x$slug, x$slug, x$slug, x$slug, x$slug))
 }
 ```
 

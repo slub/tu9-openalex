@@ -1,0 +1,1176 @@
+{
+  "id": "https://openalex.org/I62916508",
+  "ror": "https://ror.org/02kkvpp62",
+  "display_name": "Technical University of Munich",
+  "country_code": "DE",
+  "type": "education",
+  "type_id": "https://openalex.org/institution-types/education",
+  "lineage": [
+    "https://openalex.org/I62916508"
+  ],
+  "homepage_url": "https://www.tum.de",
+  "image_url": "https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/TU%20Muenchen%20Logo.svg",
+  "image_thumbnail_url": "https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/TU%20Muenchen%20Logo.svg&width=300",
+  "display_name_acronyms": [
+    "TUM"
+  ],
+  "display_name_alternatives": [
+    "Technical University of Munich",
+    "Technische Universitaet Muenchen",
+    "Technische Universität München"
+  ],
+  "repositories": [
+    {
+      "id": "https://openalex.org/S4306400453",
+      "display_name": "mediaTUM – the media and publications repository of the Technical University Munich (Technical University Munich)",
+      "host_organization": "https://openalex.org/I62916508",
+      "host_organization_name": "Technical University of Munich",
+      "host_organization_lineage": [
+        "https://openalex.org/I62916508"
+      ]
+    },
+    {
+      "id": "https://openalex.org/S4306402443",
+      "display_name": "Munich Personal RePEc Archive (Munich University)",
+      "host_organization": "https://openalex.org/I62916508",
+      "host_organization_name": "Technical University of Munich",
+      "host_organization_lineage": [
+        "https://openalex.org/I62916508"
+      ]
+    },
+    {
+      "id": "https://openalex.org/S4377196330",
+      "display_name": "mediaTUM  (Technical University of Munich)",
+      "host_organization": "https://openalex.org/I62916508",
+      "host_organization_name": "Technical University of Munich",
+      "host_organization_lineage": [
+        "https://openalex.org/I62916508"
+      ]
+    }
+  ],
+  "works_count": 227502,
+  "cited_by_count": 18820280,
+  "summary_stats": {
+    "2yr_mean_citedness": 3.9172,
+    "h_index": 1021,
+    "i10_index": 261578
+  },
+  "ids": {
+    "openalex": "https://openalex.org/I62916508",
+    "ror": "https://ror.org/02kkvpp62",
+    "grid": "grid.6936.a",
+    "wikipedia": "http://en.wikipedia.org/wiki/Technische_Universit%C3%A4t_M%C3%BCnchen",
+    "wikidata": null
+  },
+  "geo": {
+    "city": "Munich",
+    "geonames_city_id": "2867714",
+    "region": "Bavaria",
+    "country_code": "DE",
+    "country": "Germany",
+    "latitude": 48.1374,
+    "longitude": 11.5755
+  },
+  "international": {},
+  "associated_institutions": [
+    {
+      "id": "https://openalex.org/I189554337",
+      "ror": "https://ror.org/032hzb643",
+      "display_name": "Center for Integrated Protein Science Munich",
+      "country_code": "DE",
+      "type": "other",
+      "relationship": "child"
+    },
+    {
+      "id": "https://openalex.org/I2802619606",
+      "ror": "https://ror.org/04jc43x05",
+      "display_name": "TUM Klinikum",
+      "country_code": "DE",
+      "type": "healthcare",
+      "relationship": "child"
+    },
+    {
+      "id": "https://openalex.org/I4210105334",
+      "ror": "https://ror.org/01fgmnw14",
+      "display_name": "Berufsgenossenschaftliche Unfallklinik Murnau",
+      "country_code": "DE",
+      "type": "healthcare",
+      "relationship": "related"
+    },
+    {
+      "id": "https://openalex.org/I4210113080",
+      "ror": "https://ror.org/025z3z560",
+      "display_name": "Munich Cluster for Systems Neurology",
+      "country_code": "DE",
+      "type": "facility",
+      "relationship": "child"
+    },
+    {
+      "id": "https://openalex.org/I4210137376",
+      "ror": "https://ror.org/04j4kfb22",
+      "display_name": "Centre for Advanced Laser Applications",
+      "country_code": "DE",
+      "type": "facility",
+      "relationship": "child"
+    },
+    {
+      "id": "https://openalex.org/I4210148371",
+      "ror": "https://ror.org/04hbwba26",
+      "display_name": "Deutsches Herzzentrum München",
+      "country_code": "DE",
+      "type": "healthcare",
+      "relationship": "child"
+    },
+    {
+      "id": "https://openalex.org/I4387153217",
+      "ror": "https://ror.org/02nx8n605",
+      "display_name": "TU9",
+      "country_code": "DE",
+      "type": "other",
+      "relationship": "related"
+    },
+    {
+      "id": "https://openalex.org/I4387155950",
+      "ror": "https://ror.org/05g95eg64",
+      "display_name": "Institute of Biological and Medical Imaging",
+      "country_code": null,
+      "type": "facility",
+      "relationship": "child"
+    },
+    {
+      "id": "https://openalex.org/I4403386549",
+      "ror": "https://ror.org/02nfy3535",
+      "display_name": "Munich Center for Machine Learning",
+      "country_code": null,
+      "type": "education",
+      "relationship": "child"
+    },
+    {
+      "id": "https://openalex.org/I4405265300",
+      "ror": "https://ror.org/04e2f5g27",
+      "display_name": "Hochschule für Politik München",
+      "country_code": "DE",
+      "type": "education",
+      "relationship": "child"
+    },
+    {
+      "id": "https://openalex.org/I4405267400",
+      "ror": "https://ror.org/02kfbaj13",
+      "display_name": "Centre for Tactile Internet with Human-in-the-Loop",
+      "country_code": "DE",
+      "type": "facility",
+      "relationship": "related"
+    }
+  ],
+  "counts_by_year": [
+    {
+      "year": 2027,
+      "works_count": 2,
+      "oa_works_count": 2,
+      "cited_by_count": 0
+    },
+    {
+      "year": 2026,
+      "works_count": 9523,
+      "oa_works_count": 8138,
+      "cited_by_count": 2023
+    },
+    {
+      "year": 2025,
+      "works_count": 14403,
+      "oa_works_count": 11404,
+      "cited_by_count": 38652
+    },
+    {
+      "year": 2024,
+      "works_count": 15059,
+      "oa_works_count": 11990,
+      "cited_by_count": 105350
+    },
+    {
+      "year": 2023,
+      "works_count": 14245,
+      "oa_works_count": 10396,
+      "cited_by_count": 168758
+    },
+    {
+      "year": 2022,
+      "works_count": 12666,
+      "oa_works_count": 8941,
+      "cited_by_count": 217409
+    },
+    {
+      "year": 2021,
+      "works_count": 12581,
+      "oa_works_count": 9072,
+      "cited_by_count": 277694
+    },
+    {
+      "year": 2020,
+      "works_count": 11380,
+      "oa_works_count": 8069,
+      "cited_by_count": 358904
+    },
+    {
+      "year": 2019,
+      "works_count": 11127,
+      "oa_works_count": 6650,
+      "cited_by_count": 345260
+    },
+    {
+      "year": 2018,
+      "works_count": 9009,
+      "oa_works_count": 5272,
+      "cited_by_count": 377021
+    },
+    {
+      "year": 2017,
+      "works_count": 8703,
+      "oa_works_count": 4463,
+      "cited_by_count": 369609
+    },
+    {
+      "year": 2016,
+      "works_count": 8079,
+      "oa_works_count": 3995,
+      "cited_by_count": 356223
+    },
+    {
+      "year": 2015,
+      "works_count": 7338,
+      "oa_works_count": 3244,
+      "cited_by_count": 318219
+    },
+    {
+      "year": 2014,
+      "works_count": 7108,
+      "oa_works_count": 2799,
+      "cited_by_count": 284938
+    },
+    {
+      "year": 2013,
+      "works_count": 6654,
+      "oa_works_count": 2576,
+      "cited_by_count": 273203
+    },
+    {
+      "year": 2012,
+      "works_count": 5859,
+      "oa_works_count": 2297,
+      "cited_by_count": 282442
+    },
+    {
+      "year": 2011,
+      "works_count": 5725,
+      "oa_works_count": 2089,
+      "cited_by_count": 276964
+    },
+    {
+      "year": 2010,
+      "works_count": 5401,
+      "oa_works_count": 1980,
+      "cited_by_count": 258912
+    }
+  ],
+  "roles": [
+    {
+      "role": "funder",
+      "id": "https://openalex.org/F4320323383",
+      "works_count": 12345
+    },
+    {
+      "role": "institution",
+      "id": "https://openalex.org/I62916508",
+      "works_count": 227502
+    },
+    {
+      "role": "publisher",
+      "id": "https://openalex.org/P4310313768",
+      "works_count": 2306
+    }
+  ],
+  "topics": [
+    {
+      "id": "https://openalex.org/T10048",
+      "display_name": "Particle physics theoretical and experimental studies",
+      "count": 4529,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10224",
+      "display_name": "Quantum Chromodynamics and Particle Interactions",
+      "count": 3734,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10002",
+      "display_name": "Advanced Chemical Physics Studies",
+      "count": 2944,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3107",
+        "display_name": "Atomic and Molecular Physics, and Optics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10093",
+      "display_name": "Nuclear physics research studies",
+      "count": 2792,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10527",
+      "display_name": "High-Energy Particle Collisions Research",
+      "count": 2599,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11949",
+      "display_name": "Nuclear Physics and Applications",
+      "count": 2370,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3108",
+        "display_name": "Radiation"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12565",
+      "display_name": "Physics and Engineering Research Articles",
+      "count": 2309,
+      "score": 0.9999,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2206",
+        "display_name": "Computational Mechanics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11177",
+      "display_name": "Spectroscopy and Quantum Chemical Studies",
+      "count": 2235,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3107",
+        "display_name": "Atomic and Molecular Physics, and Optics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10092",
+      "display_name": "Organometallic Complex Synthesis and Catalysis",
+      "count": 1986,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1605",
+        "display_name": "Organic Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/16",
+        "display_name": "Chemistry"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10921",
+      "display_name": "Neutrino Physics Research",
+      "count": 1896,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10142",
+      "display_name": "Formal Methods in Verification",
+      "count": 1751,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1703",
+        "display_name": "Computational Theory and Mathematics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/17",
+        "display_name": "Computer Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10015",
+      "display_name": "Genomics and Phylogenetic Studies",
+      "count": 1715,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1312",
+        "display_name": "Molecular Biology"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/13",
+        "display_name": "Biochemistry, Genetics and Molecular Biology"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/1",
+        "display_name": "Life Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11741",
+      "display_name": "Flexible and Reconfigurable Manufacturing Systems",
+      "count": 1621,
+      "score": 0.9999,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2209",
+        "display_name": "Industrial and Manufacturing Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10382",
+      "display_name": "Quantum and electron transport phenomena",
+      "count": 1614,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3107",
+        "display_name": "Atomic and Molecular Physics, and Optics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11090",
+      "display_name": "Dark Matter and Cosmic Phenomena",
+      "count": 1554,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10022",
+      "display_name": "Semiconductor Quantum Structures and Devices",
+      "count": 1553,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3107",
+        "display_name": "Atomic and Molecular Physics, and Optics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10523",
+      "display_name": "Atomic and Molecular Physics",
+      "count": 1546,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3107",
+        "display_name": "Atomic and Molecular Physics, and Optics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10522",
+      "display_name": "Medical Imaging Techniques and Applications",
+      "count": 1538,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2741",
+        "display_name": "Radiology, Nuclear Medicine and Imaging"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/27",
+        "display_name": "Medicine"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/4",
+        "display_name": "Health Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10191",
+      "display_name": "Robotics and Sensor-Based Localization",
+      "count": 1523,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2202",
+        "display_name": "Aerospace Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10818",
+      "display_name": "Astrophysics and Cosmic Phenomena",
+      "count": 1437,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11993",
+      "display_name": "Atomic and Subatomic Physics Research",
+      "count": 1420,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3107",
+        "display_name": "Atomic and Molecular Physics, and Optics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10037",
+      "display_name": "Physics of Superconductivity and Magnetism",
+      "count": 1406,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3104",
+        "display_name": "Condensed Matter Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10472",
+      "display_name": "Semiconductor materials and devices",
+      "count": 1392,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2208",
+        "display_name": "Electrical and Electronic Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10192",
+      "display_name": "Catalytic Processes in Materials Science",
+      "count": 1344,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2505",
+        "display_name": "Materials Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/25",
+        "display_name": "Materials Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11965",
+      "display_name": "Quantum, superfluid, helium dynamics",
+      "count": 1338,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3107",
+        "display_name": "Atomic and Molecular Physics, and Optics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    }
+  ],
+  "topic_share": [
+    {
+      "id": "https://openalex.org/T12565",
+      "display_name": "Physics and Engineering Research Articles",
+      "value": 0.0186,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2206",
+        "display_name": "Computational Mechanics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12959",
+      "display_name": "Engineering and Materials Science Studies",
+      "value": 0.0177,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2210",
+        "display_name": "Mechanical Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11741",
+      "display_name": "Flexible and Reconfigurable Manufacturing Systems",
+      "value": 0.0174,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2209",
+        "display_name": "Industrial and Manufacturing Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10921",
+      "display_name": "Neutrino Physics Research",
+      "value": 0.0157,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10807",
+      "display_name": "Synthesis and characterization of novel inorganic/organometallic compounds",
+      "value": 0.0143,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1604",
+        "display_name": "Inorganic Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/16",
+        "display_name": "Chemistry"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11090",
+      "display_name": "Dark Matter and Cosmic Phenomena",
+      "value": 0.0122,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11790",
+      "display_name": "N-Heterocyclic Carbenes in Organic and Inorganic Chemistry",
+      "value": 0.012,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1605",
+        "display_name": "Organic Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/16",
+        "display_name": "Chemistry"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10142",
+      "display_name": "Formal Methods in Verification",
+      "value": 0.0119,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1703",
+        "display_name": "Computational Theory and Mathematics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/17",
+        "display_name": "Computer Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10093",
+      "display_name": "Nuclear physics research studies",
+      "value": 0.0118,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11687",
+      "display_name": "Teleoperation and Haptic Systems",
+      "value": 0.0116,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2210",
+        "display_name": "Mechanical Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T13031",
+      "display_name": "Civil and Structural Engineering Research",
+      "value": 0.0115,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2205",
+        "display_name": "Civil and Structural Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10653",
+      "display_name": "Robot Manipulation and Learning",
+      "value": 0.0112,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2207",
+        "display_name": "Control and Systems Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10092",
+      "display_name": "Organometallic Complex Synthesis and Catalysis",
+      "value": 0.0111,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1605",
+        "display_name": "Organic Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/16",
+        "display_name": "Chemistry"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T13295",
+      "display_name": "Safety Systems Engineering in Autonomy",
+      "value": 0.011,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2213",
+        "display_name": "Safety, Risk, Reliability and Quality"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T13458",
+      "display_name": "Astronomical and nuclear sciences",
+      "value": 0.0109,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12885",
+      "display_name": "Digital Innovation in Industries",
+      "value": 0.0107,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1405",
+        "display_name": "Management of Technology and Innovation"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/14",
+        "display_name": "Business, Management and Accounting"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/2",
+        "display_name": "Social Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11729",
+      "display_name": "Product Development and Customization",
+      "value": 0.0104,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1405",
+        "display_name": "Management of Technology and Innovation"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/14",
+        "display_name": "Business, Management and Accounting"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/2",
+        "display_name": "Social Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11099",
+      "display_name": "Autonomous Vehicle Technology and Safety",
+      "value": 0.0103,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2203",
+        "display_name": "Automotive Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12285",
+      "display_name": "Surface Chemistry and Catalysis",
+      "value": 0.0103,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2204",
+        "display_name": "Biomedical Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11450",
+      "display_name": "Model-Driven Software Engineering Techniques",
+      "value": 0.0101,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1712",
+        "display_name": "Software"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/17",
+        "display_name": "Computer Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11804",
+      "display_name": "Quantum many-body systems",
+      "value": 0.0098,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3107",
+        "display_name": "Atomic and Molecular Physics, and Optics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10910",
+      "display_name": "Corporate Governance and Management",
+      "value": 0.0098,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1408",
+        "display_name": "Strategy and Management"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/14",
+        "display_name": "Business, Management and Accounting"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/2",
+        "display_name": "Social Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10224",
+      "display_name": "Quantum Chromodynamics and Particle Interactions",
+      "value": 0.0097,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10964",
+      "display_name": "Wireless Communication Security Techniques",
+      "value": 0.009,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2208",
+        "display_name": "Electrical and Electronic Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10933",
+      "display_name": "Real-Time Systems Scheduling",
+      "value": 0.0088,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1708",
+        "display_name": "Hardware and Architecture"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/17",
+        "display_name": "Computer Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    }
+  ],
+  "is_super_system": false,
+  "status": "active",
+  "works_api_url": "https://api.openalex.org/works?filter=institutions.id:I62916508",
+  "updated_date": "2026-07-20T05:59:38",
+  "created_date": "2016-06-24T00:00:00"
+}

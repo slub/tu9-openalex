@@ -7,7 +7,8 @@
 #   data/ca_oa_by_year.csv             corresponding-author OA share by year (latest)
 #   data/ca_oa_status.csv              CA OA-status split for the reference year (latest)
 #   data/consolidated_ca_oa_by_year.csv  Leiden-consolidated CA OA share by year (latest)
-#   data/leiden_core_ca_oa_by_year.csv   Core-source-filtered CA OA share by year (latest)
+#   data/leiden_core_ca_oa_by_year.csv   Core-source (primary venue) CA OA share by year (latest)
+#   data/leiden_core_any_location_ca_oa_by_year.csv  Core-source (any location) CA OA share by year (latest)
 #   data/<slug>/*.csv                  the same views for one institution
 #   data/meta.json                     summary + last-updated date (for the site)
 #
@@ -105,6 +106,8 @@ cons_year_rows <- list()
 cons_by_slug   <- list()
 core_year_rows <- list()
 core_by_slug   <- list()
+core_any_year_rows <- list()
+core_any_by_slug   <- list()
 
 fail <- function(slug, what) {
   failures <<- c(failures, sprintf("%s: %s", slug, what))
@@ -216,7 +219,7 @@ for (i in seq_len(nrow(inst))) {
 # `component` affiliates. Every university gets one, as in the core view below:
 # where a university has no components the member set is the university alone,
 # which is its correct consolidated value. Producing it keeps the alliance
-# totals summable over the same nine universities in all three views -- omitting
+# totals summable over the same nine universities in all four views -- omitting
 # these rows made the consolidated total smaller than the single-institution
 # total, which reads as if consolidating lost works.
 for (i in seq_len(nrow(inst))) {
@@ -242,30 +245,47 @@ for (i in seq_len(nrow(inst))) {
     ca_oa_works = coa$ca_oa_works, ca_oa_share = coa$ca_oa_share)
 }
 
-# CWTS Core-source-filtered CA-OA view: same member set as the consolidated
-# view, but every university gets one (even without components), and works are
-# additionally restricted to primary_location.source.is_core:true.
-for (i in seq_len(nrow(inst))) {
-  slug <- inst$slug[i]
-  u    <- inst[i, ]
-  comp <- leiden$affiliated_openalex_id[leiden$tu9_slug == slug]
-  members <- unique(c(openalex_bare(u$openalex_id), openalex_bare(comp)))
-  message("  core ", slug, " (", length(members), " members)")
-  coa <- openalex_ca_oa_by_year_core(members, OA_START_YEAR)
-  if (is.null(coa) || nrow(coa) == 0) { fail(slug, "core OA by year"); next }
+# CWTS Core-source-filtered CA-OA views: same member set as the consolidated
+# view, but every university gets one (even without components). The CWTS Core
+# allow-list is read two distinct ways, as two separate queries that are never
+# combined:
+#   primary venue -> primary_location.source.is_core:true (leiden_core_*)
+#   any location  -> locations.source.is_core:true        (leiden_core_any_location_*)
+# The member set is computed once here and passed to both, so the two readings
+# and the consolidated view are guaranteed to be the same set of universities.
+core_summary <- function(coa, members) {
   cref <- coa[coa$year == REF_YEAR, ]
   cpa  <- period_ca(coa)
-  core_by_slug[[slug]] <- list(
+  list(
     n_members          = length(members),
     members            = members,
     ca_works_ref       = if (nrow(cref)) cref$ca_works    else NA_integer_,
     ca_oa_share_ref    = if (nrow(cref)) cref$ca_oa_share else NA_real_,
     ca_works_period    = cpa$works,
     ca_oa_share_period = cpa$share)
-  core_year_rows[[length(core_year_rows) + 1L]] <- tibble(
-    snapshot_date = snapshot_date, tu9_slug = slug, university_name = u$name,
+}
+core_year_row <- function(coa, slug, name, members) {
+  tibble(
+    snapshot_date = snapshot_date, tu9_slug = slug, university_name = name,
     n_members = length(members), year = coa$year, ca_works = coa$ca_works,
     ca_oa_works = coa$ca_oa_works, ca_oa_share = coa$ca_oa_share)
+}
+for (i in seq_len(nrow(inst))) {
+  slug <- inst$slug[i]
+  u    <- inst[i, ]
+  comp <- leiden$affiliated_openalex_id[leiden$tu9_slug == slug]
+  members <- unique(c(openalex_bare(u$openalex_id), openalex_bare(comp)))
+  message("  core ", slug, " (", length(members), " members)")
+
+  coa <- openalex_ca_oa_by_year_core(members, OA_START_YEAR)
+  if (is.null(coa) || nrow(coa) == 0) { fail(slug, "core OA by year (primary venue)"); next }
+  core_by_slug[[slug]] <- core_summary(coa, members)
+  core_year_rows[[length(core_year_rows) + 1L]] <- core_year_row(coa, slug, u$name, members)
+
+  aoa <- openalex_ca_oa_by_year_core_any_location(members, OA_START_YEAR)
+  if (is.null(aoa) || nrow(aoa) == 0) { fail(slug, "core OA by year (any location)"); next }
+  core_any_by_slug[[slug]] <- core_summary(aoa, members)
+  core_any_year_rows[[length(core_any_year_rows) + 1L]] <- core_year_row(aoa, slug, u$name, members)
 }
 
 empty_if_none <- function(rows) if (length(rows) > 0) bind_rows(rows) else tibble()
@@ -276,8 +296,10 @@ snap <- list(
   ca_oa_status   = empty_if_none(oa_status_rows),
   consolidated   = empty_if_none(cons_year_rows),
   core           = empty_if_none(core_year_rows),
+  core_any       = empty_if_none(core_any_year_rows),
   cons_members   = cons_by_slug,
   core_members   = core_by_slug,
+  core_any_members = core_any_by_slug,
   entities       = entities,
   failures       = failures
 )
@@ -353,6 +375,12 @@ if (nrow(snap$core) > 0) {
 } else if (file.exists("data/leiden_core_ca_oa_by_year.csv")) {
   unlink("data/leiden_core_ca_oa_by_year.csv")
 }
+if (nrow(snap$core_any) > 0) {
+  write_csv(snap$core_any[order(snap$core_any$tu9_slug, -snap$core_any$year), ],
+            "data/leiden_core_any_location_ca_oa_by_year.csv", na = "")
+} else if (file.exists("data/leiden_core_any_location_ca_oa_by_year.csv")) {
+  unlink("data/leiden_core_any_location_ca_oa_by_year.csv")
+}
 
 # Per-institution views. Products that do not apply are removed rather than left
 # behind, so a stale file can never be read as a current one.
@@ -384,6 +412,15 @@ for (slug in inst$slug) {
     write_csv(icore[order(-icore$year), ], corepath, na = "")
   } else if (file.exists(corepath)) {
     unlink(corepath)
+  }
+
+  coreanypath <- file.path(d, "leiden_core_any_location_ca_oa_by_year.csv")
+  icoreany <- if (nrow(snap$core_any) > 0)
+    snap$core_any[snap$core_any$tu9_slug == slug, ] else snap$core_any
+  if (nrow(icoreany) > 0) {
+    write_csv(icoreany[order(-icoreany$year), ], coreanypath, na = "")
+  } else if (file.exists(coreanypath)) {
+    unlink(coreanypath)
   }
 }
 
@@ -433,6 +470,14 @@ meta_inst <- lapply(seq_len(nrow(latest)), function(i) {
     entry$core_ca_oa_share_ref    <- core$ca_oa_share_ref
     entry$core_ca_works_period    <- core$ca_works_period
     entry$core_ca_oa_share_period <- core$ca_oa_share_period
+  }
+  core_any <- core_any_by_slug[[r$slug]]
+  if (!is.null(core_any)) {
+    entry$core_any_n_members          <- core_any$n_members
+    entry$core_any_ca_works_ref       <- core_any$ca_works_ref
+    entry$core_any_ca_oa_share_ref    <- core_any$ca_oa_share_ref
+    entry$core_any_ca_works_period    <- core_any$ca_works_period
+    entry$core_any_ca_oa_share_period <- core_any$ca_oa_share_period
   }
   entry
 })

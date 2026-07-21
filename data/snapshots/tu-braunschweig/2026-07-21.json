@@ -1,0 +1,1076 @@
+{
+  "id": "https://openalex.org/I94509681",
+  "ror": "https://ror.org/010nsgg66",
+  "display_name": "Technische Universität Braunschweig",
+  "country_code": "DE",
+  "type": "education",
+  "type_id": "https://openalex.org/institution-types/education",
+  "lineage": [
+    "https://openalex.org/I94509681"
+  ],
+  "homepage_url": "https://www.tu-braunschweig.de/",
+  "image_url": "https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/Siegel%20TU%20Braunschweig%20transparent.svg",
+  "image_thumbnail_url": "https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/Siegel%20TU%20Braunschweig%20transparent.svg&width=300",
+  "display_name_acronyms": [],
+  "display_name_alternatives": [
+    "TU Braunschweig",
+    "Technische Universität Braunschweig"
+  ],
+  "repositories": [],
+  "works_count": 63165,
+  "cited_by_count": 2821278,
+  "summary_stats": {
+    "2yr_mean_citedness": 2.2741,
+    "h_index": 422,
+    "i10_index": 51722
+  },
+  "ids": {
+    "openalex": "https://openalex.org/I94509681",
+    "ror": "https://ror.org/010nsgg66",
+    "grid": "grid.6738.a",
+    "wikipedia": "https://en.wikipedia.org/wiki/Technical_University_of_Braunschweig",
+    "wikidata": null
+  },
+  "geo": {
+    "city": "Braunschweig",
+    "geonames_city_id": "2945024",
+    "region": "Lower Saxony",
+    "country_code": "DE",
+    "country": "Germany",
+    "latitude": 52.2659,
+    "longitude": 10.5267
+  },
+  "international": {},
+  "associated_institutions": [
+    {
+      "id": "https://openalex.org/I4210096218",
+      "ror": "https://ror.org/00w53fs94",
+      "display_name": "Forschungszentrum Küste",
+      "country_code": "DE",
+      "type": "facility",
+      "relationship": "child"
+    },
+    {
+      "id": "https://openalex.org/I4210136150",
+      "ror": "https://ror.org/039t4wk02",
+      "display_name": "L3S Research Center",
+      "country_code": "DE",
+      "type": "facility",
+      "relationship": "child"
+    },
+    {
+      "id": "https://openalex.org/I4387153217",
+      "ror": "https://ror.org/02nx8n605",
+      "display_name": "TU9",
+      "country_code": "DE",
+      "type": "other",
+      "relationship": "related"
+    }
+  ],
+  "counts_by_year": [
+    {
+      "year": 2027,
+      "works_count": 2,
+      "oa_works_count": 2,
+      "cited_by_count": 0
+    },
+    {
+      "year": 2026,
+      "works_count": 1728,
+      "oa_works_count": 1402,
+      "cited_by_count": 344
+    },
+    {
+      "year": 2025,
+      "works_count": 3319,
+      "oa_works_count": 2579,
+      "cited_by_count": 4831
+    },
+    {
+      "year": 2024,
+      "works_count": 3100,
+      "oa_works_count": 2357,
+      "cited_by_count": 12661
+    },
+    {
+      "year": 2023,
+      "works_count": 2995,
+      "oa_works_count": 2209,
+      "cited_by_count": 21612
+    },
+    {
+      "year": 2022,
+      "works_count": 2939,
+      "oa_works_count": 2032,
+      "cited_by_count": 32391
+    },
+    {
+      "year": 2021,
+      "works_count": 2740,
+      "oa_works_count": 1871,
+      "cited_by_count": 38902
+    },
+    {
+      "year": 2020,
+      "works_count": 2565,
+      "oa_works_count": 1603,
+      "cited_by_count": 86372
+    },
+    {
+      "year": 2019,
+      "works_count": 2215,
+      "oa_works_count": 1130,
+      "cited_by_count": 56686
+    },
+    {
+      "year": 2018,
+      "works_count": 2319,
+      "oa_works_count": 1012,
+      "cited_by_count": 50496
+    },
+    {
+      "year": 2017,
+      "works_count": 2024,
+      "oa_works_count": 769,
+      "cited_by_count": 50755
+    },
+    {
+      "year": 2016,
+      "works_count": 1980,
+      "oa_works_count": 724,
+      "cited_by_count": 55744
+    },
+    {
+      "year": 2015,
+      "works_count": 1732,
+      "oa_works_count": 610,
+      "cited_by_count": 50361
+    },
+    {
+      "year": 2014,
+      "works_count": 1835,
+      "oa_works_count": 559,
+      "cited_by_count": 53221
+    },
+    {
+      "year": 2013,
+      "works_count": 1897,
+      "oa_works_count": 409,
+      "cited_by_count": 40734
+    },
+    {
+      "year": 2012,
+      "works_count": 1613,
+      "oa_works_count": 482,
+      "cited_by_count": 53356
+    },
+    {
+      "year": 2011,
+      "works_count": 1617,
+      "oa_works_count": 408,
+      "cited_by_count": 48202
+    },
+    {
+      "year": 2010,
+      "works_count": 1651,
+      "oa_works_count": 420,
+      "cited_by_count": 45976
+    }
+  ],
+  "roles": [
+    {
+      "role": "funder",
+      "id": "https://openalex.org/F4320322958",
+      "works_count": 2445
+    },
+    {
+      "role": "institution",
+      "id": "https://openalex.org/I94509681",
+      "works_count": 63165
+    }
+  ],
+  "topics": [
+    {
+      "id": "https://openalex.org/T10325",
+      "display_name": "Astro and Planetary Science",
+      "count": 1348,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3103",
+        "display_name": "Astronomy and Astrophysics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12565",
+      "display_name": "Physics and Engineering Research Articles",
+      "count": 1291,
+      "score": 0.9998,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2206",
+        "display_name": "Computational Mechanics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10092",
+      "display_name": "Organometallic Complex Synthesis and Catalysis",
+      "count": 1118,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1605",
+        "display_name": "Organic Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/16",
+        "display_name": "Chemistry"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10807",
+      "display_name": "Synthesis and characterization of novel inorganic/organometallic compounds",
+      "count": 1089,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1604",
+        "display_name": "Inorganic Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/16",
+        "display_name": "Chemistry"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12959",
+      "display_name": "Engineering and Materials Science Studies",
+      "count": 1075,
+      "score": 0.9997,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2210",
+        "display_name": "Mechanical Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10159",
+      "display_name": "Ionosphere and magnetosphere dynamics",
+      "count": 934,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3103",
+        "display_name": "Astronomy and Astrophysics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10251",
+      "display_name": "Solar and Space Plasma Dynamics",
+      "count": 887,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3103",
+        "display_name": "Astronomy and Astrophysics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10406",
+      "display_name": "Planetary Science and Exploration",
+      "count": 845,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3103",
+        "display_name": "Astronomy and Astrophysics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11741",
+      "display_name": "Flexible and Reconfigurable Manufacturing Systems",
+      "count": 812,
+      "score": 0.9997,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2209",
+        "display_name": "Industrial and Manufacturing Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11786",
+      "display_name": "Geomagnetism and Paleomagnetism Studies",
+      "count": 768,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1312",
+        "display_name": "Molecular Biology"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/13",
+        "display_name": "Biochemistry, Genetics and Molecular Biology"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/1",
+        "display_name": "Life Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T13031",
+      "display_name": "Civil and Structural Engineering Research",
+      "count": 682,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2205",
+        "display_name": "Civil and Structural Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10360",
+      "display_name": "Fluid Dynamics and Turbulent Flows",
+      "count": 633,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2206",
+        "display_name": "Computational Mechanics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10037",
+      "display_name": "Physics of Superconductivity and Magnetism",
+      "count": 610,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3104",
+        "display_name": "Condensed Matter Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10663",
+      "display_name": "Advanced Battery Technologies Research",
+      "count": 610,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2203",
+        "display_name": "Automotive Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11159",
+      "display_name": "Manufacturing Process and Optimization",
+      "count": 588,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2209",
+        "display_name": "Industrial and Manufacturing Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10332",
+      "display_name": "Amphibian and Reptile Biology",
+      "count": 582,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2306",
+        "display_name": "Global and Planetary Change"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/23",
+        "display_name": "Environmental Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11748",
+      "display_name": "Organophosphorus compounds synthesis",
+      "count": 568,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1605",
+        "display_name": "Organic Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/16",
+        "display_name": "Chemistry"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10002",
+      "display_name": "Advanced Chemical Physics Studies",
+      "count": 560,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3107",
+        "display_name": "Atomic and Molecular Physics, and Optics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10015",
+      "display_name": "Genomics and Phylogenetic Studies",
+      "count": 557,
+      "score": 0.9999,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1312",
+        "display_name": "Molecular Biology"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/13",
+        "display_name": "Biochemistry, Genetics and Molecular Biology"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/1",
+        "display_name": "Life Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11549",
+      "display_name": "Synthetic Organic Chemistry Methods",
+      "count": 548,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1605",
+        "display_name": "Organic Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/16",
+        "display_name": "Chemistry"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10299",
+      "display_name": "Photonic and Optical Devices",
+      "count": 532,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2208",
+        "display_name": "Electrical and Electronic Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10252",
+      "display_name": "Microbial Natural Products and Biosynthesis",
+      "count": 517,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2736",
+        "display_name": "Pharmacology"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/27",
+        "display_name": "Medicine"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/4",
+        "display_name": "Health Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10904",
+      "display_name": "Embedded Systems Design Techniques",
+      "count": 495,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1708",
+        "display_name": "Hardware and Architecture"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/17",
+        "display_name": "Computer Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10639",
+      "display_name": "Advanced Software Engineering Methodologies",
+      "count": 492,
+      "score": 0.9999,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1702",
+        "display_name": "Artificial Intelligence"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/17",
+        "display_name": "Computer Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10173",
+      "display_name": "Computational Fluid Dynamics and Aerodynamics",
+      "count": 489,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2206",
+        "display_name": "Computational Mechanics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    }
+  ],
+  "topic_share": [
+    {
+      "id": "https://openalex.org/T12959",
+      "display_name": "Engineering and Materials Science Studies",
+      "value": 0.0158,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2210",
+        "display_name": "Mechanical Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10807",
+      "display_name": "Synthesis and characterization of novel inorganic/organometallic compounds",
+      "value": 0.0118,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1604",
+        "display_name": "Inorganic Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/16",
+        "display_name": "Chemistry"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T13031",
+      "display_name": "Civil and Structural Engineering Research",
+      "value": 0.0107,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2205",
+        "display_name": "Civil and Structural Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12565",
+      "display_name": "Physics and Engineering Research Articles",
+      "value": 0.0104,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2206",
+        "display_name": "Computational Mechanics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11748",
+      "display_name": "Organophosphorus compounds synthesis",
+      "value": 0.009,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1605",
+        "display_name": "Organic Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/16",
+        "display_name": "Chemistry"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12653",
+      "display_name": "Cyclization and Aryne Chemistry",
+      "value": 0.0087,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1605",
+        "display_name": "Organic Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/16",
+        "display_name": "Chemistry"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11741",
+      "display_name": "Flexible and Reconfigurable Manufacturing Systems",
+      "value": 0.0087,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2209",
+        "display_name": "Industrial and Manufacturing Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11790",
+      "display_name": "N-Heterocyclic Carbenes in Organic and Inorganic Chemistry",
+      "value": 0.0083,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1605",
+        "display_name": "Organic Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/16",
+        "display_name": "Chemistry"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12458",
+      "display_name": "Organometallic Compounds Synthesis and Characterization",
+      "value": 0.0072,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1605",
+        "display_name": "Organic Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/16",
+        "display_name": "Chemistry"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T13833",
+      "display_name": "Ferrocene Chemistry and Applications",
+      "value": 0.0063,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1605",
+        "display_name": "Organic Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/16",
+        "display_name": "Chemistry"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10092",
+      "display_name": "Organometallic Complex Synthesis and Catalysis",
+      "value": 0.0062,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1605",
+        "display_name": "Organic Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/16",
+        "display_name": "Chemistry"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11524",
+      "display_name": "Advanced Aircraft Design and Technologies",
+      "value": 0.0057,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2306",
+        "display_name": "Global and Planetary Change"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/23",
+        "display_name": "Environmental Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10933",
+      "display_name": "Real-Time Systems Scheduling",
+      "value": 0.0056,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1708",
+        "display_name": "Hardware and Architecture"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/17",
+        "display_name": "Computer Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T14146",
+      "display_name": "Earthquake and Tsunami Effects",
+      "value": 0.0054,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2205",
+        "display_name": "Civil and Structural Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T13295",
+      "display_name": "Safety Systems Engineering in Autonomy",
+      "value": 0.0051,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2213",
+        "display_name": "Safety, Risk, Reliability and Quality"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T13239",
+      "display_name": "Phosphorus compounds and reactions",
+      "value": 0.005,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1605",
+        "display_name": "Organic Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/16",
+        "display_name": "Chemistry"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12376",
+      "display_name": "Corporate Management and Leadership",
+      "value": 0.0049,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1407",
+        "display_name": "Organizational Behavior and Human Resource Management"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/14",
+        "display_name": "Business, Management and Accounting"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/2",
+        "display_name": "Social Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12826",
+      "display_name": "Education Methods and Technologies",
+      "value": 0.0049,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3304",
+        "display_name": "Education"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/33",
+        "display_name": "Social Sciences"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/2",
+        "display_name": "Social Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12228",
+      "display_name": "Coordination Chemistry and Organometallics",
+      "value": 0.0047,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1605",
+        "display_name": "Organic Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/16",
+        "display_name": "Chemistry"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10406",
+      "display_name": "Planetary Science and Exploration",
+      "value": 0.0045,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3103",
+        "display_name": "Astronomy and Astrophysics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12885",
+      "display_name": "Digital Innovation in Industries",
+      "value": 0.0045,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1405",
+        "display_name": "Management of Technology and Innovation"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/14",
+        "display_name": "Business, Management and Accounting"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/2",
+        "display_name": "Social Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10910",
+      "display_name": "Corporate Governance and Management",
+      "value": 0.0045,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1408",
+        "display_name": "Strategy and Management"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/14",
+        "display_name": "Business, Management and Accounting"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/2",
+        "display_name": "Social Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12756",
+      "display_name": "Plant Toxicity and Pharmacological Properties",
+      "value": 0.0045,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1312",
+        "display_name": "Molecular Biology"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/13",
+        "display_name": "Biochemistry, Genetics and Molecular Biology"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/1",
+        "display_name": "Life Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T13711",
+      "display_name": "Environmental Science and Technology",
+      "value": 0.0044,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1303",
+        "display_name": "Biochemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/13",
+        "display_name": "Biochemistry, Genetics and Molecular Biology"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/1",
+        "display_name": "Life Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T14389",
+      "display_name": "Innovation, Technology, and Society",
+      "value": 0.0044,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3312",
+        "display_name": "Sociology and Political Science"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/33",
+        "display_name": "Social Sciences"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/2",
+        "display_name": "Social Sciences"
+      }
+    }
+  ],
+  "is_super_system": false,
+  "status": "active",
+  "works_api_url": "https://api.openalex.org/works?filter=institutions.id:I94509681",
+  "updated_date": "2026-07-20T05:59:38",
+  "created_date": "2016-06-24T00:00:00"
+}

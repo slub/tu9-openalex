@@ -3,7 +3,7 @@
 Open-access monitoring for the [TU9](https://www.tu9.de/) universities, built from [OpenAlex](https://openalex.org/) and snapshotted over time.
 The headline is the open-access share of each university's corresponding-author output — the lens that matches OpenAPC and transformative-agreement accounting.
 A few entity-level indicators (works, citations, h-index) are kept as context.
-Every university is shown three ways: as the single OpenAlex institution, consolidated with its affiliated organisations the way the [Leiden Ranking](https://open.leidenranking.com/) defines (e.g. with its university hospital), and that same Leiden member set restricted to CWTS Core sources.
+Every university is shown four ways: as the single OpenAlex institution, consolidated with its affiliated organisations the way the [Leiden Ranking](https://open.leidenranking.com/) defines (e.g. with its university hospital), and that same Leiden member set restricted to CWTS Core sources under two readings — works with at least one Core-source location, and the narrower set of works whose primary venue is a Core source.
 
 The pipeline and website mirror the setup of the sibling [`slub/tu9-jct-data`](https://github.com/slub/tu9-jct-data) repository (R + `renv` + Quarto, refreshed by GitHub Actions and deployed to GitHub Pages).
 For the pipeline's guarantees, CI execution paths, and schema-maintenance process, see the [Data and Publication Contract](CONTRACT.md).
@@ -17,7 +17,7 @@ Edit [`data-raw/institutions.csv`](data-raw/institutions.csv) to change the set.
 ## What is stored
 
 - `data/metrics.csv` — one row per university per snapshot: the OA headline for works whose corresponding author is affiliated with the university (using OpenAlex `corresponding_institution_ids`), covering the reporting period and reference year, plus context indicators (works, citations, h-index, i10-index, 2-year mean citedness). Works appear under three lenses — the institution alone excluding XPAC (`works_count`), the same including XPAC (`works_count_incl_xpac`, the entity's own figure), and additionally including its OpenAlex child institutions (`works_count_lineage_incl_xpac`, what openalex.org links to).
-- `data/ca_oa_by_year.csv` — corresponding-author works and OA share by publication year; `data/ca_oa_status.csv` — OA-status split for the reference year; `data/consolidated_ca_oa_by_year.csv` — the Leiden-consolidated variant; `data/leiden_core_ca_oa_by_year.csv` — the Leiden-consolidated member set restricted to CWTS Core sources (via `primary_location.source.is_core:true`).
+- `data/ca_oa_by_year.csv` — corresponding-author works and OA share by publication year; `data/ca_oa_status.csv` — OA-status split for the reference year; `data/consolidated_ca_oa_by_year.csv` — the Leiden-consolidated variant; `data/leiden_core_ca_oa_by_year.csv` — the Leiden-consolidated member set restricted to CWTS Core sources by primary venue (via `primary_location.source.is_core:true`); `data/leiden_core_any_location_ca_oa_by_year.csv` — the same member set restricted to works with any Core-source location (via `locations.source.is_core:true`).
 - `data/counts_by_year.csv` — works and citations by publication year (most recent snapshot).
 - `data/<slug>/…` — the same views per university.
 - `data/snapshots/<slug>/<date>.json` — the full raw OpenAlex entity, archived per snapshot.
@@ -45,7 +45,7 @@ quarto render                     # build the site into _site/
 
 The OpenAlex API key is optional and free. OpenAlex grants $0.10/day of usage without a key and ten times that ($1/day) with a [free key](https://developers.openalex.org/api-reference/authentication), which covers 10,000 list+filter calls a day; single-entity lookups are not metered.
 
-One refresh makes on the order of a hundred requests: one entity lookup per university plus a handful of `group_by` calls each (works-by-year, lineage works, corresponding-author OA denominator and numerator, DOAJ, OA-status composition, and the same denominator/numerator pair again for the Leiden-consolidated and the Core-source view).
+One refresh makes on the order of a hundred requests: one entity lookup per university plus a handful of `group_by` calls each (works-by-year, lineage works, corresponding-author OA denominator and numerator, DOAJ, OA-status composition, and the same denominator/numerator pair again for the Leiden-consolidated view and for each of the two Core-source readings).
 The count scales linearly with the nine universities and the number of views, so adding a view moves it by tens, not orders of magnitude — about 1 % of a single day's free-key allowance, once a week.
 The free tier is ample; the paid plans are not needed for this workload.
 To measure the current figure rather than estimate it, count the calls through `curl::curl_fetch_memory`, which is the only place this code touches the network.

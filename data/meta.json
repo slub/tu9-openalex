@@ -1,9 +1,9 @@
 {
-  "updated": "2026-07-20",
+  "updated": "2026-07-21",
   "source": "OpenAlex (corresponding-author works, CC0)",
   "n_institutions": 9,
   "n_entities": 37,
-  "n_snapshots": 2,
+  "n_snapshots": 3,
   "oa_ref_year": 2025,
   "oa_period_start": 2020,
   "oa_period_end": 2025,
@@ -21,7 +21,7 @@
       "ca_works_period": 7544,
       "ca_oa_share_period": 0.6543,
       "first_snapshot": "2026-07-18",
-      "latest_snapshot": "2026-07-20",
+      "latest_snapshot": "2026-07-21",
       "cons_n_members": 1,
       "cons_ca_works_ref": 1211,
       "cons_ca_oa_share_ref": 0.7102,
@@ -31,7 +31,12 @@
       "core_ca_works_ref": 717,
       "core_ca_oa_share_ref": 0.8661,
       "core_ca_works_period": 4576,
-      "core_ca_oa_share_period": 0.7723
+      "core_ca_oa_share_period": 0.7723,
+      "core_any_n_members": 1,
+      "core_any_ca_works_ref": 717,
+      "core_any_ca_oa_share_ref": 0.8661,
+      "core_any_ca_works_period": 4579,
+      "core_any_ca_oa_share_period": 0.7724
     },
     {
       "name": "Technical University of Munich",
@@ -46,7 +51,7 @@
       "ca_works_period": 29521,
       "ca_oa_share_period": 0.7271,
       "first_snapshot": "2026-07-18",
-      "latest_snapshot": "2026-07-20",
+      "latest_snapshot": "2026-07-21",
       "cons_n_members": 4,
       "cons_ca_works_ref": 5284,
       "cons_ca_oa_share_ref": 0.8013,
@@ -56,7 +61,12 @@
       "core_ca_works_ref": 3415,
       "core_ca_oa_share_ref": 0.8542,
       "core_ca_works_period": 22024,
-      "core_ca_oa_share_period": 0.7683
+      "core_ca_oa_share_period": 0.7683,
+      "core_any_n_members": 4,
+      "core_any_ca_works_ref": 3419,
+      "core_any_ca_oa_share_ref": 0.8543,
+      "core_any_ca_works_period": 22061,
+      "core_any_ca_oa_share_period": 0.7685
     },
     {
       "name": "Leibniz University Hannover",
@@ -71,7 +81,7 @@
       "ca_works_period": 10099,
       "ca_oa_share_period": 0.66,
       "first_snapshot": "2026-07-18",
-      "latest_snapshot": "2026-07-20",
+      "latest_snapshot": "2026-07-21",
       "cons_n_members": 1,
       "cons_ca_works_ref": 1580,
       "cons_ca_oa_share_ref": 0.6854,
@@ -81,7 +91,12 @@
       "core_ca_works_ref": 965,
       "core_ca_oa_share_ref": 0.8487,
       "core_ca_works_period": 6200,
-      "core_ca_oa_share_period": 0.7611
+      "core_ca_oa_share_period": 0.7611,
+      "core_any_n_members": 1,
+      "core_any_ca_works_ref": 965,
+      "core_any_ca_oa_share_ref": 0.8487,
+      "core_any_ca_works_period": 6206,
+      "core_any_ca_oa_share_period": 0.7612
     },
     {
       "name": "Technische Universität Berlin",
@@ -96,7 +111,7 @@
       "ca_works_period": 12371,
       "ca_oa_share_period": 0.6642,
       "first_snapshot": "2026-07-18",
-      "latest_snapshot": "2026-07-20",
+      "latest_snapshot": "2026-07-21",
       "cons_n_members": 2,
       "cons_ca_works_ref": 1804,
       "cons_ca_oa_share_ref": 0.7461,
@@ -106,7 +121,12 @@
       "core_ca_works_ref": 1137,
       "core_ca_oa_share_ref": 0.825,
       "core_ca_works_period": 7623,
-      "core_ca_oa_share_period": 0.725
+      "core_ca_oa_share_period": 0.725,
+      "core_any_n_members": 2,
+      "core_any_ca_works_ref": 1140,
+      "core_any_ca_oa_share_ref": 0.8254,
+      "core_any_ca_works_period": 7655,
+      "core_any_ca_oa_share_period": 0.7258
     },
     {
       "name": "Technische Universität Dresden",
@@ -121,7 +141,7 @@
       "ca_works_period": 17844,
       "ca_oa_share_period": 0.6914,
       "first_snapshot": "2026-07-18",
-      "latest_snapshot": "2026-07-20",
+      "latest_snapshot": "2026-07-21",
       "cons_n_members": 16,
       "cons_ca_works_ref": 3122,
       "cons_ca_oa_share_ref": 0.7431,
@@ -131,7 +151,12 @@
       "core_ca_works_ref": 2066,
       "core_ca_oa_share_ref": 0.8335,
       "core_ca_works_period": 13831,
-      "core_ca_oa_share_period": 0.7545
+      "core_ca_oa_share_period": 0.7545,
+      "core_any_n_members": 16,
+      "core_any_ca_works_ref": 2067,
+      "core_any_ca_oa_share_ref": 0.8336,
+      "core_any_ca_works_period": 13853,
+      "core_any_ca_oa_share_period": 0.7549
     },
     {
       "name": "Karlsruhe Institute of Technology",
@@ -146,7 +171,7 @@
       "ca_works_period": 20846,
       "ca_oa_share_period": 0.7313,
       "first_snapshot": "2026-07-18",
-      "latest_snapshot": "2026-07-20",
+      "latest_snapshot": "2026-07-21",
       "cons_n_members": 4,
       "cons_ca_works_ref": 3318,
       "cons_ca_oa_share_ref": 0.7857,
@@ -156,7 +181,12 @@
       "core_ca_works_ref": 1976,
       "core_ca_oa_share_ref": 0.8386,
       "core_ca_works_period": 13944,
-      "core_ca_oa_share_period": 0.762
+      "core_ca_oa_share_period": 0.762,
+      "core_any_n_members": 4,
+      "core_any_ca_works_ref": 1982,
+      "core_any_ca_oa_share_ref": 0.8391,
+      "core_any_ca_works_period": 13989,
+      "core_any_ca_oa_share_period": 0.7627
     },
     {
       "name": "University of Stuttgart",
@@ -171,7 +201,7 @@
       "ca_works_period": 12054,
       "ca_oa_share_period": 0.5791,
       "first_snapshot": "2026-07-18",
-      "latest_snapshot": "2026-07-20",
+      "latest_snapshot": "2026-07-21",
       "cons_n_members": 1,
       "cons_ca_works_ref": 1809,
       "cons_ca_oa_share_ref": 0.6291,
@@ -181,7 +211,12 @@
       "core_ca_works_ref": 1039,
       "core_ca_oa_share_ref": 0.7661,
       "core_ca_works_period": 6961,
-      "core_ca_oa_share_period": 0.7002
+      "core_ca_oa_share_period": 0.7002,
+      "core_any_n_members": 1,
+      "core_any_ca_works_ref": 1039,
+      "core_any_ca_oa_share_ref": 0.7661,
+      "core_any_ca_works_period": 6965,
+      "core_any_ca_oa_share_period": 0.7004
     },
     {
       "name": "RWTH Aachen University",
@@ -196,7 +231,7 @@
       "ca_works_period": 24755,
       "ca_oa_share_period": 0.6866,
       "first_snapshot": "2026-07-18",
-      "latest_snapshot": "2026-07-20",
+      "latest_snapshot": "2026-07-21",
       "cons_n_members": 5,
       "cons_ca_works_ref": 4699,
       "cons_ca_oa_share_ref": 0.7859,
@@ -206,7 +241,12 @@
       "core_ca_works_ref": 2563,
       "core_ca_oa_share_ref": 0.8229,
       "core_ca_works_period": 17392,
-      "core_ca_oa_share_period": 0.7183
+      "core_ca_oa_share_period": 0.7183,
+      "core_any_n_members": 5,
+      "core_any_ca_works_ref": 2563,
+      "core_any_ca_oa_share_ref": 0.8229,
+      "core_any_ca_works_period": 17416,
+      "core_any_ca_oa_share_period": 0.7185
     },
     {
       "name": "Technische Universität Darmstadt",
@@ -221,7 +261,7 @@
       "ca_works_period": 10807,
       "ca_oa_share_period": 0.5973,
       "first_snapshot": "2026-07-18",
-      "latest_snapshot": "2026-07-20",
+      "latest_snapshot": "2026-07-21",
       "cons_n_members": 3,
       "cons_ca_works_ref": 1753,
       "cons_ca_oa_share_ref": 0.6292,
@@ -231,7 +271,12 @@
       "core_ca_works_ref": 1078,
       "core_ca_oa_share_ref": 0.7597,
       "core_ca_works_period": 6877,
-      "core_ca_oa_share_period": 0.6929
+      "core_ca_oa_share_period": 0.6929,
+      "core_any_n_members": 3,
+      "core_any_ca_works_ref": 1079,
+      "core_any_ca_oa_share_ref": 0.759,
+      "core_any_ca_works_period": 6913,
+      "core_any_ca_oa_share_period": 0.6933
     }
   ]
 }

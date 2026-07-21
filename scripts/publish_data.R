@@ -29,7 +29,8 @@ publish <- function(from, to) {
 
 PRODUCTS <- c("metrics.csv", "counts_by_year.csv",
               "ca_oa_by_year.csv", "ca_oa_status.csv",
-              "consolidated_ca_oa_by_year.csv", "leiden_core_ca_oa_by_year.csv")
+              "consolidated_ca_oa_by_year.csv", "leiden_core_ca_oa_by_year.csv",
+              "leiden_core_any_location_ca_oa_by_year.csv")
 
 # Top-level data products, metadata and the data licence.
 for (f in c(PRODUCTS, "meta.json")) publish(file.path("data", f), f)

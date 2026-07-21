@@ -40,19 +40,21 @@ The consolidated unit is where, for instance, the [University Hospital Carl Gust
 Fractional `joint` affiliates are not (yet) included — only full components.
 A university without any consolidates to itself, so all nine have a consolidated value and the two views stay comparable across the alliance.
 
-## Core-source-filtered view (CWTS Core sources)
+## Core-source-filtered views (CWTS Core sources)
 
-A third view keeps the same Leiden-consolidated member set — the university's OpenAlex institution id OR-ed with its weight-1 `component` affiliates — but additionally restricts works to sources on the CWTS Core sources allow-list using
-OpenAlex's `primary_location.source.is_core:true` filter.
-This gives corresponding-author works in CWTS Core sources and their open-access share.
+Two further views keep the same Leiden-consolidated member set — the university's OpenAlex institution id OR-ed with its weight-1 `component` affiliates — but additionally restrict works to sources on the CWTS Core sources allow-list.
+They are two distinct readings of that allow-list, computed as separate queries and never combined:
 
-The OpenAlex filter combines the corresponding-author lens (`corresponding_institution_ids:<university-and-component-ids>`) with the usual XPAC exclusion (`is_xpac:false`) and `primary_location.source.is_core:true`; the numerator additionally requires `is_oa:true`.
-Because the filter is on `primary_location`, a work qualifies when its primary venue is a Core source and not when only a secondary or repository location is associated with one.
+- **Primary Core venue** (`primary_location.source.is_core:true`) — a work qualifies only when its *primary* venue is a Core source.
+- **Any Core location** (`locations.source.is_core:true`) — a work qualifies when *at least one* of its recorded locations is a Core source.
 
-This view is meaningful even for universities without Leiden components because the source filter itself narrows the publication universe.
-It is populated for all nine TU9 universities.
+Each is combined with the corresponding-author lens (`corresponding_institution_ids:<university-and-component-ids>`) and the usual XPAC exclusion (`is_xpac:false`); the numerator additionally requires `is_oa:true`.
+Because the primary location is one of the locations, the primary-venue set is contained in the any-location set, which is in turn contained in the unconstrained consolidated view: primary-venue Core ≤ any-location Core ≤ consolidated, for both the works count and its open-access subset.
 
-Important caveat: this is a **source-only Core filter**, not a reproduction of the official Leiden Ranking `core publication` set.
+Both views are meaningful even for universities without Leiden components, because the source filter itself narrows the publication universe.
+Both are populated for all nine TU9 universities.
+
+Important caveat: both are **source-only Core filters**, not a reproduction of the official Leiden Ranking `core publication` set.
 The official CWTS definition of a core publication applies additional publication-level criteria, including language, work type, source type, references, affiliation availability and retraction status.
 The Zenodo records below provide the versioned source list and methodology; the live OpenAlex `is_core` flag may evolve after the August 2025 snapshot.
 
@@ -109,7 +111,7 @@ That is a property of the data, not an error, but it means the two sources shoul
 
 ## How it is assembled
 
-1. For every university in `data-raw/institutions.csv`, the pipeline runs a handful of OpenAlex [works](https://developers.openalex.org/api-reference/works) `group_by` queries — corresponding-author works by year and OA status, total works by year, the Leiden-consolidated corresponding-author view, and the Leiden-consolidated view restricted to CWTS Core sources (`primary_location.source.is_core:true`) — and reads the [institution entity](https://developers.openalex.org/api-reference/institutions) for the citation indicators, using the polite pool and, where configured, a free OpenAlex API key.
+1. For every university in `data-raw/institutions.csv`, the pipeline runs a handful of OpenAlex [works](https://developers.openalex.org/api-reference/works) `group_by` queries — corresponding-author works by year and OA status, total works by year, the Leiden-consolidated corresponding-author view, and that consolidated view restricted to CWTS Core sources under both readings (`primary_location.source.is_core:true` and `locations.source.is_core:true`) — and reads the [institution entity](https://developers.openalex.org/api-reference/institutions) for the citation indicators, using the polite pool and, where configured, a free OpenAlex API key.
 2. Everything is fetched into memory first and only then validated: the exact configured institution set, every required product per university, a single consistent snapshot date, and the arithmetic behind each OA share. A coverage guard rail additionally aborts if the total works count drops sharply against the previous snapshot. If this pre-write validation fails, nothing is written.
 3. Only after that are the files written: a dated row per university is appended to `data/metrics.csv` (re-running on the same day replaces that day's rows rather than duplicating them), the publication-year and OA views are rewritten for the latest snapshot, and `meta.json` is regenerated. Products that no longer apply are removed rather than left behind as stale files. The stored products are then read back and validated again before they are committed or deployed.
 
