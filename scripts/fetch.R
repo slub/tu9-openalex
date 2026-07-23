@@ -10,7 +10,9 @@
 #   data/hierarchy_ca_oa_by_year.csv     OpenAlex/ROR-hierarchy CA OA share by year (latest)
 #   data/leiden_core_ca_oa_by_year.csv   Core-source (primary venue) CA OA share by year (latest)
 #   data/leiden_core_any_location_ca_oa_by_year.csv  Core-source (any location) CA OA share by year (latest)
-#   data/<slug>/*.csv                  the same views for one institution
+#   data/alliance_ca_oa_by_year.csv    deduplicated alliance-level CA OA share by year and view (latest,
+#                                       global only -- no per-institution slice; see ALLIANCE_VIEWS)
+#   data/<slug>/*.csv                  the same per-institution views (excluding the alliance product)
 #   data/meta.json                     summary + last-updated date (for the site)
 #
 # The run is FAIL-LOUD and publishes atomically in the sense that matters here:
@@ -116,6 +118,10 @@ fail <- function(slug, what) {
   failures <<- c(failures, sprintf("%s: %s", slug, what))
   message("    -> ", slug, " incomplete (", what, ")")
 }
+
+# Used both while assembling the per-institution snapshot lists below and
+# again for the alliance-level source tables further down.
+empty_if_none <- function(rows) if (length(rows) > 0) bind_rows(rows) else tibble()
 
 for (i in seq_len(nrow(inst))) {
   row <- inst[i, ]
@@ -325,20 +331,96 @@ for (i in seq_len(nrow(inst))) {
   core_any_year_rows[[length(core_any_year_rows) + 1L]] <- core_year_row(aoa, slug, u$name, members)
 }
 
-empty_if_none <- function(rows) if (length(rows) > 0) bind_rows(rows) else tibble()
+# ---------------------------------------------------------------------------
+# Alliance-level deduplicated queries: one OR-query per view over the UNION of
+# that view's member ids across all nine universities, so a work whose
+# corresponding author matches more than one member institution is counted
+# once. This is what "distinct CA works" and the direct alliance OA share
+# need -- summing the nine already-published per-institution counts (S) can
+# double-count such a work, whether because of a genuine multi-institution
+# collaboration or because one author carries multiple affiliations; the two
+# are indistinguishable from these counts alone, which is why the published
+# gap is called "cross-institutional overlap" and not a cooperation rate.
+#
+# Member sets are built from the same validated in-memory sources as the
+# per-institution views above -- read_institutions(), the Leiden components,
+# and the hierarchy children collected during this fetch -- rather than a
+# second, weaker parse. Each view reuses openalex_ca_oa_by_year() (or its Core
+# variants), so five views cost ten additional group_by requests (a
+# denominator/numerator pair each), not one request per member institution.
+oa_by_year_all   <- empty_if_none(oa_year_rows)
+hierarchy_all    <- empty_if_none(hier_year_rows)
+consolidated_all <- empty_if_none(cons_year_rows)
+core_all         <- empty_if_none(core_year_rows)
+core_any_all     <- empty_if_none(core_any_year_rows)
+
+alliance_members <- list(
+  single       = unique(openalex_bare(inst$openalex_id)),
+  hierarchy    = unique(unlist(lapply(hier_by_slug, `[[`, "members"))),
+  consolidated = unique(unlist(lapply(cons_by_slug, `[[`, "members"))),
+  core_any     = unique(unlist(lapply(cons_by_slug, `[[`, "members"))),
+  core_primary = unique(unlist(lapply(cons_by_slug, `[[`, "members")))
+)
+
+# The raw per-institution yearly rows underneath each view -- summed over the
+# headline period below to get S, "the sum of the nine institutional CA-work
+# counts already produced for that view".
+alliance_source_table <- list(
+  single = oa_by_year_all, hierarchy = hierarchy_all,
+  consolidated = consolidated_all, core_any = core_any_all,
+  core_primary = core_all
+)
+
+alliance_query <- function(view, members) {
+  switch(view,
+    core_any     = openalex_ca_oa_by_year_core_any_location(members, OA_START_YEAR),
+    core_primary = openalex_ca_oa_by_year_core(members, OA_START_YEAR),
+    openalex_ca_oa_by_year(members, OA_START_YEAR))
+}
+
+alliance_year_rows <- list()
+alliance_summary   <- list()
+for (view in ALLIANCE_VIEWS) {
+  members <- alliance_members[[view]]
+  message("  alliance ", view, " (", length(members), " members)")
+  u <- alliance_query(view, members)
+  if (is.null(u) || nrow(u) == 0) { fail(paste0("alliance:", view), "alliance OA by year"); next }
+
+  alliance_year_rows[[length(alliance_year_rows) + 1L]] <- tibble(
+    snapshot_date = snapshot_date, view = view, n_members = length(members),
+    year = u$year, ca_works = u$ca_works, ca_oa_works = u$ca_oa_works,
+    ca_oa_share = u$ca_oa_share)
+
+  up <- period_ca(u)                                   # U, U_OA over the period
+  sp <- period_ca(alliance_source_table[[view]])        # S, S_OA over the period
+  overlap <- if (sp$works > 0) round((sp$works - up$works) / sp$works, 4) else NA_real_
+
+  alliance_summary[[view]] <- list(
+    view            = view,
+    n_members       = length(members),
+    ca_works        = up$works,
+    ca_oa_works     = up$oa_works,
+    ca_oa_share     = up$share,
+    sum_ca_works    = sp$works,
+    sum_ca_oa_works = sp$oa_works,
+    overlap_share   = overlap)
+}
+
 snap <- list(
   metrics        = empty_if_none(metric_rows),
   counts_by_year = empty_if_none(cby_rows),
-  ca_oa_by_year  = empty_if_none(oa_year_rows),
+  ca_oa_by_year  = oa_by_year_all,
   ca_oa_status   = empty_if_none(oa_status_rows),
-  consolidated   = empty_if_none(cons_year_rows),
-  hierarchy      = empty_if_none(hier_year_rows),
-  core           = empty_if_none(core_year_rows),
-  core_any       = empty_if_none(core_any_year_rows),
+  consolidated   = consolidated_all,
+  hierarchy      = hierarchy_all,
+  core           = core_all,
+  core_any       = core_any_all,
   cons_members   = cons_by_slug,
   hier_members   = hier_by_slug,
   core_members   = core_by_slug,
   core_any_members = core_any_by_slug,
+  alliance          = empty_if_none(alliance_year_rows),
+  alliance_summary  = alliance_summary,
   entities       = entities,
   failures       = failures
 )
@@ -427,6 +509,14 @@ if (nrow(snap$core_any) > 0) {
 } else if (file.exists("data/leiden_core_any_location_ca_oa_by_year.csv")) {
   unlink("data/leiden_core_any_location_ca_oa_by_year.csv")
 }
+
+# Alliance-level deduplicated union product: mandatory, unlike the four views
+# above, because validate_snapshot() already refuses to write anything unless
+# all five alliance views came back populated. Global only -- it is never
+# sliced into data/<slug>/, because a deduplicated alliance-wide count has no
+# meaningful per-institution slice.
+write_csv(snap$alliance[order(snap$alliance$view, -snap$alliance$year), ],
+          "data/alliance_ca_oa_by_year.csv", na = "")
 
 # Per-institution views. Products that do not apply are removed rather than left
 # behind, so a stale file can never be read as a current one.
@@ -543,7 +633,17 @@ meta <- list(
   oa_ref_year     = REF_YEAR,
   oa_period_start = PERIOD_START,
   oa_period_end   = REF_YEAR,
-  institutions    = meta_inst
+  institutions    = meta_inst,
+  # Alliance-level deduplicated summary for the headline period, one entry per
+  # view (see ALLIANCE_VIEWS in scripts/openalex.R): n_members is the size of
+  # that view's deduplicated OR-query member set; ca_works/ca_oa_works/
+  # ca_oa_share are U, U_OA and U_OA/U from that single query; sum_ca_works/
+  # sum_ca_oa_works are S and S_OA, the sum of the nine institutional counts
+  # already published for that view above; overlap_share is (S - U) / S, or
+  # null when S is 0. This is the one structure the landing page's alliance
+  # table reads -- it does not re-derive these figures from the institutions
+  # list itself.
+  alliance        = alliance_summary
 )
 write_json(meta, "data/meta.json", auto_unbox = TRUE, pretty = TRUE, null = "null")
 

@@ -654,6 +654,180 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
     }
   }
 
+  # --- 8b. alliance-level deduplicated union product -----------------------
+  # scripts/fetch.R runs one additional OR-query per view over the UNION of
+  # that view's member ids across all nine universities (ALLIANCE_VIEWS in
+  # scripts/openalex.R), so a work matching more than one member is counted
+  # once. `snap$alliance` is the yearly (view, year) table that query
+  # produces; `snap$alliance_summary` is the period figures fetch.R derives
+  # from it (U, U_OA, the direct share) and from the nine per-institution
+  # views already validated above (S, S_OA, the overlap share). Both are
+  # checked here so the same function guards the in-memory snapshot and,
+  # via validate_products.R's second pass, the written products and
+  # meta.json alike.
+  alliance <- snap$alliance
+  alliance_sum <- snap$alliance_summary %||% list()
+
+  if (is.null(alliance)) {
+    add("alliance is absent from the snapshot")
+  } else {
+    need_cols <- c("snapshot_date", "view", "year", "n_members", "ca_works",
+                   "ca_oa_works", "ca_oa_share")
+    gone <- setdiff(need_cols, names(alliance))
+    if (length(gone) > 0)
+      add("alliance lacks required column(s): %s", paste(gone, collapse = ", "))
+
+    got_views <- sort(unique(alliance$view))
+    if (!identical(got_views, sort(ALLIANCE_VIEWS)))
+      add("alliance covers views [%s], expected [%s]",
+          paste(got_views, collapse = ", "), paste(sort(ALLIANCE_VIEWS), collapse = ", "))
+
+    if (nrow(alliance) > 0) {
+      id <- paste(alliance$view, n(alliance$year), sep = "\r")
+      dup <- unique(id[duplicated(id)])
+      if (length(dup) > 0)
+        add("alliance: %d duplicate row(s) for key (view, year): %s", length(dup),
+            paste(gsub("\r", "/", utils::head(dup, 5)), collapse = "; "))
+
+      bad_snap <- setdiff(unique(as.character(alliance$snapshot_date)), snapshot_date)
+      if (length(bad_snap) > 0)
+        add("alliance carries foreign snapshot_date(s): %s", paste(bad_snap, collapse = ", "))
+
+      ahead <- sort(unique(n(alliance$year)[n(alliance$year) > snap_year]))
+      if (length(ahead) > 0)
+        add("alliance: publication year(s) beyond the snapshot year %d: %s",
+            snap_year, paste(ahead, collapse = ", "))
+      early <- sort(unique(n(alliance$year)[!is.na(n(alliance$year)) & n(alliance$year) < 1800]))
+      if (length(early) > 0)
+        add("alliance: implausible publication year(s): %s", paste(early, collapse = ", "))
+
+      require_num(alliance, c("year", "n_members", "ca_works", "ca_oa_works"), "alliance")
+      check_oa(alliance, "alliance_ca_oa_by_year")
+
+      for (view in ALLIANCE_VIEWS) {
+        d <- alliance[alliance$view == view, , drop = FALSE]
+        k <- sum(n(d$year) == ref_year, na.rm = TRUE)
+        if (k != 1)
+          add("alliance: expected exactly 1 row for %s in reference year %d, found %d",
+              view, ref_year, k)
+        nm <- unique(n(d$n_members))
+        if (length(nm) > 1)
+          add("alliance: n_members varies across years for %s: %s", view,
+              paste(nm, collapse = "/"))
+      }
+
+      # Period figures in the summary must equal the yearly rows summed over
+      # the same headline window as every other view -- not averaged.
+      for (view in ALLIANCE_VIEWS) {
+        s <- alliance_sum[[view]]
+        if (is.null(s)) { add("alliance summary missing for: %s", view); next }
+        p <- alliance[alliance$view == view & n(alliance$year) %in% period_years, , drop = FALSE]
+        want_w <- sum(n(p$ca_works), na.rm = TRUE)
+        want_o <- sum(n(p$ca_oa_works), na.rm = TRUE)
+        want_s <- if (want_w > 0) round(want_o / want_w, 4) else NA_real_
+        if (!isTRUE(all.equal(want_w, n(s$ca_works))))
+          add("alliance %s: period ca_works (%s) does not sum the yearly values (%s)",
+              view, s$ca_works, want_w)
+        if (!isTRUE(all.equal(want_o, n(s$ca_oa_works))))
+          add("alliance %s: period ca_oa_works (%s) does not sum the yearly values (%s)",
+              view, s$ca_oa_works, want_o)
+        if (!isTRUE(all.equal(want_s, n(s$ca_oa_share))))
+          add("alliance %s: period ca_oa_share does not match the summed yearly values",
+              view)
+      }
+    }
+
+    # S -- "the sum of the nine institutional CA-work counts already produced
+    # for that view" -- recomputed independently from the same per-institution
+    # yearly rows already validated above, so a mistake in the summation
+    # itself cannot pass unnoticed. `source_tables` binds each alliance view
+    # to the raw multi-institution table it is a deduplication of.
+    source_tables <- list(single = snap$ca_oa_by_year, hierarchy = snap$hierarchy,
+                          consolidated = snap$consolidated, core_any = snap$core_any,
+                          core_primary = snap$core)
+    max_of <- function(vals) if (length(vals) == 0) NA_real_ else {
+      v <- n(unlist(vals)); if (all(is.na(v))) NA_real_ else max(v, na.rm = TRUE)
+    }
+    max_period_works <- list(
+      single       = max_of(m$ca_works_period),
+      hierarchy    = max_of(lapply(snap$hier_members, `[[`, "ca_works_period")),
+      consolidated = max_of(lapply(snap$cons_members, `[[`, "ca_works_period")),
+      core_any     = max_of(lapply(snap$core_any_members, `[[`, "ca_works_period")),
+      core_primary = max_of(lapply(snap$core_members, `[[`, "ca_works_period")))
+
+    for (view in ALLIANCE_VIEWS) {
+      s <- alliance_sum[[view]]
+      if (is.null(s)) next  # already reported above
+      src <- source_tables[[view]]
+      if (is.null(src) || nrow(src) == 0) next  # absence already reported elsewhere
+      p <- src[n(src$year) %in% period_years, , drop = FALSE]
+      want_S  <- sum(n(p$ca_works), na.rm = TRUE)
+      want_So <- sum(n(p$ca_oa_works), na.rm = TRUE)
+      if (!isTRUE(all.equal(want_S, n(s$sum_ca_works))))
+        add("alliance %s: S (%s) does not match the sum of the institutional %s view (%s)",
+            view, s$sum_ca_works, view, want_S)
+      if (!isTRUE(all.equal(want_So, n(s$sum_ca_oa_works))))
+        add("alliance %s: sum_ca_oa_works (%s) does not match the sum of the institutional %s view (%s)",
+            view, s$sum_ca_oa_works, view, want_So)
+
+      # Deduplication can only remove occurrences, never add them.
+      if (!is.na(n(s$ca_works)) && !is.na(n(s$sum_ca_works)) &&
+          n(s$ca_works) > n(s$sum_ca_works))
+        add("alliance %s: distinct CA works (%s) exceeds the institutional sum (%s)",
+            view, s$ca_works, s$sum_ca_works)
+      if (!is.na(n(s$ca_oa_works)) && !is.na(n(s$sum_ca_oa_works)) &&
+          n(s$ca_oa_works) > n(s$sum_ca_oa_works))
+        add("alliance %s: distinct OA CA works (%s) exceeds the institutional OA sum (%s)",
+            view, s$ca_oa_works, s$sum_ca_oa_works)
+
+      # An alliance union cannot be smaller than its largest single member
+      # institution's period count for that same view.
+      mx <- max_period_works[[view]]
+      if (!is.na(mx) && !is.na(n(s$ca_works)) && n(s$ca_works) < mx)
+        add("alliance %s: distinct CA works (%s) is below the largest institutional %s count (%s)",
+            view, s$ca_works, view, mx)
+
+      # overlap = (S - U) / S, defined only where S > 0, bounded to [0, 1].
+      expect_overlap <- if (!is.na(n(s$sum_ca_works)) && n(s$sum_ca_works) > 0)
+        round((n(s$sum_ca_works) - n(s$ca_works)) / n(s$sum_ca_works), 4) else NA_real_
+      if (is.na(expect_overlap) != is.na(n(s$overlap_share)))
+        add("alliance %s: overlap_share presence does not match whether S is 0", view)
+      if (!is.na(expect_overlap) && !is.na(n(s$overlap_share)) &&
+          !isTRUE(all.equal(expect_overlap, n(s$overlap_share))))
+        add("alliance %s: overlap_share (%s) does not equal (S - U) / S (%s)",
+            view, s$overlap_share, expect_overlap)
+      if (!is.na(n(s$overlap_share)) &&
+          (n(s$overlap_share) < 0 || n(s$overlap_share) > 1))
+        add("alliance %s: overlap_share (%s) is outside [0, 1]", view, s$overlap_share)
+    }
+
+    # Ordering across views, at the alliance (distinct-works U) level -- the
+    # same relationships CONTRACT.md documents per institution: single can
+    # only gain members in hierarchy and consolidated, and the Core nesting
+    # (primary venue <= any location <= consolidated) holds for both the
+    # works count and its OA subset. Deliberately NOT checked: hierarchy vs.
+    # consolidated -- they are independent, non-nested member sets.
+    get_u   <- function(view) if (!is.null(alliance_sum[[view]])) n(alliance_sum[[view]]$ca_works) else NA_real_
+    get_uoa <- function(view) if (!is.null(alliance_sum[[view]])) n(alliance_sum[[view]]$ca_oa_works) else NA_real_
+    if (!is.na(get_u("single")) && !is.na(get_u("hierarchy")) &&
+        get_u("single") > get_u("hierarchy"))
+      add("alliance: single distinct CA works (%s) exceeds hierarchy (%s)",
+          get_u("single"), get_u("hierarchy"))
+    if (!is.na(get_u("single")) && !is.na(get_u("consolidated")) &&
+        get_u("single") > get_u("consolidated"))
+      add("alliance: single distinct CA works (%s) exceeds consolidated (%s)",
+          get_u("single"), get_u("consolidated"))
+    for (pair in list(c("core_primary", "core_any"), c("core_any", "consolidated"))) {
+      inner <- pair[1]; outer <- pair[2]
+      if (!is.na(get_u(inner)) && !is.na(get_u(outer)) && get_u(inner) > get_u(outer))
+        add("alliance: %s distinct CA works (%s) exceeds %s (%s)",
+            inner, get_u(inner), outer, get_u(outer))
+      if (!is.na(get_uoa(inner)) && !is.na(get_uoa(outer)) && get_uoa(inner) > get_uoa(outer))
+        add("alliance: %s distinct OA CA works (%s) exceeds %s (%s)",
+            inner, get_uoa(inner), outer, get_uoa(outer))
+    }
+  }
+
   # The reference year and the period window are published as columns, and every
   # check above that mentions them reads them back out of the same row. Anchor
   # them to the snapshot date instead, which is the only thing that determines

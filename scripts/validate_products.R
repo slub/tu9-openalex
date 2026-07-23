@@ -125,6 +125,42 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
     }
   }
 
+  # The alliance-level deduplicated product is global only: it is one OR-query
+  # per view over the UNION of member ids across all nine universities, so it
+  # has no meaningful per-institution slice and is checked on its own here
+  # rather than through the institution-keyed `products` list above.
+  alliance_path <- file.path(data_dir, "alliance_ca_oa_by_year.csv")
+  alliance_loaded <- NULL
+  if (!file.exists(alliance_path)) {
+    add("required product missing: %s", alliance_path)
+  } else {
+    alliance_loaded <- rd(alliance_path)
+    if (nrow(alliance_loaded) == 0) {
+      add("required product is empty: %s", alliance_path)
+    } else if (!("snapshot_date" %in% names(alliance_loaded)) ||
+              !("view" %in% names(alliance_loaded))) {
+      add("%s lacks a snapshot_date or view column", alliance_path)
+    } else {
+      dates <- unique(as.character(alliance_loaded$snapshot_date))
+      if (length(dates) != 1)
+        add("%s mixes %d snapshot dates: %s", alliance_path, length(dates),
+            paste(dates, collapse = ", "))
+      else if (nzchar(updated) && dates != updated)
+        add("%s is stale: snapshot_date %s, published %s", alliance_path, dates, updated)
+      got_views <- sort(unique(alliance_loaded$view))
+      if (!identical(got_views, sort(ALLIANCE_VIEWS)))
+        add("%s covers views [%s], expected [%s]", alliance_path,
+            paste(got_views, collapse = ", "), paste(sort(ALLIANCE_VIEWS), collapse = ", "))
+    }
+  }
+  # It must NOT have been copied into any per-institution slice.
+  for (slug in expected) {
+    stray_path <- file.path(data_dir, slug, "alliance_ca_oa_by_year.csv")
+    if (file.exists(stray_path))
+      add("alliance product must not be copied into per-institution slices, found: %s",
+          stray_path)
+  }
+
   # A directory for an institution that is no longer configured would still be
   # published by publish_data.R and served as if it were current.
   dirs <- setdiff(list.dirs(data_dir, recursive = FALSE, full.names = FALSE), "snapshots")
@@ -211,6 +247,27 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
       }), expected)
     }
 
+    # The alliance summary (U, U_OA, the direct share, S, S_OA, the overlap
+    # share) is taken from meta.json, mirroring by_slug() above: this is what
+    # lets validate_snapshot() check meta.json's own claims against the
+    # written alliance_ca_oa_by_year.csv and the nine per-institution products
+    # it re-derives S from, rather than trusting meta.json's arithmetic.
+    alliance_summary_of <- function() {
+      al <- meta$alliance %or% list()
+      setNames(lapply(ALLIANCE_VIEWS, function(v) {
+        e <- al[[v]] %or% list()
+        if (length(e) == 0) return(NULL)
+        list(view            = v,
+             n_members       = n(e$n_members %or% NA),
+             ca_works        = n(e$ca_works %or% NA),
+             ca_oa_works     = n(e$ca_oa_works %or% NA),
+             ca_oa_share     = n(e$ca_oa_share %or% NA),
+             sum_ca_works    = n(e$sum_ca_works %or% NA),
+             sum_ca_oa_works = n(e$sum_ca_oa_works %or% NA),
+             overlap_share   = n(e$overlap_share %or% NA))
+      }), ALLIANCE_VIEWS)
+    }
+
     mt <- loaded[["metrics.csv"]]
     ents <- list()
     for (slug in expected) {
@@ -238,6 +295,8 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
       hier_members   = by_slug("hier", with_members = FALSE),
       core_members   = by_slug("core"),
       core_any_members = by_slug("core_any"),
+      alliance          = alliance_loaded,
+      alliance_summary  = alliance_summary_of(),
       entities       = ents,
       failures       = character())
 

@@ -235,6 +235,13 @@ openalex_works_group_url <- function(filter, group_by, include_xpac = FALSE) {
 # https://developers.openalex.org/guides/key-concepts#xpac-expansion-pack
 XPAC_EXCLUDE <- "is_xpac:false"
 
+# Stable, machine-readable identifiers for the five alliance-level readings --
+# shared by fetch.R (which writes them), validate.R and validate_products.R
+# (which check them) and site_helpers.R (which reads them), so the set of
+# expected views cannot drift between those four call sites. Order matches the
+# per-institution views documented in CONTRACT.md.
+ALLIANCE_VIEWS <- c("single", "hierarchy", "consolidated", "core_any", "core_primary")
+
 openalex_group_reader <- function(filter, group_by, include_xpac = FALSE) {
   # `filter` can carry institution ids but never the key, so it is safe context.
   what <- paste0("works group_by=", group_by)

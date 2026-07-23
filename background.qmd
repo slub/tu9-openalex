@@ -22,7 +22,8 @@ The site reports the following corresponding-author figures, identified by the `
 - **`ca_doaj_works`** / **`ca_doaj_share`** — how many of those works appeared in a journal listed in [DOAJ](https://doaj.org/), using `primary_location.source.is_in_doaj:true`.
 
 These figures are reported by publication year.
-Corresponding-author works and OA share are also summarized for the published multi-year period and reference year, while DOAJ figures have a reference-year summary.
+Corresponding-author works and OA share are additionally summarized for the published multi-year period, while the latest complete reference year is highlighted on each institution page.
+DOAJ counts and shares remain part of the yearly table.
 For the reference year, the site also reports the mutually exclusive OA-status composition: gold, hybrid, green, bronze, diamond, and closed.
 
 All of this comes from OpenAlex's server-side `group_by` aggregation (per-year and per-status counts), so no individual works are downloaded.
@@ -72,13 +73,28 @@ The Zenodo records below provide the versioned source list and methodology; the 
 - "A methodology for identifying core sources and core publications in OpenAlex", CWTS, 2025. DOI: <https://doi.org/10.5281/zenodo.17200830>. Methodology report plus the supplementary source spreadsheet (`Supplementary material - Sources.ods`).
 - CWTS Leiden Ranking Open Edition 2025 — Data. DOI: <https://doi.org/10.5281/zenodo.17471989>. The `pub.tsv` table includes an `is_core_pub` publication-level field, but the standalone, auditable source list is the separate Core-sources dataset above.
 
+## Alliance-level deduplication
+
+The landing page's "Coverage of the alliance" table does not sum the nine per-institution figures above. Summing them can double-count a work: if its corresponding-author affiliations resolve to more than one TU9 member (through multiple affiliations, or through genuine cross-institution collaboration), that work is counted once in each member's own figure. For each of the five readings, the site instead runs one further `group_by` query with every member university's relevant OpenAlex id — across all nine universities, deduplicated — OR-ed into a single `corresponding_institution_ids` filter, so such a work is counted once.
+
+The table reports, for the published multi-year period:
+
+- **Distinct CA works** — *U*, the works count from that one deduplicated query;
+- **CA OA share** — *U*<sub>OA</sub> / *U*, the direct ratio of open-access works to all works in that same query — not a median, average, or weighted average of the nine institutional shares.
+
+The five queries are the same reasoning already used for the per-institution single/hierarchy/consolidated/Core views, just run once more over the union of all nine universities' ids instead of one at a time — costing ten additional `group_by` requests (one denominator/numerator pair per view), not one request per member institution. The underlying yearly rows are published in `data/alliance_ca_oa_by_year.csv`, keyed by `(view, year)`; like the other grouped-response products, it is a latest-snapshot-only file with no historical series and no per-institution slice, because a deduplicated alliance-wide count has no single institution to slice it by.
+
+### Diagnostic: cross-institutional overlap
+
+Beside *U*, `meta.json`'s alliance entries also carry *S* (`sum_ca_works`), its OA counterpart (`sum_ca_oa_works`), and `overlap_share` = (*S* − *U*) / *S*, where *S* is the sum of the nine institutional CA-work counts already shown on the [Institutions](institutions/index.qmd) page for that reading. This is the share of that sum removed by deduplication; zero means no overlap. It is validated (`scripts/validate.R` checks `overlap_share` equals `(S − U) / S` and falls in `[0, 1]`) and published for those who want to inspect it, but it is not shown on the landing-page table, because it is **not** a cooperation rate: it cannot distinguish a work with several affiliated corresponding authors at different member institutions from one whose single corresponding author simply lists more than one of them, so it reads more reliably as a data-quality diagnostic than as a headline figure.
+
 ## Context metrics
 
 Beside the OA figures, each snapshot keeps entity-level context: output counts under XPAC-excluded, XPAC-inclusive, and lineage-inclusive lenses, and citation indicators (cited-by count, h-index, i10-index, 2-year mean citedness). These are archived in `metrics.csv` and the raw per-snapshot entity JSON (`data/snapshots/<slug>/<date>.json`) but are **not** shown on institution pages: they use an any-author lens rather than the corresponding-author one this site is built around, mix XPAC-inclusive and XPAC-excluded figures depending on the field, and — being precomputed OpenAlex entity aggregates rather than live queries — lag the live API for a year still filling up. See [Downloads](downloads.qmd) for the files. Every *displayed* query on this site, including the hierarchy view above, still applies `is_xpac:false` explicitly rather than relying on OpenAlex's current default.
 
 ## How it is assembled
 
-1. For every university in `data-raw/institutions.csv`, the pipeline looks up its OpenAlex/ROR `lineage` descendants (an [institutions](https://developers.openalex.org/api-reference/institutions) search, cursor-paginated) and runs a handful of OpenAlex [works](https://developers.openalex.org/api-reference/works) `group_by` queries — corresponding-author works by year and OA status, total works by year, the OpenAlex/ROR hierarchy corresponding-author view, the Leiden-consolidated corresponding-author view, and that consolidated view restricted to CWTS Core sources under both readings (`primary_location.source.is_core:true` and `locations.source.is_core:true`) — and reads the institution entity for the citation indicators, using the polite pool and, where configured, a free OpenAlex API key.
+1. For every university in `data-raw/institutions.csv`, the pipeline looks up its OpenAlex/ROR `lineage` descendants (an [institutions](https://developers.openalex.org/api-reference/institutions) search, cursor-paginated) and runs a handful of OpenAlex [works](https://developers.openalex.org/api-reference/works) `group_by` queries — corresponding-author works by year and OA status, total works by year, the OpenAlex/ROR hierarchy corresponding-author view, the Leiden-consolidated corresponding-author view, and that consolidated view restricted to CWTS Core sources under both readings (`primary_location.source.is_core:true` and `locations.source.is_core:true`) — and reads the institution entity for the citation indicators, using the polite pool and, where configured, a free OpenAlex API key. Once every university has been fetched, five further deduplicated `group_by` queries run over the UNION of member ids across all nine universities, one per reading (see [Alliance-level deduplication](#alliance-level-deduplication)) — ten additional requests in total.
 2. Everything is fetched into memory first and only then validated: the exact configured institution set, every required product per university, a single consistent snapshot date, and the arithmetic behind each OA share. A coverage guard rail additionally aborts if the total works count drops sharply against the previous snapshot. If this pre-write validation fails, nothing is written.
 3. Only after that are the files written: a dated row per university is appended to `data/metrics.csv` (re-running on the same day replaces that day's rows rather than duplicating them), the publication-year and OA views are rewritten for the latest snapshot, and `meta.json` is regenerated. Products that no longer apply are removed rather than left behind as stale files. The stored products are then read back and validated again before they are committed or deployed.
 

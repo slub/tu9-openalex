@@ -20,6 +20,10 @@ Views 4 and 5 are two distinct readings of the same allow-list, computed as sepa
 
 View 2 (hierarchy) and view 3 (consolidated) are independent member sets computed from different sources and do not nest: neither is a subset of the other, and empirically the hierarchy figure exceeds the consolidated one for some TU9 universities and falls short for others. Both are guaranteed only to be at least as large as view 1 (single), checked separately in `scripts/validate.R`; no ordering between views 2 and 3 is asserted or should be.
 
+Beside those nine per-institution views, the pipeline publishes one alliance-level reading per view: a single deduplicated OpenAlex query OR-ing every configured university's relevant member ids together, so a work whose corresponding author matches more than one member institution is counted once. Let *S* be the sum of the nine institutional CA-work counts already published for a view, *U* the distinct CA works that view's deduplicated query returns, and *U*<sub>OA</sub> its open-access subset. The landing page presents *U* ("distinct CA works") and *U*<sub>OA</sub>/*U* ("CA OA share", a direct ratio, not an average of the nine institutional shares).
+
+`meta.json` additionally carries *S*, *S*<sub>OA</sub> (the OA-work counterpart), and (*S* − *U*)/*S* ("overlap_share", the share of *S* removed by deduplication) for every view. These are computed and validated with the same rigor as the displayed figures — see the validation-layer bullets below — but the site does not present overlap as a headline metric: it is explicitly **not** a cooperation rate, since a work can match more than one member because one author carries multiple affiliations, not only because authors at different member institutions collaborated, and the count alone cannot distinguish the two. It remains available as a validated diagnostic field in `meta.json` and is derivable from `data/alliance_ca_oa_by_year.csv` together with the nine per-institution products.
+
 The project is a prototype, but it publishes committed data through a public static website.
 The appropriate standard is therefore strong validation at the commit and deployment boundaries, not independent proof of every upstream value or production-grade operational resilience.
 
@@ -60,11 +64,12 @@ Their published values can be checked for completeness, arithmetic, ordering, co
 | `data/consolidated_ca_oa_by_year.csv` | `(tu9_slug, year)` | Latest snapshot only |
 | `data/leiden_core_ca_oa_by_year.csv` | `(tu9_slug, year)` | Latest snapshot only |
 | `data/leiden_core_any_location_ca_oa_by_year.csv` | `(tu9_slug, year)` | Latest snapshot only |
-| `data/meta.json` | One site summary plus one entry per institution | Latest snapshot plus history-derived summary fields |
+| `data/alliance_ca_oa_by_year.csv` | `(view, year)` | Latest snapshot only, alliance-level only (no per-institution slice) |
+| `data/meta.json` | One site summary plus one entry per institution, plus one alliance summary per view | Latest snapshot plus history-derived summary fields |
 | `data/snapshots/<slug>/<date>.json` | `(slug, snapshot date)` | Raw institution entity archive |
 
-Every CSV product is mandatory for every configured institution.
-The files under `data/<slug>/` must have the same columns and rows as that institution's slice of the corresponding global file.
+Every CSV product is mandatory for every configured institution, with one exception: `data/alliance_ca_oa_by_year.csv` is an alliance-level product only, keyed by `view` rather than by institution, and intentionally has no per-institution slice under `data/<slug>/` — a deduplicated alliance-wide count has no single institution to slice it by.
+Every other CSV product's files under `data/<slug>/` must have the same columns and rows as that institution's slice of the corresponding global file.
 
 ## Validation layers
 
@@ -100,7 +105,8 @@ It requires:
 - consolidated and both Core member sets that agree with the validated mapping; the hierarchy member set checked for self-consistency (own id included, `n_members` matches what was fetched) since there is no external mapping to check it against;
 - valid lens ordering, including consolidated counts and hierarchy counts each independently not falling below the single-institution view (but not against each other), and the nested Core subset invariants (primary-venue Core ≤ any-location Core ≤ consolidated) on both the works count and its open-access subset;
 - reconstructible entity metrics that agree with the archived entity;
-- protection against an unexpectedly large drop from the previous snapshot.
+- protection against an unexpectedly large drop from the previous snapshot;
+- the alliance-level product: exactly the five expected views with stable identifiers, unique `(view, year)` keys, required year coverage and bounds, finite non-negative counts, `ca_oa_works ≤ ca_works` and share arithmetic per row, period figures that sum the yearly rows (not an average), *S* that agrees with the sum of the nine institutional rows it is derived from, *U* and *U*<sub>OA</sub> that do not exceed *S* and its OA counterpart, an alliance union no smaller than its largest single member institution, overlap equal to `(S − U) / S` and bounded to `[0, 1]` when defined, single ≤ hierarchy and single ≤ consolidated, and the Core nesting (primary ≤ any-location ≤ consolidated) on both works and OA works — with no ordering asserted between hierarchy and consolidated, mirroring the per-institution rule above.
 
 `FORCE=1` may bypass only the large-drop guard rail.
 It must not bypass completeness, schema, identity, arithmetic, membership, or date validation.
@@ -114,7 +120,8 @@ It requires:
 - latest-only products to carry exactly `meta.updated`;
 - exact institution coverage and no unconfigured data directories;
 - every per-institution export to equal its global slice;
-- `meta.json` to agree with the current CSV rows, configuration, mapping, and metrics history;
+- `meta.json` to agree with the current CSV rows, configuration, mapping, and metrics history, including its alliance summary against the written `alliance_ca_oa_by_year.csv` and the nine institutional products each view's *S* is summed from;
+- the alliance product to exist, be non-empty, current, and cover exactly the five expected views, and to have no per-institution slice under any `data/<slug>/`;
 - the current raw entity for every institution to exist, parse, carry the expected ID, and support reconstructible fields;
 - the current written products to pass `validate_snapshot()` again;
 - all historical `metrics.csv` rows to have valid keys, dates, coverage, identities, required numerics, ordering, and row-level arithmetic.
@@ -211,7 +218,7 @@ Adding or removing an entire product also requires coordinated changes to:
 The current contract deliberately accepts that:
 
 - internally consistent but incorrect values returned by OpenAlex may pass;
-- unarchived grouped responses cannot be independently reconstructed later;
+- unarchived grouped responses cannot be independently reconstructed later, including the alliance-level deduplicated queries: `data/alliance_ca_oa_by_year.csv` is latest-snapshot only, with no historical series and no invented or backfilled prior values;
 - the hierarchy view's exact member-ID list is fetched live and not archived anywhere, unlike the Leiden mapping's committed CSV, so it cannot be independently reconstructed after the fact either — only its count (`n_members`) is published and cross-checked for self-consistency;
 - the snapshot date and `period_start` are policy inputs without a third on-disk authority;
 - a failure after writing can leave a local checkout's `data/` dirty, although CI will not commit or deploy it;

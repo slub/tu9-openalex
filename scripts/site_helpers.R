@@ -190,44 +190,51 @@ institutions_table <- function(meta, path_prefix = "institutions/") {
   )
 }
 
-# Alliance-level summary across the four corresponding-author OA views.
-# Computes total CA works and the median CA OA share for each lens.
+# Stable alliance view identifiers (ALLIANCE_VIEWS in scripts/openalex.R) to
+# their display labels, in table row order.
+ALLIANCE_VIEW_LABELS <- c(
+  single       = "Single institution (ROR/OpenAlex)",
+  hierarchy    = "Multi-institutional hierarchy (OpenAlex/ROR)",
+  consolidated = "Consolidated (OpenAlex/Leiden)",
+  core_any     = "Core sources (any location)",
+  core_primary = "Core sources (primary venue)"
+)
+
+# Alliance-level summary across the five corresponding-author OA views, built
+# from meta$alliance (scripts/fetch.R) rather than re-derived from the
+# per-institution figures: each view's figures come from ONE deduplicated
+# OpenAlex OR-query across all nine universities, not from summing or
+# averaging the nine per-institution rows shown on the Institutions page.
+#
+#   Distinct CA works -- U, the deduplicated works count itself
+#   CA OA share        -- U_OA / U, a direct ratio over that same union
+#
+# meta.json's alliance entries also carry sum_ca_works, sum_ca_oa_works and
+# overlap_share (S, S_OA and (S - U) / S) -- kept as a validated diagnostic
+# field (see scripts/validate.R and CONTRACT.md) and available via meta.json
+# and data/alliance_ca_oa_by_year.csv, but deliberately NOT surfaced as a
+# headline column here; see background.qmd for why it reads as a data detail
+# rather than a site metric.
+#
+# meta.json is regenerated fresh on every run and carries no history, so a
+# missing or incomplete alliance block means the site has nothing current to
+# show -- fail loudly rather than silently render a thinner table.
 alliance_summary_table <- function(meta) {
-  ca_num <- function(x) if (is.null(x)) NA_real_ else as.numeric(x)
-  inst <- meta$institutions
   period <- sprintf("%s–%s", meta$oa_period_start, meta$oa_period_end)
+  al <- meta$alliance
+  if (is.null(al) || length(al) == 0)
+    stop("data/meta.json has no alliance summary; refusing to render", call. = FALSE)
+  views <- names(ALLIANCE_VIEW_LABELS)
+  missing_v <- setdiff(views, names(al))
+  if (length(missing_v) > 0)
+    stop("data/meta.json alliance summary is missing view(s): ",
+         paste(missing_v, collapse = ", "), call. = FALSE)
 
-  single_works <- vapply(inst, function(x) as.integer(x$ca_works_period %||% NA), integer(1))
-  single_share <- vapply(inst, function(x) ca_num(x$ca_oa_share_period), numeric(1))
-
-  hier_works <- vapply(inst, function(x) as.integer(x$hier_ca_works_period %||% NA), integer(1))
-  hier_share <- vapply(inst, function(x) ca_num(x$hier_ca_oa_share_period), numeric(1))
-
-  cons_works <- vapply(inst, function(x) as.integer(x$cons_ca_works_period %||% NA), integer(1))
-  cons_share <- vapply(inst, function(x) ca_num(x$cons_ca_oa_share_period), numeric(1))
-
-  core_works <- vapply(inst, function(x) as.integer(x$core_ca_works_period %||% NA), integer(1))
-  core_share <- vapply(inst, function(x) ca_num(x$core_ca_oa_share_period), numeric(1))
-
-  core_any_works <- vapply(inst, function(x) as.integer(x$core_any_ca_works_period %||% NA), integer(1))
-  core_any_share <- vapply(inst, function(x) ca_num(x$core_any_ca_oa_share_period), numeric(1))
-
+  num <- function(x) if (is.null(x)) NA_real_ else as.numeric(x)
   df <- data.frame(
-    View          = c("Single institution (ROR/OpenAlex)",
-                       "Multi-institutional hierarchy (OpenAlex/ROR)",
-                       "Consolidated (OpenAlex/Leiden)",
-                       "Core sources (any location)",
-                       "Core sources (primary venue)"),
-    CA_works      = c(sum(single_works, na.rm = TRUE),
-                       sum(hier_works, na.rm = TRUE),
-                       sum(cons_works, na.rm = TRUE),
-                       sum(core_any_works, na.rm = TRUE),
-                       sum(core_works, na.rm = TRUE)),
-    CA_OA_share   = c(median(single_share, na.rm = TRUE),
-                       median(hier_share, na.rm = TRUE),
-                       median(cons_share, na.rm = TRUE),
-                       median(core_any_share, na.rm = TRUE),
-                       median(core_share, na.rm = TRUE)),
+    View           = unname(ALLIANCE_VIEW_LABELS[views]),
+    Distinct_works = vapply(views, function(v) as.integer(num(al[[v]]$ca_works)), integer(1)),
+    OA_share       = vapply(views, function(v) num(al[[v]]$ca_oa_share), numeric(1)),
     stringsAsFactors = FALSE
   )
 
@@ -235,11 +242,11 @@ alliance_summary_table <- function(meta) {
     df,
     sortable = FALSE, highlight = TRUE,
     columns = list(
-      View        = colDef(minWidth = 230),
-      CA_works    = colDef(name = sprintf("Total CA works %s", period),
-                           format = colFormat(separators = TRUE, locales = "en-US")),
-      CA_OA_share = colDef(name = sprintf("Median CA OA share %s", period), minWidth = 160,
-                           cell = share_bar_cell("#2a9d4a"), html = TRUE)
+      View           = colDef(minWidth = 230),
+      Distinct_works = colDef(name = sprintf("Distinct CA works %s", period), minWidth = 140,
+                              format = colFormat(separators = TRUE, locales = "en-US")),
+      OA_share       = colDef(name = sprintf("CA OA share %s", period), minWidth = 150,
+                              cell = share_bar_cell("#2a9d4a"), html = TRUE)
     )
   )
 }
@@ -470,13 +477,15 @@ inst_page <- function(slug) {
         tags$strong("corresponding author"),
         " is affiliated with this institution — the lens used for OpenAPC and ",
         "transformative agreements. Both the denominator and the numerator are ",
-        "counted on this corresponding-author basis. ",
-        tags$strong("CA DOAJ"), " counts those works whose primary journal is ",
-        "listed in ",
+        "counted on this corresponding-author basis. The ",
+        tags$strong("CA DOAJ"), " columns show the subset of corresponding-author ",
+        "works whose primary source is indexed in ",
         tags$a(href = "https://doaj.org/", target = "_blank", "DOAJ"),
-        ". DOAJ listing describes the work's primary journal, not an additional ",
-        "OA status. Each work belongs to exactly one OA-status category below, so ",
-        "DOAJ counts are shown separately rather than added to the status totals."),
+        ", and their share of all CA works for that year. DOAJ indexing is a ",
+        "journal attribute, not an additional OA-status category. DOAJ-listed ",
+        "works overlap with the mutually exclusive OA-status categories shown ",
+        "below, so the DOAJ figures are presented separately rather than added ",
+        "to the OA-status composition."),
       if (!is.null(oa)) ca_oa_by_year_table(oa),
       if (!is.null(status)) tagList(
         tags$h3(sprintf("OA-status composition (%s)", latest$ref_year)),
