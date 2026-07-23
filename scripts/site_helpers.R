@@ -92,14 +92,14 @@ bar_cell <- function(max_value, colour = "#4c78a8") {
   }
 }
 
-# Format a 0..1 share as a percentage string (e.g. 0.7637 -> "76.4%").
-fmt_pct <- function(x) {
+# Format a 0..1 share as a percentage string (e.g. 0.76366 -> "76.37%").
+fmt_pct <- function(x, decimals = 2) {
   x <- suppressWarnings(as.numeric(x))
-  ifelse(is.na(x), "", sprintf("%.1f%%", 100 * x))
+  ifelse(is.na(x), "", sprintf("%.*f%%", decimals, 100 * x))
 }
 
 # A 0..1 share rendered as a filled bar with the percentage beside it.
-share_bar_cell <- function(colour = "#2a9d4a") {
+share_bar_cell <- function(colour = "#2a9d4a", decimals = 2) {
   function(value) {
     v <- suppressWarnings(as.numeric(value))
     if (is.na(v)) return("")
@@ -109,7 +109,7 @@ share_bar_cell <- function(colour = "#2a9d4a") {
       "position:relative;overflow:hidden;"),
       tags$div(style = paste0("background:", colour, ";height:100%;width:", width, ";")))
     label <- tags$span(style = "margin-left:0.5em;min-width:3.2em;text-align:right;",
-                       fmt_pct(v))
+                       fmt_pct(v, decimals))
     as.character(tags$div(style = "display:flex;align-items:center;", track, label))
   }
 }
@@ -382,14 +382,14 @@ inst_page <- function(slug) {
       inline_p(
         "OpenAlex's own institution hierarchy, via ROR, independently of the ",
         leiden_link, " mapping above: the university OR-ed with every ",
-        "institution in its OpenAlex ", tags$code("lineage"), " -- its full ",
+        "institution in its OpenAlex ", tags$code("lineage"), " — its full ",
         "descendant tree, at any depth. This is a different, automatically-",
         "derived hierarchy than Leiden's curated ", tags$strong("component"),
         " list, so the two member sets can diverge in either direction; ",
         "neither is a subset of the other. This view is guaranteed to be at ",
         "least as large as the single-institution view above, but ",
         tags$strong("not"), " guaranteed to fall between it and the Leiden-",
-        "consolidated view below -- it can exceed consolidated just as ",
+        "consolidated view below — it can exceed consolidated just as ",
         "easily as fall short of it.",
         if (nrow(href)) paste0(" In ", latest$ref_year, " this covers ",
                                fmt_int(href$n_members), " member institution(s).")
