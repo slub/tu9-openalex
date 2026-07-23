@@ -54,6 +54,7 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
     list(file = "ca_oa_by_year.csv",              key = "slug",     series = FALSE),
     list(file = "ca_oa_status.csv",               key = "slug",     series = FALSE),
     list(file = "consolidated_ca_oa_by_year.csv", key = "tu9_slug", series = FALSE),
+    list(file = "hierarchy_ca_oa_by_year.csv",    key = "tu9_slug", series = FALSE),
     list(file = "leiden_core_ca_oa_by_year.csv",  key = "tu9_slug", series = FALSE),
     list(file = "leiden_core_any_location_ca_oa_by_year.csv", key = "tu9_slug", series = FALSE))
 
@@ -186,18 +187,23 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
     members_of <- function(slug) unique(c(
       openalex_bare(inst$openalex_id[inst$slug == slug]),
       openalex_bare(leiden$affiliated_openalex_id[leiden$tu9_slug == slug])))
-    by_slug <- function(meta_prefix) {
+    # `with_members = TRUE` (consolidated/core/core_any) re-derives `members`
+    # from the Leiden mapping, so validate_snapshot() can check the published
+    # n_members against a source of truth independent of meta.json itself --
+    # recomputing it from meta.json would have made that check unfalsifiable.
+    # Hierarchy has no such committed file: OpenAlex/ROR's live hierarchy is not
+    # archived anywhere, so its exact member IDs are not reconstructible after
+    # the fact (the same accepted limitation CONTRACT.md already gives to
+    # unarchived grouped responses). `with_members = FALSE` leaves `members`
+    # NULL, which validate_snapshot()'s member-list checks are already guarded
+    # against, so they are skipped for hierarchy here without special-casing.
+    by_slug <- function(meta_prefix, with_members = TRUE) {
       setNames(lapply(expected, function(s) {
         e <- Filter(function(x) identical(as.character(x$slug %or% ""), s),
                     meta$institutions %or% list())
         e <- if (length(e) > 0) e[[1]] else list()
-        # `members` can only come from the Leiden mapping -- meta.json does not
-        # list them -- but `n_members` is a published field, so take it from
-        # meta.json and let validate_snapshot() reconcile the two. Recomputing it
-        # here from the same mapping the member list comes from would have made
-        # the check unfalsifiable.
         list(n_members       = n(e[[paste0(meta_prefix, "_n_members")]] %or% NA),
-             members         = members_of(s),
+             members         = if (with_members) members_of(s) else NULL,
              ca_works_ref    = n(e[[paste0(meta_prefix, "_ca_works_ref")]] %or% NA),
              ca_oa_share_ref = n(e[[paste0(meta_prefix, "_ca_oa_share_ref")]] %or% NA),
              ca_works_period = n(e[[paste0(meta_prefix, "_ca_works_period")]] %or% NA),
@@ -225,9 +231,11 @@ validate_products <- function(data_dir = "data", raw_dir = "data-raw", inst = NU
       ca_oa_by_year  = loaded[["ca_oa_by_year.csv"]],
       ca_oa_status   = loaded[["ca_oa_status.csv"]],
       consolidated   = loaded[["consolidated_ca_oa_by_year.csv"]],
+      hierarchy      = loaded[["hierarchy_ca_oa_by_year.csv"]],
       core           = loaded[["leiden_core_ca_oa_by_year.csv"]],
       core_any       = loaded[["leiden_core_any_location_ca_oa_by_year.csv"]],
       cons_members   = by_slug("cons"),
+      hier_members   = by_slug("hier", with_members = FALSE),
       core_members   = by_slug("core"),
       core_any_members = by_slug("core_any"),
       entities       = ents,

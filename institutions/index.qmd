@@ -9,16 +9,17 @@ meta <- read_meta()
 ```
 
 Figures cover corresponding-author works published `r meta$oa_period_start`–`r meta$oa_period_end`, per university.
-The [home page](../index.qmd) totals the same four readings across the alliance.
+The [home page](../index.qmd) totals the same five readings across the alliance.
 
 ```{r}
 #| echo: false
 institutions_table(meta, path_prefix = "")
 ```
 
-Each university is shown four ways, each with its own CA works count (works published in the period whose corresponding author is at the institution) and the CA OA share among them:
+Each university is shown five ways, each with its own CA works count (works published in the period whose corresponding author is at the institution) and the CA OA share among them:
 
 - **Single institution (ROR/OpenAlex)** — the one OpenAlex institution identified by the university's [ROR](https://ror.org/) id.
+- **Multi-institutional hierarchy (OpenAlex/ROR)** — the university grouped with every institution in its own OpenAlex `lineage` (its full descendant tree), independently of the Leiden mapping below. Not guaranteed to fall between the single-institution and consolidated figures.
 - **Consolidated (OpenAlex/Leiden)** — the university grouped with its Leiden `component` affiliates (e.g. its university hospital). A university without components consolidates to itself.
 - **Core sources (any location)** — the Leiden-consolidated member set, restricted to works with at least one location on the CWTS Core sources list.
 - **Core sources (primary venue)** — the same member set, restricted to the narrower set of works whose primary venue is a Core source.

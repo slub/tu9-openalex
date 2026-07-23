@@ -106,6 +106,10 @@ metrics_row_invariants <- function(m, add, prefix = "") {
 # it keeps the alliance views summable over the same universities. The member set
 # is checked against the Leiden mapping rather than merely being present. Both
 # CWTS Core readings (primary venue and any location) share that member set.
+# The hierarchy view is also required for all nine, on the same "always present,
+# falls back to the university alone" logic -- but its member set comes from
+# OpenAlex/ROR's own live hierarchy, not a curated mapping, so only internal
+# self-consistency is checked, not agreement with a committed file.
 validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
                               prev_metrics = NULL, guard_threshold = 0.20,
                               force = FALSE, period_start = NULL) {
@@ -180,6 +184,8 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
     ca_oa_status = c("snapshot_date", "slug", "year", "oa_status", "ca_works"),
     consolidated = c("snapshot_date", "tu9_slug", "university_name", "n_members",
                      "year", "ca_works", "ca_oa_works", "ca_oa_share"),
+    hierarchy = c("snapshot_date", "tu9_slug", "university_name", "n_members",
+                  "year", "ca_works", "ca_oa_works", "ca_oa_share"),
     core = c("snapshot_date", "tu9_slug", "university_name", "n_members",
              "year", "ca_works", "ca_oa_works", "ca_oa_share"),
     core_any = c("snapshot_date", "tu9_slug", "university_name", "n_members",
@@ -240,9 +246,42 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
       add("consolidated member set for %s does not match the Leiden mapping", slug)
   }
 
+  # --- 3b. hierarchy view present for every university ----------------------
+  # Presence is required for all nine, same reasoning as consolidated. Unlike
+  # consolidated, there is no static, curated mapping to check the member set
+  # against -- OpenAlex/ROR's own hierarchy is fetched live each run and is not
+  # archived anywhere, so its exact member IDs are not reconstructible after
+  # the fact. The self-consistency checks below (own id is in the member set,
+  # n_members matches what was actually fetched) therefore only run when a real
+  # member list is available -- the in-memory pass right after fetch.R's own
+  # fetch, where `snap$hier_members[[slug]]$members` is the list just used to
+  # build the query. validate_products.R's post-write pass deliberately has no
+  # such list to hand in (see its `by_slug(..., with_members = FALSE)`), so
+  # these are skipped there rather than reported as an error, the same way the
+  # ref_headlines member checks below already guard on `!is.null(s$members)`.
+  hier_got <- if (nrow(snap$hierarchy) > 0) sort(unique(snap$hierarchy$tu9_slug)) else character()
+  missing_hier <- setdiff(expected, hier_got)
+  unexpected_hier <- setdiff(hier_got, expected)
+  if (length(missing_hier) > 0)
+    add("hierarchy view missing for: %s", paste(missing_hier, collapse = ", "))
+  if (length(unexpected_hier) > 0)
+    add("unexpected universities in hierarchy view: %s",
+        paste(unexpected_hier, collapse = ", "))
+  for (slug in expected) {
+    hier_mem <- snap$hier_members[[slug]]$members
+    if (is.null(hier_mem)) next  # not reconstructible post-write; see comment above
+    own <- openalex_bare(inst$openalex_id[inst$slug == slug])
+    if (!(own %in% hier_mem))
+      add("hierarchy member set for %s does not include the university itself", slug)
+    n_declared <- snap$hier_members[[slug]]$n_members
+    if (!isTRUE(all.equal(as.numeric(n_declared), length(hier_mem))))
+      add("hierarchy n_members for %s is %s, the fetched member set has %d",
+          slug, paste(n_declared, collapse = "/"), length(hier_mem))
+  }
+
   # --- 4. both Core views are present for every university ------------------
   # The primary-venue and any-location Core readings each cover all nine, so the
-  # four alliance views stay summable over the same universities.
+  # five alliance views stay summable over the same universities.
   for (view in c("core", "core_any")) {
     got <- if (nrow(snap[[view]]) > 0) sort(unique(snap[[view]]$tu9_slug)) else character()
     missing_v <- setdiff(expected, got)
@@ -281,6 +320,7 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   # the year was fetched or bound twice.
   ref_views <- list(ca_oa_by_year = list(d = snap$ca_oa_by_year, key = "slug"),
                     consolidated  = list(d = snap$consolidated,  key = "tu9_slug"),
+                    hierarchy     = list(d = snap$hierarchy,     key = "tu9_slug"),
                     core          = list(d = snap$core,          key = "tu9_slug"),
                     core_any      = list(d = snap$core_any,      key = "tu9_slug"))
   for (nm in names(ref_views)) {
@@ -305,6 +345,7 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
     ca_oa_by_year  = c("slug", "year"),
     ca_oa_status   = c("slug", "year", "oa_status"),
     consolidated   = c("tu9_slug", "year"),
+    hierarchy      = c("tu9_slug", "year"),
     core           = c("tu9_slug", "year"),
     core_any       = c("tu9_slug", "year"))
   for (nm in names(keys)) {
@@ -328,7 +369,7 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   # bounded the window, the corresponding-author queries did not, so the two
   # paths disagreed. Assert the bound rather than trusting each call site.
   snap_year <- as.integer(format(as.Date(snapshot_date), "%Y"))
-  for (nm in c("counts_by_year", "ca_oa_by_year", "consolidated", "core", "core_any")) {
+  for (nm in c("counts_by_year", "ca_oa_by_year", "consolidated", "hierarchy", "core", "core_any")) {
     d <- snap[[nm]]
     if (is.null(d) || nrow(d) == 0) next
     ahead <- sort(unique(n(d$year)[n(d$year) > snap_year]))
@@ -353,7 +394,7 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
 
   # --- 7. one consistent snapshot_date everywhere --------------------------
   for (nm in c("metrics", "counts_by_year", "ca_oa_by_year", "ca_oa_status",
-               "consolidated", "core", "core_any")) {
+               "consolidated", "hierarchy", "core", "core_any")) {
     d <- snap[[nm]]
     if (is.null(d) || nrow(d) == 0) next
     bad <- setdiff(unique(as.character(d$snapshot_date)), snapshot_date)
@@ -435,6 +476,7 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
           length(bad_lens), cb$slug[bad_lens[1]], cb$year[bad_lens[1]])
   }
   check_oa(snap$consolidated, "consolidated_ca_oa_by_year")
+  check_oa(snap$hierarchy, "hierarchy_ca_oa_by_year")
   check_oa(snap$core, "leiden_core_ca_oa_by_year")
   check_oa(snap$core_any, "leiden_core_any_location_ca_oa_by_year")
 
@@ -491,6 +533,10 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
          works = function(s) n(snap$cons_members[[s]]$ca_works_period),
          oa_works = NULL,  # not published for this view
          share = function(s) n(snap$cons_members[[s]]$ca_oa_share_period)),
+    list(label = "hierarchy", rows = snap$hierarchy, key = "tu9_slug",
+         works = function(s) n(snap$hier_members[[s]]$ca_works_period),
+         oa_works = NULL,
+         share = function(s) n(snap$hier_members[[s]]$ca_oa_share_period)),
     list(label = "core", rows = snap$core, key = "tu9_slug",
          works = function(s) n(snap$core_members[[s]]$ca_works_period),
          oa_works = NULL,
@@ -559,6 +605,7 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   # reference headline could be off by any amount and pass.
   ref_headlines <- list(
     list(label = "consolidated", rows = snap$consolidated, sum = snap$cons_members),
+    list(label = "hierarchy",    rows = snap$hierarchy,    sum = snap$hier_members),
     list(label = "core",         rows = snap$core,         sum = snap$core_members),
     list(label = "core_any",     rows = snap$core_any,     sum = snap$core_any_members))
   for (v in ref_headlines) {
@@ -582,12 +629,20 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
           !isTRUE(all.equal(n(s$n_members), length(s$members))))
         add("%s n_members for %s is %s, the member set has %d",
             v$label, slug, paste(s$n_members, collapse = "/"), length(s$members))
+      # This compares two already-written values (the yearly rows' own
+      # n_members against the summary's n_members from meta.json), so unlike
+      # the length(s$members) check above it holds even where the live member
+      # list itself is unavailable to re-derive independently -- hierarchy's
+      # post-write pass, which has no committed mapping to reconstruct
+      # membership from (see validate_products.R's by_slug(with_members =
+      # FALSE)). Not guarding this on `!is.null(s$members)` is deliberate: a
+      # CSV/meta.json n_members mismatch must still be caught there.
       if ("n_members" %in% names(d)) {
         rows_n <- unique(n(d$n_members[d$tu9_slug == slug]))
-        if (!is.null(s$members) &&
-            !identical(rows_n, as.numeric(length(s$members))))
-          add("%s: n_members in the yearly rows for %s is %s, the member set has %d",
-              v$label, slug, paste(rows_n, collapse = "/"), length(s$members))
+        if (!isTRUE(all.equal(rows_n, n(s$n_members))))
+          add("%s: n_members in the yearly rows for %s is %s, meta.json says %s",
+              v$label, slug, paste(rows_n, collapse = "/"),
+              paste(n(s$n_members), collapse = "/"))
       }
     }
   }
@@ -669,7 +724,7 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   # row. metrics.name was checked against the configuration; these were not, so
   # the same drift would show up unopposed on exactly the pages that carry the
   # consolidated headline.
-  for (nm in c("consolidated", "core")) {
+  for (nm in c("consolidated", "hierarchy", "core")) {
     d <- snap[[nm]]
     if (is.null(d) || nrow(d) == 0 || !("university_name" %in% names(d))) next
     for (slug in expected) {
@@ -699,6 +754,31 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
         add("consolidated ca_works (%s) is below the single-institution value (%s) for %s year %s",
             snap$consolidated$ca_works[i], s,
             snap$consolidated$tu9_slug[i], snap$consolidated$year[i])
+      }
+    }
+  }
+
+  # Hierarchy ORs the university with every institution in its OWN OpenAlex
+  # lineage, so it too can only add works relative to the single-institution
+  # view -- same reasoning as consolidated, checked independently because
+  # hierarchy and consolidated are built from different, non-nested member
+  # sets. Deliberately NOT checked against `consolidated`: proven (this
+  # session, across all nine TU9 universities) to fall on either side of it
+  # depending on the university, so no ordering between the two is asserted.
+  if (!is.null(snap$hierarchy) && nrow(snap$hierarchy) > 0 &&
+      !is.null(snap$ca_oa_by_year) && nrow(snap$ca_oa_by_year) > 0) {
+    single <- setNames(n(snap$ca_oa_by_year$ca_works),
+                       paste(snap$ca_oa_by_year$slug, snap$ca_oa_by_year$year, sep = "|"))
+    for (i in seq_len(nrow(snap$hierarchy))) {
+      key <- paste(snap$hierarchy$tu9_slug[i], snap$hierarchy$year[i], sep = "|")
+      s <- single[key]
+      if (is.na(s)) {
+        add("hierarchy row for %s year %s has no single-institution counterpart",
+            snap$hierarchy$tu9_slug[i], snap$hierarchy$year[i])
+      } else if (n(snap$hierarchy$ca_works[i]) < s) {
+        add("hierarchy ca_works (%s) is below the single-institution value (%s) for %s year %s",
+            snap$hierarchy$ca_works[i], s,
+            snap$hierarchy$tu9_slug[i], snap$hierarchy$year[i])
       }
     }
   }

@@ -131,6 +131,8 @@ institutions_table <- function(meta, path_prefix = "institutions/") {
     Institution     = vapply(inst, function(x) x$name, character(1)),
     CA_works        = vapply(inst, function(x) as.integer(x$ca_works_period %||% NA), integer(1)),
     CA_OA_ror       = vapply(inst, function(x) ca_num(x$ca_oa_share_period), numeric(1)),
+    CA_works_hier   = vapply(inst, function(x) as.integer(x$hier_ca_works_period %||% NA), integer(1)),
+    CA_OA_hier      = vapply(inst, function(x) ca_num(x$hier_ca_oa_share_period), numeric(1)),
     CA_works_leiden = vapply(inst, function(x) as.integer(x$cons_ca_works_period %||% NA), integer(1)),
     CA_OA_leiden    = vapply(inst, function(x) ca_num(x$cons_ca_oa_share_period), numeric(1)),
     CA_works_core_any = vapply(inst, function(x) as.integer(x$core_any_ca_works_period %||% NA), integer(1)),
@@ -148,6 +150,8 @@ institutions_table <- function(meta, path_prefix = "institutions/") {
     columnGroups = list(
       colGroup(name = sprintf("Single institution %s (ROR/OpenAlex)", period),
                columns = c("CA_works", "CA_OA_ror")),
+      colGroup(name = sprintf("Multi-institutional hierarchy %s (OpenAlex/ROR)", period),
+               columns = c("CA_works_hier", "CA_OA_hier")),
       colGroup(name = sprintf("Consolidated %s (OpenAlex/Leiden)", period),
                columns = c("CA_works_leiden", "CA_OA_leiden")),
       colGroup(name = sprintf("Core sources (any location) %s", period),
@@ -163,6 +167,10 @@ institutions_table <- function(meta, path_prefix = "institutions/") {
                          format = colFormat(separators = TRUE, locales = "en-US")),
       CA_OA_ror = colDef(name = "CA OA share", minWidth = 130,
                          cell = share_bar_cell(), html = TRUE),
+      CA_works_hier = colDef(name = "CA works", minWidth = 90,
+                             format = colFormat(separators = TRUE, locales = "en-US")),
+      CA_OA_hier = colDef(name = "CA OA share", minWidth = 130,
+                          cell = share_bar_cell("#3182bd"), html = TRUE),
       CA_works_leiden = colDef(name = "CA works", minWidth = 90,
                                format = colFormat(separators = TRUE, locales = "en-US")),
       CA_OA_leiden = colDef(name = "CA OA share", minWidth = 130,
@@ -192,6 +200,9 @@ alliance_summary_table <- function(meta) {
   single_works <- vapply(inst, function(x) as.integer(x$ca_works_period %||% NA), integer(1))
   single_share <- vapply(inst, function(x) ca_num(x$ca_oa_share_period), numeric(1))
 
+  hier_works <- vapply(inst, function(x) as.integer(x$hier_ca_works_period %||% NA), integer(1))
+  hier_share <- vapply(inst, function(x) ca_num(x$hier_ca_oa_share_period), numeric(1))
+
   cons_works <- vapply(inst, function(x) as.integer(x$cons_ca_works_period %||% NA), integer(1))
   cons_share <- vapply(inst, function(x) ca_num(x$cons_ca_oa_share_period), numeric(1))
 
@@ -203,14 +214,17 @@ alliance_summary_table <- function(meta) {
 
   df <- data.frame(
     View          = c("Single institution (ROR/OpenAlex)",
+                       "Multi-institutional hierarchy (OpenAlex/ROR)",
                        "Consolidated (OpenAlex/Leiden)",
                        "Core sources (any location)",
                        "Core sources (primary venue)"),
     CA_works      = c(sum(single_works, na.rm = TRUE),
+                       sum(hier_works, na.rm = TRUE),
                        sum(cons_works, na.rm = TRUE),
                        sum(core_any_works, na.rm = TRUE),
                        sum(core_works, na.rm = TRUE)),
     CA_OA_share   = c(median(single_share, na.rm = TRUE),
+                       median(hier_share, na.rm = TRUE),
                        median(cons_share, na.rm = TRUE),
                        median(core_any_share, na.rm = TRUE),
                        median(core_share, na.rm = TRUE)),
@@ -247,29 +261,6 @@ institution_directory <- function(inst, path_prefix = "") {
         df$Institution[i]
       )
     })
-  )
-}
-
-# Yearly works / citations table for one institution.
-counts_by_year_table <- function(cby) {
-  cby <- cby[order(-as.integer(cby$year)), , drop = FALSE]
-  works <- suppressWarnings(as.integer(cby$works_count))
-  max_w <- if (length(works)) max(works, na.rm = TRUE) else 0
-  reactable(
-    cby[, c("year", "works_count", "works_count_incl_xpac",
-            "works_count_lineage_incl_xpac", "cited_by_count")],
-    sortable = TRUE, defaultPageSize = 12, highlight = TRUE,
-    columns = list(
-      year           = colDef(name = "Year", maxWidth = 80),
-      works_count    = colDef(name = "Works", cell = bar_cell(max_w), html = TRUE),
-      works_count_incl_xpac = colDef(name = "Works (incl. XPAC)", maxWidth = 150,
-                              format = colFormat(separators = TRUE, locales = "en-US")),
-      works_count_lineage_incl_xpac = colDef(name = "Works (+lineage, incl. XPAC)",
-                              maxWidth = 170,
-                              format = colFormat(separators = TRUE, locales = "en-US")),
-      cited_by_count = colDef(name = "Citations received",
-                              format = colFormat(separators = TRUE, locales = "en-US"))
-    )
   )
 }
 
@@ -319,7 +310,6 @@ inst_page <- function(slug) {
 
   # Every product below is mandatory; read_current() fails the build if one is
   # missing, empty or stale.
-  cby    <- read_current(slug, "counts_by_year.csv", published)
   oa     <- read_current(slug, "ca_oa_by_year.csv", published)
   status <- read_current(slug, "ca_oa_status.csv", published)
 
@@ -368,6 +358,36 @@ inst_page <- function(slug) {
       if (length(members))
         inline_p("Component members added: ", tags$em(paste(members, collapse = "; ")), "."),
       ca_oa_by_year_table(cons))
+  }
+
+  # Multi-institutional hierarchy (OpenAlex/ROR): the university OR-ed with
+  # every institution in ITS OWN OpenAlex `lineage`, independently of the
+  # Leiden mapping above. A mandatory product like consolidated, so
+  # read_current() fails the build if it is missing, empty or stale.
+  hier <- read_current(slug, "hierarchy_ca_oa_by_year.csv", published)
+  hier_section <- NULL
+  if (!is.null(hier) && nrow(hier) > 0) {
+    href <- hier[hier$year == latest$ref_year, ]
+    leiden_link <- tags$a(href = "https://open.leidenranking.com/",
+                          target = "_blank", "CWTS Leiden Ranking Open Edition")
+    hier_section <- tagList(
+      tags$h2(id = "hierarchy", "Multi-institutional hierarchy (OpenAlex/ROR)"),
+      inline_p(
+        "OpenAlex's own institution hierarchy, via ROR, independently of the ",
+        leiden_link, " mapping above: the university OR-ed with every ",
+        "institution in its OpenAlex ", tags$code("lineage"), " -- its full ",
+        "descendant tree, at any depth. This is a different, automatically-",
+        "derived hierarchy than Leiden's curated ", tags$strong("component"),
+        " list, so the two member sets can diverge in either direction; ",
+        "neither is a subset of the other. This view is guaranteed to be at ",
+        "least as large as the single-institution view above, but ",
+        tags$strong("not"), " guaranteed to fall between it and the Leiden-",
+        "consolidated view below -- it can exceed consolidated just as ",
+        "easily as fall short of it.",
+        if (nrow(href)) paste0(" In ", latest$ref_year, " this covers ",
+                               fmt_int(href$n_members), " member institution(s).")
+        else ""),
+      ca_oa_by_year_table(hier))
   }
 
   # CWTS Core-source views: same member set as the consolidated view, restricted
@@ -465,15 +485,6 @@ inst_page <- function(slug) {
   # `cons_section` (built above) is placed after the OA section in the page body.
 
   tagList(
-    inline_p(
-      "This university's own OpenAlex record (the single ",
-      tags$strong("ROR/OpenAlex"), " institution, all authors) holds ",
-      tags$strong(fmt_int(latest$works_count)), " works — ",
-      tags$strong(fmt_int(latest$works_count_incl_xpac)),
-      " including XPAC, the basis on which the OpenAlex entity reports ",
-      tags$strong(fmt_int(latest$cited_by_count)), " citations and an h-index of ",
-      tags$strong(latest$h_index), " (snapshot ", latest$snapshot_date,
-      "). These are broader than the corresponding-author figures below."),
     oa_intro,
     inline_p(
       "OpenAlex entity: ",
@@ -489,6 +500,9 @@ inst_page <- function(slug) {
       code_link(paste0(slug, "/counts_by_year.csv"), "counts_by_year.csv"),
       if (!is.null(oa)) HTML(paste0(" · ",
         as.character(code_link(paste0(slug, "/ca_oa_by_year.csv"), "ca_oa_by_year.csv")))),
+      if (!is.null(hier)) HTML(paste0(" · ",
+        as.character(code_link(paste0(slug, "/hierarchy_ca_oa_by_year.csv"),
+                               "hierarchy_ca_oa_by_year.csv")))),
       if (!is.null(cons)) HTML(paste0(" · ",
         as.character(code_link(paste0(slug, "/consolidated_ca_oa_by_year.csv"),
                                "consolidated_ca_oa_by_year.csv")))),
@@ -498,34 +512,14 @@ inst_page <- function(slug) {
       if (!is.null(core_any)) HTML(paste0(" · ",
         as.character(code_link(paste0(slug, "/leiden_core_any_location_ca_oa_by_year.csv"),
                                "leiden_core_any_location_ca_oa_by_year.csv")))),
-      "."),
+      ". Entity-level indicators (works, citations, h-index, i10-index, 2-year mean ",
+      "citedness) are archived per snapshot in ", tags$code("metrics.csv"),
+      " above and the raw snapshot JSON, though not shown on this page — see ",
+      tags$a(href = "../background.html#context-metrics", "Background"), "."),
     oa_section,
+    hier_section,
     cons_section,
-    core_section,
-    tags$h2(id = "metrics", "Metric history"),
-    inline_p(
-      "Figures for this single institution (", tags$strong("ROR/OpenAlex"),
-      ", all authors), one row per snapshot. ", tags$strong("Works"),
-      " exclude XPAC (works API); ", tags$strong("Works (incl. XPAC)"),
-      " and the citation columns — citations, h-index, i10-index, 2-year mean ",
-      "citedness — come from the OpenAlex entity, so they share the same ",
-      "XPAC-inclusive basis (the entity works count is the matching denominator ",
-      "for the citation figures). ", tags$strong("Works (+lineage, incl. XPAC)"),
-      " additionally counts the institution's OpenAlex child institutions: it is ",
-      "the figure ", tags$a(href = "https://openalex.org/", target = "_blank",
-                            "openalex.org"),
-      " itself links to from an institution profile, carried here so the two can ",
-      "be reconciled. It is not used for any metric on this site."),
-    metric_history_table(m),
-    if (!is.null(cby)) tagList(
-      tags$h2(id = "by-year", "Works and citations by year"),
-      inline_p(
-        "By publication year, for this single institution (",
-        tags$strong("ROR/OpenAlex"), ", all authors) — not the corresponding-author ",
-        "subset. ", tags$strong("Works"), " exclude XPAC; ",
-        tags$strong("Works (incl. XPAC)"), " and the citation counts come from the ",
-        "OpenAlex entity, sharing the same XPAC-inclusive basis."),
-      counts_by_year_table(cby))
+    core_section
   )
 }
 
@@ -567,31 +561,6 @@ ca_oa_status_table <- function(status) {
     columns = list(
       oa_status = colDef(name = "OA status", maxWidth = 140),
       ca_works  = colDef(name = "CA works", cell = bar_cell(max_w), html = TRUE)
-    )
-  )
-}
-
-# Time series of the tracked metrics across snapshots (one row per snapshot).
-metric_history_table <- function(m) {
-  m <- m[order(m$snapshot_date, decreasing = TRUE), , drop = FALSE]
-  reactable(
-    m[, c("snapshot_date", "works_count", "works_count_incl_xpac",
-          "works_count_lineage_incl_xpac", "cited_by_count",
-          "h_index", "i10_index", "two_yr_mean_citedness")],
-    sortable = TRUE, defaultPageSize = 12, highlight = TRUE,
-    columns = list(
-      snapshot_date         = colDef(name = "Snapshot", maxWidth = 110),
-      works_count           = colDef(name = "Works",
-                                     format = colFormat(separators = TRUE, locales = "en-US")),
-      works_count_incl_xpac = colDef(name = "Works (incl. XPAC)",
-                                     format = colFormat(separators = TRUE, locales = "en-US")),
-      works_count_lineage_incl_xpac = colDef(name = "Works (+lineage, incl. XPAC)",
-                                     format = colFormat(separators = TRUE, locales = "en-US")),
-      cited_by_count        = colDef(name = "Citations",
-                                     format = colFormat(separators = TRUE, locales = "en-US")),
-      h_index               = colDef(name = "h-index"),
-      i10_index             = colDef(name = "i10-index"),
-      two_yr_mean_citedness = colDef(name = "2yr mean citedness")
     )
   )
 }

@@ -8,14 +8,17 @@ The R scripts implement the contract; the README and website explain the project
 
 The project monitors open access for the configured TU9 universities using OpenAlex and stores snapshots over time.
 Its headline is the open-access share of works whose corresponding author is affiliated with a university, using OpenAlex `corresponding_institution_ids`.
-Each university is represented through four views:
+Each university is represented through five views:
 
 1. the single configured OpenAlex institution;
-2. that institution consolidated with the weight-1 `component` affiliates in the Leiden mapping;
-3. the same consolidated member set restricted to works with any CWTS Core-source location, using `locations.source.is_core:true`;
-4. the same consolidated member set restricted to works whose primary venue is a CWTS Core source, using `primary_location.source.is_core:true`.
+2. that institution grouped with every institution in its own OpenAlex `lineage` (its full descendant tree), fetched live via an institutions search — OpenAlex/ROR's own automatically-derived hierarchy, independent of the Leiden mapping below;
+3. that institution consolidated with the weight-1 `component` affiliates in the Leiden mapping;
+4. the same consolidated member set restricted to works with any CWTS Core-source location, using `locations.source.is_core:true`;
+5. the same consolidated member set restricted to works whose primary venue is a CWTS Core source, using `primary_location.source.is_core:true`.
 
-Views 3 and 4 are two distinct readings of the same allow-list, computed as separate queries and never combined. They nest: view 4 ⊆ view 3 ⊆ view 2, for both the works count and its open-access subset.
+Views 4 and 5 are two distinct readings of the same allow-list, computed as separate queries and never combined. They nest: view 5 ⊆ view 4 ⊆ view 3, for both the works count and its open-access subset.
+
+View 2 (hierarchy) and view 3 (consolidated) are independent member sets computed from different sources and do not nest: neither is a subset of the other, and empirically the hierarchy figure exceeds the consolidated one for some TU9 universities and falls short for others. Both are guaranteed only to be at least as large as view 1 (single), checked separately in `scripts/validate.R`; no ordering between views 2 and 3 is asserted or should be.
 
 The project is a prototype, but it publishes committed data through a public static website.
 The appropriate standard is therefore strong validation at the commit and deployment boundaries, not independent proof of every upstream value or production-grade operational resilience.
@@ -34,7 +37,8 @@ A guard belongs in the current contract when it protects a public claim or commi
 | `data-raw/leiden_affiliations.csv` | Consolidated member assignments after joint validation against the institution configuration |
 | The run's snapshot date | Snapshot year, reference year, maximum publication year, and period end |
 | Archived OpenAlex institution entities | Entity ID, XPAC-inclusive works, citations, h-index, i10-index, 2-year mean citedness, and their reconstructible yearly entity counts |
-| OpenAlex grouped works responses | XPAC-excluded, lineage, corresponding-author, OA, DOAJ, status, consolidated, and both Core-source (primary-venue and any-location) figures for the current fetch |
+| OpenAlex institutions search (`lineage:<id>`) | The hierarchy view's member set for the current fetch only — not archived, so not independently reconstructible after the fact |
+| OpenAlex grouped works responses | XPAC-excluded, lineage, corresponding-author, OA, DOAJ, status, hierarchy, consolidated, and both Core-source (primary-venue and any-location) figures for the current fetch |
 | Global files under `data/` | Canonical written products from which per-institution exports are sliced |
 | `data/metrics.csv` | Snapshot history and the source for reconstructible historical metadata such as first/latest snapshot |
 
@@ -52,6 +56,7 @@ Their published values can be checked for completeness, arithmetic, ordering, co
 | `data/counts_by_year.csv` | `(slug, year)` | Latest snapshot only |
 | `data/ca_oa_by_year.csv` | `(slug, year)` | Latest snapshot only |
 | `data/ca_oa_status.csv` | `(slug, year, oa_status)` | Latest snapshot only |
+| `data/hierarchy_ca_oa_by_year.csv` | `(tu9_slug, year)` | Latest snapshot only |
 | `data/consolidated_ca_oa_by_year.csv` | `(tu9_slug, year)` | Latest snapshot only |
 | `data/leiden_core_ca_oa_by_year.csv` | `(tu9_slug, year)` | Latest snapshot only |
 | `data/leiden_core_any_location_ca_oa_by_year.csv` | `(tu9_slug, year)` | Latest snapshot only |
@@ -92,8 +97,8 @@ It requires:
 - finite, non-negative required numeric values;
 - numerator, denominator, and share arithmetic for OA and DOAJ values;
 - reference-year and period headlines that agree with their yearly rows;
-- consolidated and both Core member sets that agree with the validated mapping;
-- valid lens ordering, including consolidated counts not falling below the single-institution view, and the nested Core subset invariants (primary-venue Core ≤ any-location Core ≤ consolidated) on both the works count and its open-access subset;
+- consolidated and both Core member sets that agree with the validated mapping; the hierarchy member set checked for self-consistency (own id included, `n_members` matches what was fetched) since there is no external mapping to check it against;
+- valid lens ordering, including consolidated counts and hierarchy counts each independently not falling below the single-institution view (but not against each other), and the nested Core subset invariants (primary-venue Core ≤ any-location Core ≤ consolidated) on both the works count and its open-access subset;
 - reconstructible entity metrics that agree with the archived entity;
 - protection against an unexpectedly large drop from the previous snapshot.
 
@@ -207,6 +212,7 @@ The current contract deliberately accepts that:
 
 - internally consistent but incorrect values returned by OpenAlex may pass;
 - unarchived grouped responses cannot be independently reconstructed later;
+- the hierarchy view's exact member-ID list is fetched live and not archived anywhere, unlike the Leiden mapping's committed CSV, so it cannot be independently reconstructed after the fact either — only its count (`n_members`) is published and cross-checked for self-consistency;
 - the snapshot date and `period_start` are policy inputs without a third on-disk authority;
 - a failure after writing can leave a local checkout's `data/` dirty, although CI will not commit or deploy it;
 - a refresh push can fail if `main` moved because the workflow does not rebase;

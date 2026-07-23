@@ -7,6 +7,7 @@
 #   data/ca_oa_by_year.csv             corresponding-author OA share by year (latest)
 #   data/ca_oa_status.csv              CA OA-status split for the reference year (latest)
 #   data/consolidated_ca_oa_by_year.csv  Leiden-consolidated CA OA share by year (latest)
+#   data/hierarchy_ca_oa_by_year.csv     OpenAlex/ROR-hierarchy CA OA share by year (latest)
 #   data/leiden_core_ca_oa_by_year.csv   Core-source (primary venue) CA OA share by year (latest)
 #   data/leiden_core_any_location_ca_oa_by_year.csv  Core-source (any location) CA OA share by year (latest)
 #   data/<slug>/*.csv                  the same views for one institution
@@ -104,6 +105,8 @@ oa_year_rows   <- list()
 oa_status_rows <- list()
 cons_year_rows <- list()
 cons_by_slug   <- list()
+hier_year_rows <- list()
+hier_by_slug   <- list()
 core_year_rows <- list()
 core_by_slug   <- list()
 core_any_year_rows <- list()
@@ -219,7 +222,7 @@ for (i in seq_len(nrow(inst))) {
 # `component` affiliates. Every university gets one, as in the core view below:
 # where a university has no components the member set is the university alone,
 # which is its correct consolidated value. Producing it keeps the alliance
-# totals summable over the same nine universities in all four views -- omitting
+# totals summable over the same nine universities in all five views -- omitting
 # these rows made the consolidated total smaller than the single-institution
 # total, which reads as if consolidating lost works.
 for (i in seq_len(nrow(inst))) {
@@ -243,6 +246,40 @@ for (i in seq_len(nrow(inst))) {
     snapshot_date = snapshot_date, tu9_slug = slug, university_name = u$name,
     n_members = length(members), year = coa$year, ca_works = coa$ca_works,
     ca_oa_works = coa$ca_oa_works, ca_oa_share = coa$ca_oa_share)
+}
+
+# Multi-institutional hierarchy (OpenAlex/ROR) CA-OA view: each university
+# OR-ed with every institution in ITS OWN OpenAlex `lineage` -- not the curated
+# Leiden mapping above, but OpenAlex/ROR's own automatically-derived hierarchy.
+# The two member sets are independent and neither is a subset of the other, so
+# this view is not expected to sit between the single-institution and
+# consolidated figures -- only to be at least as large as the single-
+# institution one. Every university gets a row, even with zero descendants
+# (member set = the university alone), for the same comparability reason as
+# consolidated: a future change in OpenAlex/ROR's hierarchy should not require
+# a schema change to pick up.
+for (i in seq_len(nrow(inst))) {
+  slug <- inst$slug[i]
+  u    <- inst[i, ]
+  children <- openalex_hierarchy_children(u$openalex_bare)
+  if (is.null(children)) { fail(slug, "hierarchy children"); next }
+  members <- unique(c(openalex_bare(u$openalex_id), children))
+  message("  hierarchy ", slug, " (", length(members), " members)")
+  hoa <- openalex_ca_oa_by_year(members, OA_START_YEAR)
+  if (is.null(hoa) || nrow(hoa) == 0) { fail(slug, "hierarchy OA by year"); next }
+  href <- hoa[hoa$year == REF_YEAR, ]
+  hpa  <- period_ca(hoa)
+  hier_by_slug[[slug]] <- list(
+    n_members          = length(members),
+    members            = members,
+    ca_works_ref       = if (nrow(href)) href$ca_works    else NA_integer_,
+    ca_oa_share_ref    = if (nrow(href)) href$ca_oa_share else NA_real_,
+    ca_works_period    = hpa$works,
+    ca_oa_share_period = hpa$share)
+  hier_year_rows[[length(hier_year_rows) + 1L]] <- tibble(
+    snapshot_date = snapshot_date, tu9_slug = slug, university_name = u$name,
+    n_members = length(members), year = hoa$year, ca_works = hoa$ca_works,
+    ca_oa_works = hoa$ca_oa_works, ca_oa_share = hoa$ca_oa_share)
 }
 
 # CWTS Core-source-filtered CA-OA views: same member set as the consolidated
@@ -295,9 +332,11 @@ snap <- list(
   ca_oa_by_year  = empty_if_none(oa_year_rows),
   ca_oa_status   = empty_if_none(oa_status_rows),
   consolidated   = empty_if_none(cons_year_rows),
+  hierarchy      = empty_if_none(hier_year_rows),
   core           = empty_if_none(core_year_rows),
   core_any       = empty_if_none(core_any_year_rows),
   cons_members   = cons_by_slug,
+  hier_members   = hier_by_slug,
   core_members   = core_by_slug,
   core_any_members = core_any_by_slug,
   entities       = entities,
@@ -369,6 +408,13 @@ if (nrow(snap$consolidated) > 0) {
 } else if (file.exists("data/consolidated_ca_oa_by_year.csv")) {
   unlink("data/consolidated_ca_oa_by_year.csv")
 }
+if (nrow(snap$hierarchy) > 0) {
+  write_csv(snap$hierarchy[order(snap$hierarchy$tu9_slug,
+                                 -snap$hierarchy$year), ],
+            "data/hierarchy_ca_oa_by_year.csv", na = "")
+} else if (file.exists("data/hierarchy_ca_oa_by_year.csv")) {
+  unlink("data/hierarchy_ca_oa_by_year.csv")
+}
 if (nrow(snap$core) > 0) {
   write_csv(snap$core[order(snap$core$tu9_slug, -snap$core$year), ],
             "data/leiden_core_ca_oa_by_year.csv", na = "")
@@ -403,6 +449,15 @@ for (slug in inst$slug) {
     write_csv(ico[order(-ico$year), ], cpath, na = "")
   } else if (file.exists(cpath)) {
     unlink(cpath)
+  }
+
+  hpath <- file.path(d, "hierarchy_ca_oa_by_year.csv")
+  ihier <- if (nrow(snap$hierarchy) > 0)
+    snap$hierarchy[snap$hierarchy$tu9_slug == slug, ] else snap$hierarchy
+  if (nrow(ihier) > 0) {
+    write_csv(ihier[order(-ihier$year), ], hpath, na = "")
+  } else if (file.exists(hpath)) {
+    unlink(hpath)
   }
 
   corepath <- file.path(d, "leiden_core_ca_oa_by_year.csv")
@@ -462,6 +517,14 @@ meta_inst <- lapply(seq_len(nrow(latest)), function(i) {
     entry$cons_ca_oa_share_ref    <- cons$ca_oa_share_ref
     entry$cons_ca_works_period    <- cons$ca_works_period
     entry$cons_ca_oa_share_period <- cons$ca_oa_share_period
+  }
+  hier <- hier_by_slug[[r$slug]]
+  if (!is.null(hier)) {
+    entry$hier_n_members          <- hier$n_members
+    entry$hier_ca_works_ref       <- hier$ca_works_ref
+    entry$hier_ca_oa_share_ref    <- hier$ca_oa_share_ref
+    entry$hier_ca_works_period    <- hier$ca_works_period
+    entry$hier_ca_oa_share_period <- hier$ca_oa_share_period
   }
   core <- core_by_slug[[r$slug]]
   if (!is.null(core)) {

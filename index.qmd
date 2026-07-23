@@ -12,7 +12,7 @@ Open-access monitoring for the [TU9](https://www.tu9.de/) universities, built fr
 The headline is the open-access share on the corresponding-author lens — the fraction of a university's corresponding-author output that is open access.
 That is the view which matches [OpenAPC](https://openapc.net/) and transformative-agreement accounting, and the one relevant to OA monitoring.
 
-Each university is shown four ways: as the single OpenAlex institution; grouped with its affiliated organisations the way the [Leiden Ranking](https://open.leidenranking.com/) defines (e.g. with its university hospital); and that same Leiden member set restricted to CWTS Core sources under two readings — works with at least one Core-source location, and the narrower set of works whose primary venue is a Core source.
+Each university is shown five ways: as the single OpenAlex institution; grouped with every institution in its own OpenAlex/ROR `lineage`, independently of any curation; grouped with its affiliated organisations the way the [Leiden Ranking](https://open.leidenranking.com/) defines (e.g. with its university hospital); and that same Leiden member set restricted to CWTS Core sources under two readings — works with at least one Core-source location, and the narrower set of works whose primary venue is a Core source.
 See [Background](background.qmd) for method and sources and [Downloads](downloads.qmd) for the raw files.
 
 Refreshed on a schedule and released under CC0.
@@ -34,8 +34,9 @@ cat(sprintf(
 alliance_summary_table(meta)
 ```
 
-All four readings cover the same nine universities, so the totals are directly comparable.
+All five readings cover the same nine universities, so the totals are directly comparable.
 Consolidating adds the weight-1 Leiden `component` affiliates and can therefore only raise a university's count; three universities have no such affiliates and consolidate to themselves.
+The multi-institutional hierarchy reading adds OpenAlex/ROR's own descendant institutions instead, and can likewise only raise a university's count relative to the single-institution view — but it is a different, uncurated member set, so it is **not** guaranteed to fall between the single-institution and Leiden-consolidated figures; across the nine TU9 universities it exceeds the consolidated figure about as often as it falls short of it.
 The two Core-source readings both draw on the consolidated member set: *primary venue* is contained in *any location*, and both are contained in the consolidated view.
 
-The [Institutions](institutions/index.qmd) page breaks the same four readings down per university.
+The [Institutions](institutions/index.qmd) page breaks the same five readings down per university.

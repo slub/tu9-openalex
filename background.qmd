@@ -40,6 +40,14 @@ The consolidated unit is where, for instance, the [University Hospital Carl Gust
 Fractional `joint` affiliates are not (yet) included — only full components.
 A university without any consolidates to itself, so all nine have a consolidated value and the two views stay comparable across the alliance.
 
+## Multi-institutional hierarchy (OpenAlex/ROR)
+
+A third view groups each university with every institution in *its own* OpenAlex `lineage` — the descendant tree OpenAlex/ROR itself models via `institutions?filter=lineage:<id>`, walked to whatever depth it goes, not just one level. This is deliberately a different judgement from the curated Leiden mapping above: it is OpenAlex/ROR's own automatically-derived organisational hierarchy, not a methodologist's reviewed `component`/`joint`/`associated` classification. Kept as an independent reading to diff against Leiden's curated one, not because it is expected to sit between the single-institution and consolidated figures — it isn't, reliably. As with the consolidated view, it is combined with the corresponding-author lens and `is_xpac:false`, and a university without lineage descendants is reported as itself, so all nine have a value.
+
+Leiden consolidation and OpenAlex/ROR's lineage define genuinely different sets, diverging in both directions at once, not just missing a few edge cases. For TU Dresden: the [University Hospital Carl Gustav Carus](https://openalex.org/I4210162051) is a Leiden `component` but *not* in TU Dresden's OpenAlex lineage (OpenAlex links it as `related`, not `child`) — so consolidated counts it and hierarchy does not. Conversely, roughly twenty small OpenAlex-modelled research centres (many created in one apparent batch, e.g. under the DRESDEN-concept umbrella) sit in TU Dresden's lineage without being a Leiden `component` at all — so hierarchy counts them and consolidated does not. Checked across all nine TU9 universities, the two member sets produce a hierarchy figure that exceeds the Leiden-consolidated figure for six of them and falls short for three — there is no reliable ordering between the two, only the guarantee (checked in `scripts/validate.R`) that hierarchy, like consolidated, can only add works relative to the single-institution view.
+
+Because it is fetched live rather than drawn from a versioned, reviewed mapping, this view's membership can also shift between snapshots for reasons unrelated to publishing activity — for instance when a batch of ROR edits (an affiliation-editor submission, a periodic ROR release) is later reflected in OpenAlex's own institution graph. The published `n_members` count is carried specifically so such a shift is visible rather than silently absorbed into the figures.
+
 ## Core-source-filtered views (CWTS Core sources)
 
 Two further views keep the same Leiden-consolidated member set — the university's OpenAlex institution id OR-ed with its weight-1 `component` affiliates — but additionally restrict works to sources on the CWTS Core sources allow-list.
@@ -66,52 +74,11 @@ The Zenodo records below provide the versioned source list and methodology; the 
 
 ## Context metrics
 
-Beside the OA figures, each snapshot keeps output counts from the Works API and institution entity, together with entity-level citation indicators.
-The output counts preserve XPAC-excluded, XPAC-inclusive, and lineage-inclusive lenses for comparison.
-
-- **Output** — total works and works by publication year under the applicable lenses;
-- **Citation context** — cited-by count, h-index, i10-index, and 2-year mean citedness.
-
-The fetched OpenAlex institution entity is also archived as JSON per snapshot (`data/snapshots/<slug>/<date>.json`) for source fields not surfaced in the CSVs.
-
-### Why these figures differ from the OpenAlex profile
-
-An institution's page on openalex.org links to its works with `authorships.institutions.lineage:<id>&include_xpac=true`.
-That is a wider population than the one counted here, in two independent ways, so the numbers will not match unless both are accounted for. For TU Dresden:
-
-| Lens | Works |
-|------|------:|
-| `authorships.institutions.id`, XPAC excluded — published here | 129,281 |
-| `authorships.institutions.id`, XPAC included — the entity's `works_count` | 139,032 |
-| `authorships.institutions.lineage`, XPAC included — what openalex.org links to | 148,325 |
-
-The first step is the Expansion Pack. The second is lineage: OpenAlex's parent/child hierarchy, which rolls a university's child institutions into it.
-This dataset counts the institution itself — `corresponding_institution_ids` and `authorships.institutions.id` match one entity and perform no lineage expansion.
-
-The lineage figure is carried in `metrics.csv` as `works_count_lineage_incl_xpac` purely so the two can be reconciled; no metric on this site is derived from it.
-
-Leiden consolidation and OpenAlex lineage define different sets.
-They overlap but diverge exactly where it matters: the [University Hospital Carl Gustav Carus](https://openalex.org/I4210162051) is *not* in TU Dresden's OpenAlex lineage (OpenAlex links it as `related`, not `child`), yet Leiden counts it as a `component`.
-Conversely an institute such as [NaMLab](https://openalex.org/I4210122489) *is* in the lineage.
-This project's consolidated view uses the Leiden `component` mapping, which counts the university hospital.
-
-### Expansion Pack (XPAC) is excluded
-
-In November 2025 OpenAlex added ~190 million works as the [Expansion Pack](https://developers.openalex.org/guides/key-concepts#xpac-expansion-pack) (XPAC) — mainly datasets and repository records with lower average data quality.
-Every works query here appends `is_xpac:false`, so `works_count`, the works-per-year counts and all open-access figures exclude XPAC explicitly rather than by relying on OpenAlex's current default.
-Because the institution *entity*'s own aggregates include XPAC, `works_count` and works-per-year are taken from the works API (not the entity).
-The citation-based indicators (`cited_by_count`, h-index, i10-index, 2-year mean citedness) are the exception: OpenAlex publishes them only as an entity aggregate, so those figures **include** XPAC.
-
-### Entity aggregates lag the live API
-
-The institution entity's own figures — `works_count`, `counts_by_year`, `cited_by_count` and the summary statistics — are precomputed aggregates, while every works query here is answered live. The two are therefore not from the same moment.
-For a year that is still filling up this is visible: in July 2026 the live XPAC-*excluded* count of TU Munich's 2026 works (9,497) already exceeded the entity's precomputed XPAC-*inclusive* figure for the same year (9,431).
-
-That is a property of the data, not an error, but it means the two sources should not be compared as though they were simultaneous. The consistency checks in `scripts/validate.R` compare live figures with live figures for exactly this reason.
+Beside the OA figures, each snapshot keeps entity-level context: output counts under XPAC-excluded, XPAC-inclusive, and lineage-inclusive lenses, and citation indicators (cited-by count, h-index, i10-index, 2-year mean citedness). These are archived in `metrics.csv` and the raw per-snapshot entity JSON (`data/snapshots/<slug>/<date>.json`) but are **not** shown on institution pages: they use an any-author lens rather than the corresponding-author one this site is built around, mix XPAC-inclusive and XPAC-excluded figures depending on the field, and — being precomputed OpenAlex entity aggregates rather than live queries — lag the live API for a year still filling up. See [Downloads](downloads.qmd) for the files. Every *displayed* query on this site, including the hierarchy view above, still applies `is_xpac:false` explicitly rather than relying on OpenAlex's current default.
 
 ## How it is assembled
 
-1. For every university in `data-raw/institutions.csv`, the pipeline runs a handful of OpenAlex [works](https://developers.openalex.org/api-reference/works) `group_by` queries — corresponding-author works by year and OA status, total works by year, the Leiden-consolidated corresponding-author view, and that consolidated view restricted to CWTS Core sources under both readings (`primary_location.source.is_core:true` and `locations.source.is_core:true`) — and reads the [institution entity](https://developers.openalex.org/api-reference/institutions) for the citation indicators, using the polite pool and, where configured, a free OpenAlex API key.
+1. For every university in `data-raw/institutions.csv`, the pipeline looks up its OpenAlex/ROR `lineage` descendants (an [institutions](https://developers.openalex.org/api-reference/institutions) search, cursor-paginated) and runs a handful of OpenAlex [works](https://developers.openalex.org/api-reference/works) `group_by` queries — corresponding-author works by year and OA status, total works by year, the OpenAlex/ROR hierarchy corresponding-author view, the Leiden-consolidated corresponding-author view, and that consolidated view restricted to CWTS Core sources under both readings (`primary_location.source.is_core:true` and `locations.source.is_core:true`) — and reads the institution entity for the citation indicators, using the polite pool and, where configured, a free OpenAlex API key.
 2. Everything is fetched into memory first and only then validated: the exact configured institution set, every required product per university, a single consistent snapshot date, and the arithmetic behind each OA share. A coverage guard rail additionally aborts if the total works count drops sharply against the previous snapshot. If this pre-write validation fails, nothing is written.
 3. Only after that are the files written: a dated row per university is appended to `data/metrics.csv` (re-running on the same day replaces that day's rows rather than duplicating them), the publication-year and OA views are rewritten for the latest snapshot, and `meta.json` is regenerated. Products that no longer apply are removed rather than left behind as stale files. The stored products are then read back and validated again before they are committed or deployed.
 

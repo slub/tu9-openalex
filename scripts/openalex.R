@@ -132,6 +132,48 @@ openalex_institution_reader <- function(id) {
   )
 }
 
+# Every OpenAlex institution in `inst_id`'s `lineage` -- its full descendant
+# tree, at any depth, as OpenAlex/ROR itself models the organisation, not the
+# curated Leiden `component` mapping. This is the "raw aggregation" member set
+# for the Multi-institutional hierarchy view: unlike the one-level
+# `associated_institutions` field already sitting on the fetched entity, this
+# walks the transitive closure via the institutions SEARCH endpoint, so a
+# hierarchy nested more than one level deep (as already seen at TU Dresden) is
+# not silently missed. Cursor-paginated; the endpoint includes `inst_id` itself
+# in the results, so it is excluded from the return value. Returns a character
+# vector of bare ids, or NULL on any network/parse failure -- same failure
+# contract as every other reader here, so a bad response fails that
+# institution's hierarchy view rather than substituting an incomplete one.
+openalex_hierarchy_children <- function(inst_id) {
+  id <- openalex_bare(inst_id)
+  ids <- character(0)
+  cursor <- "*"
+  repeat {
+    url <- paste0(
+      "https://api.openalex.org/institutions",
+      "?filter=", utils::URLencode(paste0("lineage:", id), reserved = TRUE),
+      "&per_page=200",
+      "&cursor=", utils::URLencode(cursor, reserved = TRUE),
+      "&select=id",
+      "&mailto=", utils::URLencode(openalex_mailto(), reserved = TRUE))
+    key <- Sys.getenv("OPENALEX_API_KEY")
+    if (nzchar(key)) url <- paste0(url, "&api_key=", utils::URLencode(key, reserved = TRUE))
+    txt <- openalex_get(url, paste0("hierarchy children ", id))
+    if (is.null(txt)) return(NULL)
+    obj <- tryCatch(fromJSON(txt, simplifyVector = FALSE), error = function(e) NULL)
+    if (is.null(obj) || is.null(obj$results)) {
+      message("    hierarchy children ", id, ": unparsable response")
+      return(NULL)
+    }
+    page_ids <- vapply(obj$results, function(r) openalex_bare(as.character(r$id %||% NA)),
+                       character(1))
+    ids <- c(ids, page_ids)
+    cursor <- obj$meta$next_cursor
+    if (is.null(cursor) || length(obj$results) == 0) break
+  }
+  unique(setdiff(ids, id))
+}
+
 # --- works aggregation (group_by) ------------------------------------------
 # The OA metrics use OpenAlex's `group_by`, which returns server-side aggregated
 # counts -- we never page through individual works. The denominator is the
