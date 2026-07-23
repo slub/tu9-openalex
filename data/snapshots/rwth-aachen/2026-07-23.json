@@ -39,12 +39,12 @@
       ]
     }
   ],
-  "works_count": 192839,
-  "cited_by_count": 17461524,
+  "works_count": 193062,
+  "cited_by_count": 17486783,
   "summary_stats": {
-    "2yr_mean_citedness": 2.4566,
+    "2yr_mean_citedness": 2.4616,
     "h_index": 893,
-    "i10_index": 250452
+    "i10_index": 250884
   },
   "ids": {
     "openalex": "https://openalex.org/I887968799",
@@ -166,124 +166,124 @@
     },
     {
       "year": 2026,
-      "works_count": 7840,
-      "oa_works_count": 6931,
-      "cited_by_count": 1606
+      "works_count": 7891,
+      "oa_works_count": 6977,
+      "cited_by_count": 1618
     },
     {
       "year": 2025,
-      "works_count": 15027,
-      "oa_works_count": 12939,
-      "cited_by_count": 21569
+      "works_count": 15029,
+      "oa_works_count": 12941,
+      "cited_by_count": 21679
     },
     {
       "year": 2024,
-      "works_count": 13914,
-      "oa_works_count": 11739,
-      "cited_by_count": 62214
+      "works_count": 13917,
+      "oa_works_count": 11742,
+      "cited_by_count": 62365
     },
     {
       "year": 2023,
-      "works_count": 14521,
-      "oa_works_count": 11786,
-      "cited_by_count": 94028
+      "works_count": 14522,
+      "oa_works_count": 11787,
+      "cited_by_count": 94142
     },
     {
       "year": 2022,
-      "works_count": 12097,
-      "oa_works_count": 9267,
-      "cited_by_count": 133426
+      "works_count": 12101,
+      "oa_works_count": 9269,
+      "cited_by_count": 133590
     },
     {
       "year": 2021,
-      "works_count": 12914,
-      "oa_works_count": 10087,
-      "cited_by_count": 176869
+      "works_count": 12917,
+      "oa_works_count": 10090,
+      "cited_by_count": 176972
     },
     {
       "year": 2020,
-      "works_count": 10576,
-      "oa_works_count": 7617,
-      "cited_by_count": 220072
+      "works_count": 10584,
+      "oa_works_count": 7618,
+      "cited_by_count": 220313
     },
     {
       "year": 2019,
-      "works_count": 9094,
-      "oa_works_count": 5700,
-      "cited_by_count": 209579
+      "works_count": 9103,
+      "oa_works_count": 5702,
+      "cited_by_count": 209760
     },
     {
       "year": 2018,
-      "works_count": 8453,
-      "oa_works_count": 4844,
-      "cited_by_count": 240826
+      "works_count": 8462,
+      "oa_works_count": 4846,
+      "cited_by_count": 241030
     },
     {
       "year": 2017,
-      "works_count": 7360,
-      "oa_works_count": 3729,
-      "cited_by_count": 208522
+      "works_count": 7378,
+      "oa_works_count": 3735,
+      "cited_by_count": 208903
     },
     {
       "year": 2016,
-      "works_count": 6785,
-      "oa_works_count": 2896,
-      "cited_by_count": 235399
+      "works_count": 6801,
+      "oa_works_count": 2903,
+      "cited_by_count": 235826
     },
     {
       "year": 2015,
-      "works_count": 5881,
-      "oa_works_count": 2241,
-      "cited_by_count": 194088
+      "works_count": 5893,
+      "oa_works_count": 2246,
+      "cited_by_count": 194819
     },
     {
       "year": 2014,
-      "works_count": 5661,
-      "oa_works_count": 1944,
-      "cited_by_count": 252910
+      "works_count": 5668,
+      "oa_works_count": 1949,
+      "cited_by_count": 253058
     },
     {
       "year": 2013,
-      "works_count": 5035,
-      "oa_works_count": 1643,
-      "cited_by_count": 186960
+      "works_count": 5038,
+      "oa_works_count": 1644,
+      "cited_by_count": 187120
     },
     {
       "year": 2012,
-      "works_count": 5174,
-      "oa_works_count": 1574,
-      "cited_by_count": 193897
+      "works_count": 5180,
+      "oa_works_count": 1577,
+      "cited_by_count": 194267
     },
     {
       "year": 2011,
-      "works_count": 4693,
-      "oa_works_count": 1318,
-      "cited_by_count": 193435
+      "works_count": 4699,
+      "oa_works_count": 1319,
+      "cited_by_count": 193621
     },
     {
       "year": 2010,
-      "works_count": 4507,
-      "oa_works_count": 1190,
-      "cited_by_count": 164769
+      "works_count": 4509,
+      "oa_works_count": 1191,
+      "cited_by_count": 165197
     }
   ],
   "roles": [
     {
       "role": "funder",
       "id": "https://openalex.org/F4320324232",
-      "works_count": 12485
+      "works_count": 12487
     },
     {
       "role": "institution",
       "id": "https://openalex.org/I887968799",
-      "works_count": 192839
+      "works_count": 193062
     }
   ],
   "topics": [
     {
       "id": "https://openalex.org/T10048",
       "display_name": "Particle physics theoretical and experimental studies",
-      "count": 6831,
+      "count": 6833,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3106",
@@ -499,7 +499,7 @@
     {
       "id": "https://openalex.org/T10188",
       "display_name": "Advanced machining processes and optimization",
-      "count": 1515,
+      "count": 1518,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2210",
@@ -517,7 +517,7 @@
     {
       "id": "https://openalex.org/T10142",
       "display_name": "Formal Methods in Verification",
-      "count": 1512,
+      "count": 1513,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/1703",
@@ -589,7 +589,7 @@
     {
       "id": "https://openalex.org/T11044",
       "display_name": "Particle Detector Development and Performance",
-      "count": 1353,
+      "count": 1354,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3106",
@@ -643,7 +643,7 @@
     {
       "id": "https://openalex.org/T12565",
       "display_name": "Physics and Engineering Research Articles",
-      "count": 1306,
+      "count": 1305,
       "score": 0.9999,
       "subfield": {
         "id": "https://openalex.org/subfields/2206",
@@ -697,7 +697,7 @@
     {
       "id": "https://openalex.org/T10173",
       "display_name": "Computational Fluid Dynamics and Aerodynamics",
-      "count": 1206,
+      "count": 1207,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2206",
@@ -922,7 +922,7 @@
     {
       "id": "https://openalex.org/T14508",
       "display_name": "Vocational Education and Training",
-      "value": 0.0128,
+      "value": 0.0127,
       "subfield": {
         "id": "https://openalex.org/subfields/3304",
         "display_name": "Education"
@@ -1161,6 +1161,6 @@
   "is_super_system": false,
   "status": "active",
   "works_api_url": "https://api.openalex.org/works?filter=institutions.id:I887968799",
-  "updated_date": "2026-07-22T05:59:22",
+  "updated_date": "2026-07-23T06:00:47",
   "created_date": "2016-06-24T00:00:00"
 }

@@ -34,12 +34,12 @@
       ]
     }
   ],
-  "works_count": 167548,
-  "cited_by_count": 11318931,
+  "works_count": 167666,
+  "cited_by_count": 11331873,
   "summary_stats": {
-    "2yr_mean_citedness": 2.8992,
+    "2yr_mean_citedness": 2.9028,
     "h_index": 751,
-    "i10_index": 179621
+    "i10_index": 179761
   },
   "ids": {
     "openalex": "https://openalex.org/I102335020",
@@ -109,105 +109,105 @@
     },
     {
       "year": 2026,
-      "works_count": 6585,
-      "oa_works_count": 5821,
-      "cited_by_count": 1063
+      "works_count": 6620,
+      "oa_works_count": 5850,
+      "cited_by_count": 1082
     },
     {
       "year": 2025,
-      "works_count": 14012,
-      "oa_works_count": 12313,
-      "cited_by_count": 17308
+      "works_count": 14016,
+      "oa_works_count": 12315,
+      "cited_by_count": 17384
     },
     {
       "year": 2024,
-      "works_count": 13475,
-      "oa_works_count": 11561,
-      "cited_by_count": 50335
+      "works_count": 13476,
+      "oa_works_count": 11562,
+      "cited_by_count": 50440
     },
     {
       "year": 2023,
-      "works_count": 11411,
-      "oa_works_count": 9363,
-      "cited_by_count": 75289
+      "works_count": 11412,
+      "oa_works_count": 9364,
+      "cited_by_count": 75384
     },
     {
       "year": 2022,
-      "works_count": 11049,
-      "oa_works_count": 8885,
-      "cited_by_count": 108764
+      "works_count": 11050,
+      "oa_works_count": 8886,
+      "cited_by_count": 108856
     },
     {
       "year": 2021,
-      "works_count": 9483,
-      "oa_works_count": 7506,
-      "cited_by_count": 133911
+      "works_count": 9485,
+      "oa_works_count": 7507,
+      "cited_by_count": 133988
     },
     {
       "year": 2020,
       "works_count": 10108,
       "oa_works_count": 8024,
-      "cited_by_count": 188406
+      "cited_by_count": 188494
     },
     {
       "year": 2019,
-      "works_count": 9635,
-      "oa_works_count": 7057,
-      "cited_by_count": 187763
+      "works_count": 9637,
+      "oa_works_count": 7058,
+      "cited_by_count": 187983
     },
     {
       "year": 2018,
-      "works_count": 6523,
-      "oa_works_count": 3561,
-      "cited_by_count": 174240
+      "works_count": 6525,
+      "oa_works_count": 3563,
+      "cited_by_count": 174298
     },
     {
       "year": 2017,
-      "works_count": 5642,
-      "oa_works_count": 2572,
-      "cited_by_count": 187854
+      "works_count": 5644,
+      "oa_works_count": 2573,
+      "cited_by_count": 187967
     },
     {
       "year": 2016,
-      "works_count": 5801,
-      "oa_works_count": 2564,
-      "cited_by_count": 190934
+      "works_count": 5806,
+      "oa_works_count": 2567,
+      "cited_by_count": 191165
     },
     {
       "year": 2015,
-      "works_count": 5207,
-      "oa_works_count": 2016,
-      "cited_by_count": 168410
+      "works_count": 5211,
+      "oa_works_count": 2018,
+      "cited_by_count": 168926
     },
     {
       "year": 2014,
-      "works_count": 5096,
-      "oa_works_count": 1887,
-      "cited_by_count": 202707
+      "works_count": 5100,
+      "oa_works_count": 1888,
+      "cited_by_count": 202930
     },
     {
       "year": 2013,
-      "works_count": 4971,
-      "oa_works_count": 1727,
-      "cited_by_count": 187906
+      "works_count": 4974,
+      "oa_works_count": 1726,
+      "cited_by_count": 188005
     },
     {
       "year": 2012,
       "works_count": 4588,
-      "oa_works_count": 1595,
-      "cited_by_count": 168631
+      "oa_works_count": 1596,
+      "cited_by_count": 168653
     },
     {
       "year": 2011,
-      "works_count": 4502,
-      "oa_works_count": 1356,
-      "cited_by_count": 164090
+      "works_count": 4504,
+      "oa_works_count": 1357,
+      "cited_by_count": 164336
     },
     {
       "year": 2010,
-      "works_count": 3928,
+      "works_count": 3929,
       "oa_works_count": 1282,
-      "cited_by_count": 131530
+      "cited_by_count": 131544
     }
   ],
   "roles": [
@@ -219,14 +219,14 @@
     {
       "role": "institution",
       "id": "https://openalex.org/I102335020",
-      "works_count": 167548
+      "works_count": 167666
     }
   ],
   "topics": [
     {
       "id": "https://openalex.org/T10048",
       "display_name": "Particle physics theoretical and experimental studies",
-      "count": 6060,
+      "count": 6063,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3106",
@@ -298,7 +298,7 @@
     {
       "id": "https://openalex.org/T10224",
       "display_name": "Quantum Chromodynamics and Particle Interactions",
-      "count": 3789,
+      "count": 3793,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3106",
@@ -316,7 +316,7 @@
     {
       "id": "https://openalex.org/T10527",
       "display_name": "High-Energy Particle Collisions Research",
-      "count": 3177,
+      "count": 3178,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3106",
@@ -334,7 +334,7 @@
     {
       "id": "https://openalex.org/T10075",
       "display_name": "Atmospheric chemistry and aerosols",
-      "count": 3100,
+      "count": 3103,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/1902",
@@ -352,7 +352,7 @@
     {
       "id": "https://openalex.org/T10018",
       "display_name": "Advancements in Battery Materials",
-      "count": 2754,
+      "count": 2756,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2208",
@@ -370,7 +370,7 @@
     {
       "id": "https://openalex.org/T11320",
       "display_name": "Atmospheric Ozone and Climate",
-      "count": 2709,
+      "count": 2710,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/1902",
@@ -388,7 +388,7 @@
     {
       "id": "https://openalex.org/T10037",
       "display_name": "Physics of Superconductivity and Magnetism",
-      "count": 2558,
+      "count": 2559,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3104",
@@ -424,7 +424,7 @@
     {
       "id": "https://openalex.org/T10281",
       "display_name": "Advanced Battery Materials and Technologies",
-      "count": 2231,
+      "count": 2232,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2208",
@@ -478,7 +478,7 @@
     {
       "id": "https://openalex.org/T12565",
       "display_name": "Physics and Engineering Research Articles",
-      "count": 2037,
+      "count": 2038,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2206",
@@ -550,7 +550,7 @@
     {
       "id": "https://openalex.org/T11242",
       "display_name": "Nuclear Materials and Properties",
-      "count": 1718,
+      "count": 1719,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2505",
@@ -640,7 +640,7 @@
     {
       "id": "https://openalex.org/T10663",
       "display_name": "Advanced Battery Technologies Research",
-      "count": 1570,
+      "count": 1571,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2203",
@@ -658,7 +658,7 @@
     {
       "id": "https://openalex.org/T10592",
       "display_name": "Fusion materials and technologies",
-      "count": 1551,
+      "count": 1552,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2505",
@@ -712,7 +712,7 @@
     {
       "id": "https://openalex.org/T10807",
       "display_name": "Synthesis and characterization of novel inorganic/organometallic compounds",
-      "value": 0.0128,
+      "value": 0.0129,
       "subfield": {
         "id": "https://openalex.org/subfields/1604",
         "display_name": "Inorganic Chemistry"
@@ -763,7 +763,7 @@
     {
       "id": "https://openalex.org/T10921",
       "display_name": "Neutrino Physics Research",
-      "value": 0.012,
+      "value": 0.0121,
       "subfield": {
         "id": "https://openalex.org/subfields/3106",
         "display_name": "Nuclear and High Energy Physics"
@@ -780,7 +780,7 @@
     {
       "id": "https://openalex.org/T10048",
       "display_name": "Particle physics theoretical and experimental studies",
-      "value": 0.0116,
+      "value": 0.0117,
       "subfield": {
         "id": "https://openalex.org/subfields/3106",
         "display_name": "Nuclear and High Energy Physics"
@@ -788,23 +788,6 @@
       "field": {
         "id": "https://openalex.org/fields/31",
         "display_name": "Physics and Astronomy"
-      },
-      "domain": {
-        "id": "https://openalex.org/domains/3",
-        "display_name": "Physical Sciences"
-      }
-    },
-    {
-      "id": "https://openalex.org/T14481",
-      "display_name": "Renewable Energy and Sustainability",
-      "value": 0.0113,
-      "subfield": {
-        "id": "https://openalex.org/subfields/2105",
-        "display_name": "Renewable Energy, Sustainability and the Environment"
-      },
-      "field": {
-        "id": "https://openalex.org/fields/21",
-        "display_name": "Energy"
       },
       "domain": {
         "id": "https://openalex.org/domains/3",
@@ -822,6 +805,23 @@
       "field": {
         "id": "https://openalex.org/fields/19",
         "display_name": "Earth and Planetary Sciences"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T14481",
+      "display_name": "Renewable Energy and Sustainability",
+      "value": 0.0113,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2105",
+        "display_name": "Renewable Energy, Sustainability and the Environment"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/21",
+        "display_name": "Energy"
       },
       "domain": {
         "id": "https://openalex.org/domains/3",
@@ -1104,6 +1104,6 @@
   "is_super_system": false,
   "status": "active",
   "works_api_url": "https://api.openalex.org/works?filter=institutions.id:I102335020",
-  "updated_date": "2026-07-22T05:59:22",
+  "updated_date": "2026-07-23T06:00:47",
   "created_date": "2016-06-24T00:00:00"
 }

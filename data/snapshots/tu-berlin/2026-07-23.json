@@ -31,12 +31,12 @@
       ]
     }
   ],
-  "works_count": 111818,
-  "cited_by_count": 5500428,
+  "works_count": 111937,
+  "cited_by_count": 5507545,
   "summary_stats": {
-    "2yr_mean_citedness": 3.0715,
+    "2yr_mean_citedness": 3.0773,
     "h_index": 632,
-    "i10_index": 90706
+    "i10_index": 90807
   },
   "ids": {
     "openalex": "https://openalex.org/I4577782",
@@ -116,117 +116,117 @@
   "counts_by_year": [
     {
       "year": 2026,
-      "works_count": 3190,
-      "oa_works_count": 2647,
-      "cited_by_count": 694
+      "works_count": 3211,
+      "oa_works_count": 2665,
+      "cited_by_count": 697
     },
     {
       "year": 2025,
-      "works_count": 5753,
+      "works_count": 5752,
       "oa_works_count": 4515,
-      "cited_by_count": 11193
+      "cited_by_count": 11262
     },
     {
       "year": 2024,
-      "works_count": 5643,
-      "oa_works_count": 4431,
-      "cited_by_count": 28756
+      "works_count": 5646,
+      "oa_works_count": 4434,
+      "cited_by_count": 28835
     },
     {
       "year": 2023,
-      "works_count": 5338,
-      "oa_works_count": 3765,
-      "cited_by_count": 46823
+      "works_count": 5340,
+      "oa_works_count": 3767,
+      "cited_by_count": 46905
     },
     {
       "year": 2022,
-      "works_count": 5360,
-      "oa_works_count": 3699,
-      "cited_by_count": 65409
+      "works_count": 5361,
+      "oa_works_count": 3700,
+      "cited_by_count": 65461
     },
     {
       "year": 2021,
-      "works_count": 5606,
-      "oa_works_count": 3979,
-      "cited_by_count": 93396
+      "works_count": 5607,
+      "oa_works_count": 3980,
+      "cited_by_count": 93475
     },
     {
       "year": 2020,
-      "works_count": 5016,
-      "oa_works_count": 3268,
-      "cited_by_count": 126178
+      "works_count": 5019,
+      "oa_works_count": 3270,
+      "cited_by_count": 126234
     },
     {
       "year": 2019,
-      "works_count": 4023,
-      "oa_works_count": 2074,
-      "cited_by_count": 108706
+      "works_count": 4027,
+      "oa_works_count": 2076,
+      "cited_by_count": 108747
     },
     {
       "year": 2018,
-      "works_count": 3827,
-      "oa_works_count": 1657,
-      "cited_by_count": 105732
+      "works_count": 3831,
+      "oa_works_count": 1659,
+      "cited_by_count": 105806
     },
     {
       "year": 2017,
-      "works_count": 3593,
-      "oa_works_count": 1465,
-      "cited_by_count": 107887
+      "works_count": 3599,
+      "oa_works_count": 1467,
+      "cited_by_count": 108443
     },
     {
       "year": 2016,
-      "works_count": 3721,
-      "oa_works_count": 1465,
-      "cited_by_count": 116819
+      "works_count": 3731,
+      "oa_works_count": 1471,
+      "cited_by_count": 117433
     },
     {
       "year": 2015,
-      "works_count": 3506,
-      "oa_works_count": 1160,
-      "cited_by_count": 96203
+      "works_count": 3510,
+      "oa_works_count": 1164,
+      "cited_by_count": 96294
     },
     {
       "year": 2014,
-      "works_count": 3140,
-      "oa_works_count": 999,
-      "cited_by_count": 90079
+      "works_count": 3149,
+      "oa_works_count": 1004,
+      "cited_by_count": 90538
     },
     {
       "year": 2013,
-      "works_count": 3052,
-      "oa_works_count": 885,
-      "cited_by_count": 92989
+      "works_count": 3055,
+      "oa_works_count": 886,
+      "cited_by_count": 93006
     },
     {
       "year": 2012,
       "works_count": 3037,
       "oa_works_count": 840,
-      "cited_by_count": 104495
+      "cited_by_count": 104512
     },
     {
       "year": 2011,
-      "works_count": 2729,
-      "oa_works_count": 694,
-      "cited_by_count": 90973
+      "works_count": 2731,
+      "oa_works_count": 696,
+      "cited_by_count": 91005
     },
     {
       "year": 2010,
-      "works_count": 2852,
-      "oa_works_count": 687,
-      "cited_by_count": 101629
+      "works_count": 2856,
+      "oa_works_count": 690,
+      "cited_by_count": 101688
     }
   ],
   "roles": [
     {
       "role": "funder",
       "id": "https://openalex.org/F4320324094",
-      "works_count": 6336
+      "works_count": 6337
     },
     {
       "role": "institution",
       "id": "https://openalex.org/I4577782",
-      "works_count": 111818
+      "works_count": 111937
     }
   ],
   "topics": [
@@ -251,7 +251,7 @@
     {
       "id": "https://openalex.org/T12565",
       "display_name": "Physics and Engineering Research Articles",
-      "count": 2287,
+      "count": 2288,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2206",
@@ -305,7 +305,7 @@
     {
       "id": "https://openalex.org/T10002",
       "display_name": "Advanced Chemical Physics Studies",
-      "count": 1509,
+      "count": 1512,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3107",
@@ -341,7 +341,7 @@
     {
       "id": "https://openalex.org/T12959",
       "display_name": "Engineering and Materials Science Studies",
-      "count": 1266,
+      "count": 1269,
       "score": 0.9997,
       "subfield": {
         "id": "https://openalex.org/subfields/2210",
@@ -359,7 +359,7 @@
     {
       "id": "https://openalex.org/T10092",
       "display_name": "Organometallic Complex Synthesis and Catalysis",
-      "count": 1219,
+      "count": 1221,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/1605",
@@ -467,7 +467,7 @@
     {
       "id": "https://openalex.org/T10581",
       "display_name": "Neural dynamics and brain function",
-      "count": 938,
+      "count": 941,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2805",
@@ -503,7 +503,7 @@
     {
       "id": "https://openalex.org/T10807",
       "display_name": "Synthesis and characterization of novel inorganic/organometallic compounds",
-      "count": 936,
+      "count": 937,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/1604",
@@ -521,7 +521,7 @@
     {
       "id": "https://openalex.org/T11187",
       "display_name": "Nonlinear Dynamics and Pattern Formation",
-      "count": 894,
+      "count": 895,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/1705",
@@ -539,7 +539,7 @@
     {
       "id": "https://openalex.org/T10374",
       "display_name": "Advanced Graph Theory Research",
-      "count": 892,
+      "count": 893,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/1703",
@@ -575,7 +575,7 @@
     {
       "id": "https://openalex.org/T11549",
       "display_name": "Synthetic Organic Chemistry Methods",
-      "count": 858,
+      "count": 861,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/1605",
@@ -593,7 +593,7 @@
     {
       "id": "https://openalex.org/T10321",
       "display_name": "Quantum Dots Synthesis And Properties",
-      "count": 842,
+      "count": 843,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2505",
@@ -1111,6 +1111,6 @@
   "is_super_system": false,
   "status": "active",
   "works_api_url": "https://api.openalex.org/works?filter=institutions.id:I4577782",
-  "updated_date": "2026-07-22T05:59:22",
+  "updated_date": "2026-07-23T06:00:47",
   "created_date": "2016-06-24T00:00:00"
 }

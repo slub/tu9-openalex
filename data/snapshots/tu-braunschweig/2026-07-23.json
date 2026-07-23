@@ -17,12 +17,12 @@
     "Technische Universität Braunschweig"
   ],
   "repositories": [],
-  "works_count": 63183,
-  "cited_by_count": 2822212,
+  "works_count": 63279,
+  "cited_by_count": 2829138,
   "summary_stats": {
-    "2yr_mean_citedness": 2.2803,
+    "2yr_mean_citedness": 2.2883,
     "h_index": 422,
-    "i10_index": 51727
+    "i10_index": 51837
   },
   "ids": {
     "openalex": "https://openalex.org/I94509681",
@@ -76,124 +76,124 @@
     },
     {
       "year": 2026,
-      "works_count": 1747,
-      "oa_works_count": 1422,
-      "cited_by_count": 351
+      "works_count": 1767,
+      "oa_works_count": 1432,
+      "cited_by_count": 355
     },
     {
       "year": 2025,
-      "works_count": 3316,
-      "oa_works_count": 2576,
-      "cited_by_count": 4864
+      "works_count": 3315,
+      "oa_works_count": 2575,
+      "cited_by_count": 4888
     },
     {
       "year": 2024,
-      "works_count": 3100,
-      "oa_works_count": 2357,
-      "cited_by_count": 12683
+      "works_count": 3102,
+      "oa_works_count": 2359,
+      "cited_by_count": 12726
     },
     {
       "year": 2023,
-      "works_count": 2995,
-      "oa_works_count": 2209,
-      "cited_by_count": 21646
+      "works_count": 2996,
+      "oa_works_count": 2210,
+      "cited_by_count": 21676
     },
     {
       "year": 2022,
-      "works_count": 2939,
-      "oa_works_count": 2032,
-      "cited_by_count": 32416
+      "works_count": 2941,
+      "oa_works_count": 2033,
+      "cited_by_count": 32468
     },
     {
       "year": 2021,
-      "works_count": 2740,
+      "works_count": 2742,
       "oa_works_count": 1871,
-      "cited_by_count": 38937
+      "cited_by_count": 38970
     },
     {
       "year": 2020,
-      "works_count": 2565,
-      "oa_works_count": 1603,
-      "cited_by_count": 86436
+      "works_count": 2567,
+      "oa_works_count": 1605,
+      "cited_by_count": 86491
     },
     {
       "year": 2019,
       "works_count": 2215,
       "oa_works_count": 1130,
-      "cited_by_count": 56708
+      "cited_by_count": 56724
     },
     {
       "year": 2018,
-      "works_count": 2320,
-      "oa_works_count": 1013,
-      "cited_by_count": 50523
+      "works_count": 2322,
+      "oa_works_count": 1014,
+      "cited_by_count": 50560
     },
     {
       "year": 2017,
-      "works_count": 2024,
-      "oa_works_count": 770,
-      "cited_by_count": 50770
+      "works_count": 2030,
+      "oa_works_count": 774,
+      "cited_by_count": 50859
     },
     {
       "year": 2016,
-      "works_count": 1980,
+      "works_count": 1983,
       "oa_works_count": 724,
-      "cited_by_count": 55756
+      "cited_by_count": 55792
     },
     {
       "year": 2015,
-      "works_count": 1732,
-      "oa_works_count": 609,
-      "cited_by_count": 50378
+      "works_count": 1736,
+      "oa_works_count": 611,
+      "cited_by_count": 50660
     },
     {
       "year": 2014,
-      "works_count": 1836,
+      "works_count": 1837,
       "oa_works_count": 559,
-      "cited_by_count": 53240
+      "cited_by_count": 53263
     },
     {
       "year": 2013,
-      "works_count": 1897,
+      "works_count": 1899,
       "oa_works_count": 409,
-      "cited_by_count": 40737
+      "cited_by_count": 40767
     },
     {
       "year": 2012,
-      "works_count": 1613,
-      "oa_works_count": 482,
-      "cited_by_count": 53363
+      "works_count": 1614,
+      "oa_works_count": 483,
+      "cited_by_count": 53369
     },
     {
       "year": 2011,
-      "works_count": 1617,
-      "oa_works_count": 408,
-      "cited_by_count": 48216
+      "works_count": 1619,
+      "oa_works_count": 409,
+      "cited_by_count": 48375
     },
     {
       "year": 2010,
-      "works_count": 1651,
-      "oa_works_count": 420,
-      "cited_by_count": 45990
+      "works_count": 1652,
+      "oa_works_count": 421,
+      "cited_by_count": 45997
     }
   ],
   "roles": [
     {
       "role": "funder",
       "id": "https://openalex.org/F4320322958",
-      "works_count": 2448
+      "works_count": 2449
     },
     {
       "role": "institution",
       "id": "https://openalex.org/I94509681",
-      "works_count": 63183
+      "works_count": 63279
     }
   ],
   "topics": [
     {
       "id": "https://openalex.org/T10325",
       "display_name": "Astro and Planetary Science",
-      "count": 1348,
+      "count": 1349,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3103",
@@ -211,7 +211,7 @@
     {
       "id": "https://openalex.org/T12565",
       "display_name": "Physics and Engineering Research Articles",
-      "count": 1291,
+      "count": 1294,
       "score": 0.9998,
       "subfield": {
         "id": "https://openalex.org/subfields/2206",
@@ -229,7 +229,7 @@
     {
       "id": "https://openalex.org/T10092",
       "display_name": "Organometallic Complex Synthesis and Catalysis",
-      "count": 1118,
+      "count": 1120,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/1605",
@@ -247,7 +247,7 @@
     {
       "id": "https://openalex.org/T10807",
       "display_name": "Synthesis and characterization of novel inorganic/organometallic compounds",
-      "count": 1089,
+      "count": 1091,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/1604",
@@ -265,7 +265,7 @@
     {
       "id": "https://openalex.org/T12959",
       "display_name": "Engineering and Materials Science Studies",
-      "count": 1075,
+      "count": 1080,
       "score": 0.9997,
       "subfield": {
         "id": "https://openalex.org/subfields/2210",
@@ -319,7 +319,7 @@
     {
       "id": "https://openalex.org/T10406",
       "display_name": "Planetary Science and Exploration",
-      "count": 845,
+      "count": 846,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3103",
@@ -373,7 +373,7 @@
     {
       "id": "https://openalex.org/T13031",
       "display_name": "Civil and Structural Engineering Research",
-      "count": 682,
+      "count": 691,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2205",
@@ -535,7 +535,7 @@
     {
       "id": "https://openalex.org/T11549",
       "display_name": "Synthetic Organic Chemistry Methods",
-      "count": 548,
+      "count": 549,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/1605",
@@ -571,7 +571,7 @@
     {
       "id": "https://openalex.org/T10252",
       "display_name": "Microbial Natural Products and Biosynthesis",
-      "count": 517,
+      "count": 519,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2736",
@@ -625,7 +625,7 @@
     {
       "id": "https://openalex.org/T10173",
       "display_name": "Computational Fluid Dynamics and Aerodynamics",
-      "count": 489,
+      "count": 491,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2206",
@@ -645,7 +645,7 @@
     {
       "id": "https://openalex.org/T12959",
       "display_name": "Engineering and Materials Science Studies",
-      "value": 0.0158,
+      "value": 0.0159,
       "subfield": {
         "id": "https://openalex.org/subfields/2210",
         "display_name": "Mechanical Engineering"
@@ -679,7 +679,7 @@
     {
       "id": "https://openalex.org/T13031",
       "display_name": "Civil and Structural Engineering Research",
-      "value": 0.0107,
+      "value": 0.0108,
       "subfield": {
         "id": "https://openalex.org/subfields/2205",
         "display_name": "Civil and Structural Engineering"
@@ -832,7 +832,7 @@
     {
       "id": "https://openalex.org/T11524",
       "display_name": "Advanced Aircraft Design and Technologies",
-      "value": 0.0057,
+      "value": 0.0058,
       "subfield": {
         "id": "https://openalex.org/subfields/2306",
         "display_name": "Global and Planetary Change"
@@ -968,7 +968,7 @@
     {
       "id": "https://openalex.org/T10406",
       "display_name": "Planetary Science and Exploration",
-      "value": 0.0045,
+      "value": 0.0046,
       "subfield": {
         "id": "https://openalex.org/subfields/3103",
         "display_name": "Astronomy and Astrophysics"
@@ -980,6 +980,23 @@
       "domain": {
         "id": "https://openalex.org/domains/3",
         "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12756",
+      "display_name": "Plant Toxicity and Pharmacological Properties",
+      "value": 0.0045,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1312",
+        "display_name": "Molecular Biology"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/13",
+        "display_name": "Biochemistry, Genetics and Molecular Biology"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/1",
+        "display_name": "Life Sciences"
       }
     },
     {
@@ -1017,26 +1034,9 @@
       }
     },
     {
-      "id": "https://openalex.org/T12756",
-      "display_name": "Plant Toxicity and Pharmacological Properties",
-      "value": 0.0045,
-      "subfield": {
-        "id": "https://openalex.org/subfields/1312",
-        "display_name": "Molecular Biology"
-      },
-      "field": {
-        "id": "https://openalex.org/fields/13",
-        "display_name": "Biochemistry, Genetics and Molecular Biology"
-      },
-      "domain": {
-        "id": "https://openalex.org/domains/1",
-        "display_name": "Life Sciences"
-      }
-    },
-    {
       "id": "https://openalex.org/T13711",
       "display_name": "Environmental Science and Technology",
-      "value": 0.0044,
+      "value": 0.0045,
       "subfield": {
         "id": "https://openalex.org/subfields/1303",
         "display_name": "Biochemistry"
@@ -1071,6 +1071,6 @@
   "is_super_system": false,
   "status": "active",
   "works_api_url": "https://api.openalex.org/works?filter=institutions.id:I94509681",
-  "updated_date": "2026-07-22T05:59:22",
+  "updated_date": "2026-07-23T06:00:47",
   "created_date": "2016-06-24T00:00:00"
 }

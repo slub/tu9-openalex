@@ -108,8 +108,11 @@ metrics_row_invariants <- function(m, add, prefix = "") {
 # CWTS Core readings (primary venue and any location) share that member set.
 # The hierarchy view is also required for all nine, on the same "always present,
 # falls back to the university alone" logic -- but its member set comes from
-# OpenAlex/ROR's own live hierarchy, not a curated mapping, so only internal
-# self-consistency is checked, not agreement with a committed file.
+# OpenAlex/ROR's own live hierarchy, not a curated mapping, so there is no
+# committed file to check it against. Its safeguards are a fail-loud fetch
+# (openalex_hierarchy_children() rejects a malformed page rather than
+# admitting a missing or duplicated id) and a cross-check between the written
+# CSV and meta.json, not a membership check here.
 validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
                               prev_metrics = NULL, guard_threshold = 0.20,
                               force = FALSE, period_start = NULL) {
@@ -251,14 +254,22 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
   # consolidated, there is no static, curated mapping to check the member set
   # against -- OpenAlex/ROR's own hierarchy is fetched live each run and is not
   # archived anywhere, so its exact member IDs are not reconstructible after
-  # the fact. The self-consistency checks below (own id is in the member set,
-  # n_members matches what was actually fetched) therefore only run when a real
-  # member list is available -- the in-memory pass right after fetch.R's own
-  # fetch, where `snap$hier_members[[slug]]$members` is the list just used to
-  # build the query. validate_products.R's post-write pass deliberately has no
-  # such list to hand in (see its `by_slug(..., with_members = FALSE)`), so
-  # these are skipped there rather than reported as an error, the same way the
-  # ref_headlines member checks below already guard on `!is.null(s$members)`.
+  # the fact, in either validation pass. The real safeguards on that member set
+  # therefore live elsewhere, not here: openalex_hierarchy_children() rejects a
+  # response with a missing or duplicated id (openalex.R) before fetch.R ever
+  # builds `members` from it, and the ref_headlines block below cross-checks
+  # the written CSV's n_members against meta.json's -- two independently
+  # written files, which can actually disagree if a future change touches one
+  # and not the other. The per-slug loop below is deliberately NOT a
+  # membership check: in the only pass where it can run (immediately after
+  # fetch.R's own fetch), `hier_mem` and `n_declared` are read from the very
+  # list literal fetch.R just built them from, so a "does n_members equal
+  # length(members)" comparison there could never fail -- it would only be
+  # restating the same value fetch.R just wrote in one expression. It is kept
+  # to the one check that is not circular: that the university's own id
+  # actually made it into the OR-list, which guards against a future edit to
+  # fetch.R's hierarchy loop dropping the self term, not against corrupted
+  # upstream data.
   hier_got <- if (nrow(snap$hierarchy) > 0) sort(unique(snap$hierarchy$tu9_slug)) else character()
   missing_hier <- setdiff(expected, hier_got)
   unexpected_hier <- setdiff(hier_got, expected)
@@ -273,10 +284,6 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
     own <- openalex_bare(inst$openalex_id[inst$slug == slug])
     if (!(own %in% hier_mem))
       add("hierarchy member set for %s does not include the university itself", slug)
-    n_declared <- snap$hier_members[[slug]]$n_members
-    if (!isTRUE(all.equal(as.numeric(n_declared), length(hier_mem))))
-      add("hierarchy n_members for %s is %s, the fetched member set has %d",
-          slug, paste(n_declared, collapse = "/"), length(hier_mem))
   }
 
   # --- 4. both Core views are present for every university ------------------
@@ -415,7 +422,7 @@ validate_snapshot <- function(snap, inst, leiden_comp, snapshot_date,
               "counts_by_year")
   require_num(snap$ca_oa_status, c("year", "ca_works"), "ca_oa_status")
   # A publication year below this is a parsing accident, not a record.
-  for (nm in c("counts_by_year", "ca_oa_by_year", "consolidated", "core", "core_any")) {
+  for (nm in c("counts_by_year", "ca_oa_by_year", "consolidated", "hierarchy", "core", "core_any")) {
     d <- snap[[nm]]
     if (is.null(d) || nrow(d) == 0) next
     early <- sort(unique(n(d$year)[!is.na(n(d$year)) & n(d$year) < 1800]))

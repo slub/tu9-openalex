@@ -491,6 +491,20 @@ for (d in setdiff(list.dirs(file.path("data", "snapshots"), recursive = FALSE,
 }
 
 # --- meta.json -------------------------------------------------------------
+# Merge one view's per-slug summary (n_members, ca_works_ref, ca_oa_share_ref,
+# ca_works_period, ca_oa_share_period) into `entry` under `<prefix>_*` names.
+# One implementation shared by every extra view (consolidated, hierarchy, both
+# Core readings) instead of four copies that could individually drift.
+with_view_summary <- function(entry, prefix, summary) {
+  if (is.null(summary)) return(entry)
+  entry[[paste0(prefix, "_n_members")]]          <- summary$n_members
+  entry[[paste0(prefix, "_ca_works_ref")]]       <- summary$ca_works_ref
+  entry[[paste0(prefix, "_ca_oa_share_ref")]]    <- summary$ca_oa_share_ref
+  entry[[paste0(prefix, "_ca_works_period")]]    <- summary$ca_works_period
+  entry[[paste0(prefix, "_ca_oa_share_period")]] <- summary$ca_oa_share_period
+  entry
+}
+
 latest <- snap$metrics
 meta_inst <- lapply(seq_len(nrow(latest)), function(i) {
   r    <- latest[i, ]
@@ -510,38 +524,10 @@ meta_inst <- lapply(seq_len(nrow(latest)), function(i) {
     first_snapshot  = min(hist$snapshot_date),
     latest_snapshot = max(hist$snapshot_date)
   )
-  cons <- cons_by_slug[[r$slug]]
-  if (!is.null(cons)) {
-    entry$cons_n_members          <- cons$n_members
-    entry$cons_ca_works_ref       <- cons$ca_works_ref
-    entry$cons_ca_oa_share_ref    <- cons$ca_oa_share_ref
-    entry$cons_ca_works_period    <- cons$ca_works_period
-    entry$cons_ca_oa_share_period <- cons$ca_oa_share_period
-  }
-  hier <- hier_by_slug[[r$slug]]
-  if (!is.null(hier)) {
-    entry$hier_n_members          <- hier$n_members
-    entry$hier_ca_works_ref       <- hier$ca_works_ref
-    entry$hier_ca_oa_share_ref    <- hier$ca_oa_share_ref
-    entry$hier_ca_works_period    <- hier$ca_works_period
-    entry$hier_ca_oa_share_period <- hier$ca_oa_share_period
-  }
-  core <- core_by_slug[[r$slug]]
-  if (!is.null(core)) {
-    entry$core_n_members          <- core$n_members
-    entry$core_ca_works_ref       <- core$ca_works_ref
-    entry$core_ca_oa_share_ref    <- core$ca_oa_share_ref
-    entry$core_ca_works_period    <- core$ca_works_period
-    entry$core_ca_oa_share_period <- core$ca_oa_share_period
-  }
-  core_any <- core_any_by_slug[[r$slug]]
-  if (!is.null(core_any)) {
-    entry$core_any_n_members          <- core_any$n_members
-    entry$core_any_ca_works_ref       <- core_any$ca_works_ref
-    entry$core_any_ca_oa_share_ref    <- core_any$ca_oa_share_ref
-    entry$core_any_ca_works_period    <- core_any$ca_works_period
-    entry$core_any_ca_oa_share_period <- core_any$ca_oa_share_period
-  }
+  entry <- with_view_summary(entry, "cons",     cons_by_slug[[r$slug]])
+  entry <- with_view_summary(entry, "hier",     hier_by_slug[[r$slug]])
+  entry <- with_view_summary(entry, "core",     core_by_slug[[r$slug]])
+  entry <- with_view_summary(entry, "core_any", core_any_by_slug[[r$slug]])
   entry
 })
 

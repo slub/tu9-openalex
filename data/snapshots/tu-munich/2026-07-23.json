@@ -48,12 +48,12 @@
       ]
     }
   ],
-  "works_count": 227557,
-  "cited_by_count": 18827307,
+  "works_count": 227807,
+  "cited_by_count": 18865071,
   "summary_stats": {
-    "2yr_mean_citedness": 3.9255,
-    "h_index": 1021,
-    "i10_index": 261661
+    "2yr_mean_citedness": 3.935,
+    "h_index": 1022,
+    "i10_index": 262121
   },
   "ids": {
     "openalex": "https://openalex.org/I62916508",
@@ -171,117 +171,117 @@
     },
     {
       "year": 2026,
-      "works_count": 9572,
-      "oa_works_count": 8180,
-      "cited_by_count": 2058
+      "works_count": 9601,
+      "oa_works_count": 8206,
+      "cited_by_count": 2089
     },
     {
       "year": 2025,
-      "works_count": 14403,
-      "oa_works_count": 11405,
-      "cited_by_count": 38876
+      "works_count": 14399,
+      "oa_works_count": 11401,
+      "cited_by_count": 39064
     },
     {
       "year": 2024,
-      "works_count": 15061,
-      "oa_works_count": 11992,
-      "cited_by_count": 105603
+      "works_count": 15062,
+      "oa_works_count": 11993,
+      "cited_by_count": 105828
     },
     {
       "year": 2023,
-      "works_count": 14246,
-      "oa_works_count": 10397,
-      "cited_by_count": 169024
+      "works_count": 14251,
+      "oa_works_count": 10402,
+      "cited_by_count": 169240
     },
     {
       "year": 2022,
-      "works_count": 12666,
-      "oa_works_count": 8941,
-      "cited_by_count": 217631
+      "works_count": 12672,
+      "oa_works_count": 8945,
+      "cited_by_count": 217943
     },
     {
       "year": 2021,
-      "works_count": 12581,
-      "oa_works_count": 9072,
-      "cited_by_count": 277910
+      "works_count": 12591,
+      "oa_works_count": 9077,
+      "cited_by_count": 278337
     },
     {
       "year": 2020,
-      "works_count": 11380,
+      "works_count": 11386,
       "oa_works_count": 8069,
-      "cited_by_count": 359133
+      "cited_by_count": 359347
     },
     {
       "year": 2019,
-      "works_count": 11127,
-      "oa_works_count": 6650,
-      "cited_by_count": 345402
+      "works_count": 11134,
+      "oa_works_count": 6655,
+      "cited_by_count": 345838
     },
     {
       "year": 2018,
-      "works_count": 9009,
-      "oa_works_count": 5272,
-      "cited_by_count": 377165
+      "works_count": 9019,
+      "oa_works_count": 5279,
+      "cited_by_count": 377691
     },
     {
       "year": 2017,
-      "works_count": 8703,
-      "oa_works_count": 4463,
-      "cited_by_count": 369751
+      "works_count": 8716,
+      "oa_works_count": 4470,
+      "cited_by_count": 370479
     },
     {
       "year": 2016,
-      "works_count": 8079,
-      "oa_works_count": 3996,
-      "cited_by_count": 356324
+      "works_count": 8088,
+      "oa_works_count": 4000,
+      "cited_by_count": 357003
     },
     {
       "year": 2015,
-      "works_count": 7339,
-      "oa_works_count": 3243,
-      "cited_by_count": 318320
+      "works_count": 7360,
+      "oa_works_count": 3251,
+      "cited_by_count": 319556
     },
     {
       "year": 2014,
-      "works_count": 7108,
-      "oa_works_count": 2799,
-      "cited_by_count": 285002
+      "works_count": 7118,
+      "oa_works_count": 2803,
+      "cited_by_count": 285322
     },
     {
       "year": 2013,
-      "works_count": 6654,
-      "oa_works_count": 2576,
-      "cited_by_count": 273255
+      "works_count": 6659,
+      "oa_works_count": 2580,
+      "cited_by_count": 277212
     },
     {
       "year": 2012,
-      "works_count": 5859,
-      "oa_works_count": 2297,
-      "cited_by_count": 282488
+      "works_count": 5865,
+      "oa_works_count": 2300,
+      "cited_by_count": 282668
     },
     {
       "year": 2011,
-      "works_count": 5725,
-      "oa_works_count": 2089,
-      "cited_by_count": 277006
+      "works_count": 5729,
+      "oa_works_count": 2091,
+      "cited_by_count": 277175
     },
     {
       "year": 2010,
-      "works_count": 5401,
-      "oa_works_count": 1980,
-      "cited_by_count": 258958
+      "works_count": 5406,
+      "oa_works_count": 1983,
+      "cited_by_count": 259077
     }
   ],
   "roles": [
     {
       "role": "funder",
       "id": "https://openalex.org/F4320323383",
-      "works_count": 12348
+      "works_count": 12353
     },
     {
       "role": "institution",
       "id": "https://openalex.org/I62916508",
-      "works_count": 227557
+      "works_count": 227807
     },
     {
       "role": "publisher",
@@ -293,7 +293,7 @@
     {
       "id": "https://openalex.org/T10048",
       "display_name": "Particle physics theoretical and experimental studies",
-      "count": 4529,
+      "count": 4532,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3106",
@@ -311,7 +311,7 @@
     {
       "id": "https://openalex.org/T10224",
       "display_name": "Quantum Chromodynamics and Particle Interactions",
-      "count": 3734,
+      "count": 3736,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3106",
@@ -329,7 +329,7 @@
     {
       "id": "https://openalex.org/T10002",
       "display_name": "Advanced Chemical Physics Studies",
-      "count": 2944,
+      "count": 2945,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3107",
@@ -347,7 +347,7 @@
     {
       "id": "https://openalex.org/T10093",
       "display_name": "Nuclear physics research studies",
-      "count": 2792,
+      "count": 2793,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3106",
@@ -419,7 +419,7 @@
     {
       "id": "https://openalex.org/T11177",
       "display_name": "Spectroscopy and Quantum Chemical Studies",
-      "count": 2235,
+      "count": 2239,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3107",
@@ -437,7 +437,7 @@
     {
       "id": "https://openalex.org/T10092",
       "display_name": "Organometallic Complex Synthesis and Catalysis",
-      "count": 1986,
+      "count": 1987,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/1605",
@@ -491,7 +491,7 @@
     {
       "id": "https://openalex.org/T10015",
       "display_name": "Genomics and Phylogenetic Studies",
-      "count": 1715,
+      "count": 1716,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/1312",
@@ -509,7 +509,7 @@
     {
       "id": "https://openalex.org/T11741",
       "display_name": "Flexible and Reconfigurable Manufacturing Systems",
-      "count": 1621,
+      "count": 1622,
       "score": 0.9999,
       "subfield": {
         "id": "https://openalex.org/subfields/2209",
@@ -527,7 +527,7 @@
     {
       "id": "https://openalex.org/T10382",
       "display_name": "Quantum and electron transport phenomena",
-      "count": 1615,
+      "count": 1616,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3107",
@@ -545,7 +545,7 @@
     {
       "id": "https://openalex.org/T11090",
       "display_name": "Dark Matter and Cosmic Phenomena",
-      "count": 1554,
+      "count": 1555,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3106",
@@ -653,7 +653,7 @@
     {
       "id": "https://openalex.org/T11993",
       "display_name": "Atomic and Subatomic Physics Research",
-      "count": 1421,
+      "count": 1423,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3107",
@@ -671,7 +671,7 @@
     {
       "id": "https://openalex.org/T10037",
       "display_name": "Physics of Superconductivity and Magnetism",
-      "count": 1407,
+      "count": 1408,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3104",
@@ -689,7 +689,7 @@
     {
       "id": "https://openalex.org/T10472",
       "display_name": "Semiconductor materials and devices",
-      "count": 1392,
+      "count": 1393,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2208",
@@ -707,7 +707,7 @@
     {
       "id": "https://openalex.org/T10192",
       "display_name": "Catalytic Processes in Materials Science",
-      "count": 1344,
+      "count": 1345,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2505",
@@ -881,7 +881,7 @@
     {
       "id": "https://openalex.org/T10093",
       "display_name": "Nuclear physics research studies",
-      "value": 0.0118,
+      "value": 0.0119,
       "subfield": {
         "id": "https://openalex.org/subfields/3106",
         "display_name": "Nuclear and High Energy Physics"
@@ -1068,7 +1068,7 @@
     {
       "id": "https://openalex.org/T11450",
       "display_name": "Model-Driven Software Engineering Techniques",
-      "value": 0.0101,
+      "value": 0.0102,
       "subfield": {
         "id": "https://openalex.org/subfields/1712",
         "display_name": "Software"
@@ -1171,6 +1171,6 @@
   "is_super_system": false,
   "status": "active",
   "works_api_url": "https://api.openalex.org/works?filter=institutions.id:I62916508",
-  "updated_date": "2026-07-22T05:59:22",
+  "updated_date": "2026-07-23T06:00:47",
   "created_date": "2016-06-24T00:00:00"
 }

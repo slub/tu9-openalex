@@ -20,12 +20,12 @@
     "Technische Universität Dresden"
   ],
   "repositories": [],
-  "works_count": 139102,
-  "cited_by_count": 10157891,
+  "works_count": 139239,
+  "cited_by_count": 10173637,
   "summary_stats": {
-    "2yr_mean_citedness": 3.6057,
-    "h_index": 767,
-    "i10_index": 146830
+    "2yr_mean_citedness": 3.6115,
+    "h_index": 769,
+    "i10_index": 147050
   },
   "ids": {
     "openalex": "https://openalex.org/I78650965",
@@ -401,117 +401,117 @@
   "counts_by_year": [
     {
       "year": 2026,
-      "works_count": 4356,
-      "oa_works_count": 3567,
-      "cited_by_count": 1337
+      "works_count": 4386,
+      "oa_works_count": 3592,
+      "cited_by_count": 1357
     },
     {
       "year": 2025,
-      "works_count": 8294,
+      "works_count": 8296,
       "oa_works_count": 6485,
-      "cited_by_count": 19734
+      "cited_by_count": 19823
     },
     {
       "year": 2024,
       "works_count": 8717,
       "oa_works_count": 6928,
-      "cited_by_count": 51385
+      "cited_by_count": 51492
     },
     {
       "year": 2023,
-      "works_count": 8363,
-      "oa_works_count": 6172,
-      "cited_by_count": 81712
+      "works_count": 8366,
+      "oa_works_count": 6173,
+      "cited_by_count": 81838
     },
     {
       "year": 2022,
-      "works_count": 8333,
-      "oa_works_count": 5975,
-      "cited_by_count": 123493
+      "works_count": 8335,
+      "oa_works_count": 5976,
+      "cited_by_count": 123625
     },
     {
       "year": 2021,
-      "works_count": 8368,
-      "oa_works_count": 6121,
-      "cited_by_count": 163716
+      "works_count": 8373,
+      "oa_works_count": 6123,
+      "cited_by_count": 163850
     },
     {
       "year": 2020,
-      "works_count": 7370,
+      "works_count": 7372,
       "oa_works_count": 4923,
-      "cited_by_count": 217221
+      "cited_by_count": 217797
     },
     {
       "year": 2019,
-      "works_count": 6292,
+      "works_count": 6296,
       "oa_works_count": 3448,
-      "cited_by_count": 197052
+      "cited_by_count": 197179
     },
     {
       "year": 2018,
-      "works_count": 5921,
-      "oa_works_count": 3050,
-      "cited_by_count": 204772
+      "works_count": 5930,
+      "oa_works_count": 3053,
+      "cited_by_count": 205033
     },
     {
       "year": 2017,
-      "works_count": 5650,
-      "oa_works_count": 2613,
-      "cited_by_count": 203400
+      "works_count": 5656,
+      "oa_works_count": 2615,
+      "cited_by_count": 203711
     },
     {
       "year": 2016,
-      "works_count": 5509,
-      "oa_works_count": 2550,
-      "cited_by_count": 213768
+      "works_count": 5523,
+      "oa_works_count": 2554,
+      "cited_by_count": 214012
     },
     {
       "year": 2015,
-      "works_count": 5342,
-      "oa_works_count": 2291,
-      "cited_by_count": 204244
+      "works_count": 5352,
+      "oa_works_count": 2295,
+      "cited_by_count": 204557
     },
     {
       "year": 2014,
-      "works_count": 5243,
-      "oa_works_count": 1918,
-      "cited_by_count": 194737
+      "works_count": 5250,
+      "oa_works_count": 1921,
+      "cited_by_count": 195086
     },
     {
       "year": 2013,
-      "works_count": 4713,
+      "works_count": 4720,
       "oa_works_count": 1584,
-      "cited_by_count": 169694
+      "cited_by_count": 169934
     },
     {
       "year": 2012,
-      "works_count": 4104,
-      "oa_works_count": 1323,
-      "cited_by_count": 172217
+      "works_count": 4105,
+      "oa_works_count": 1324,
+      "cited_by_count": 172247
     },
     {
       "year": 2011,
-      "works_count": 3549,
-      "oa_works_count": 1051,
-      "cited_by_count": 145372
+      "works_count": 3554,
+      "oa_works_count": 1052,
+      "cited_by_count": 145566
     },
     {
       "year": 2010,
       "works_count": 3263,
       "oa_works_count": 933,
-      "cited_by_count": 142167
+      "cited_by_count": 142186
     }
   ],
   "roles": [
     {
       "role": "funder",
       "id": "https://openalex.org/F4320321613",
-      "works_count": 9480
+      "works_count": 9481
     },
     {
       "role": "institution",
       "id": "https://openalex.org/I78650965",
-      "works_count": 139102
+      "works_count": 139239
     },
     {
       "role": "publisher",
@@ -595,7 +595,7 @@
     {
       "id": "https://openalex.org/T13031",
       "display_name": "Civil and Structural Engineering Research",
-      "count": 1286,
+      "count": 1288,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2205",
@@ -604,6 +604,24 @@
       "field": {
         "id": "https://openalex.org/fields/22",
         "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10037",
+      "display_name": "Physics of Superconductivity and Magnetism",
+      "count": 1211,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3104",
+        "display_name": "Condensed Matter Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
       },
       "domain": {
         "id": "https://openalex.org/domains/3",
@@ -629,27 +647,9 @@
       }
     },
     {
-      "id": "https://openalex.org/T10037",
-      "display_name": "Physics of Superconductivity and Magnetism",
-      "count": 1209,
-      "score": 1,
-      "subfield": {
-        "id": "https://openalex.org/subfields/3104",
-        "display_name": "Condensed Matter Physics"
-      },
-      "field": {
-        "id": "https://openalex.org/fields/31",
-        "display_name": "Physics and Astronomy"
-      },
-      "domain": {
-        "id": "https://openalex.org/domains/3",
-        "display_name": "Physical Sciences"
-      }
-    },
-    {
       "id": "https://openalex.org/T10215",
       "display_name": "Semantic Web and Ontologies",
-      "count": 1165,
+      "count": 1166,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/1702",
@@ -667,7 +667,7 @@
     {
       "id": "https://openalex.org/T10971",
       "display_name": "Olfactory and Sensory Function Studies",
-      "count": 1106,
+      "count": 1110,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2809",
@@ -703,7 +703,7 @@
     {
       "id": "https://openalex.org/T10042",
       "display_name": "Neural and Behavioral Psychology Studies",
-      "count": 1071,
+      "count": 1075,
       "score": 0.9999,
       "subfield": {
         "id": "https://openalex.org/subfields/2805",
@@ -721,7 +721,7 @@
     {
       "id": "https://openalex.org/T11682",
       "display_name": "Advanced Condensed Matter Physics",
-      "count": 1059,
+      "count": 1061,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3104",
@@ -739,7 +739,7 @@
     {
       "id": "https://openalex.org/T12959",
       "display_name": "Engineering and Materials Science Studies",
-      "count": 1042,
+      "count": 1043,
       "score": 0.9997,
       "subfield": {
         "id": "https://openalex.org/subfields/2210",
@@ -847,7 +847,7 @@
     {
       "id": "https://openalex.org/T10681",
       "display_name": "Rare-earth and actinide compounds",
-      "count": 955,
+      "count": 956,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/3104",
@@ -865,7 +865,7 @@
     {
       "id": "https://openalex.org/T10502",
       "display_name": "Advanced Memory and Neural Computing",
-      "count": 910,
+      "count": 911,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2208",
@@ -901,7 +901,7 @@
     {
       "id": "https://openalex.org/T11741",
       "display_name": "Flexible and Reconfigurable Manufacturing Systems",
-      "count": 906,
+      "count": 907,
       "score": 0.9999,
       "subfield": {
         "id": "https://openalex.org/subfields/2209",
@@ -937,7 +937,7 @@
     {
       "id": "https://openalex.org/T10607",
       "display_name": "Magnetic and transport properties of perovskites and related materials",
-      "count": 821,
+      "count": 822,
       "score": 1,
       "subfield": {
         "id": "https://openalex.org/subfields/2504",
@@ -1230,7 +1230,7 @@
     {
       "id": "https://openalex.org/T14481",
       "display_name": "Renewable Energy and Sustainability",
-      "value": 0.0081,
+      "value": 0.0082,
       "subfield": {
         "id": "https://openalex.org/subfields/2105",
         "display_name": "Renewable Energy, Sustainability and the Environment"
@@ -1332,7 +1332,7 @@
     {
       "id": "https://openalex.org/T12753",
       "display_name": "Psychology, Coaching, and Therapy",
-      "value": 0.0072,
+      "value": 0.0071,
       "subfield": {
         "id": "https://openalex.org/subfields/3207",
         "display_name": "Social Psychology"
@@ -1364,6 +1364,23 @@
       }
     },
     {
+      "id": "https://openalex.org/T14081",
+      "display_name": "Linguistic Education and Pedagogy",
+      "value": 0.0071,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1203",
+        "display_name": "Language and Linguistics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/12",
+        "display_name": "Arts and Humanities"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/2",
+        "display_name": "Social Sciences"
+      }
+    },
+    {
       "id": "https://openalex.org/T12885",
       "display_name": "Digital Innovation in Industries",
       "value": 0.0071,
@@ -1379,28 +1396,11 @@
         "id": "https://openalex.org/domains/2",
         "display_name": "Social Sciences"
       }
-    },
-    {
-      "id": "https://openalex.org/T10045",
-      "display_name": "Organic Electronics and Photovoltaics",
-      "value": 0.0071,
-      "subfield": {
-        "id": "https://openalex.org/subfields/2208",
-        "display_name": "Electrical and Electronic Engineering"
-      },
-      "field": {
-        "id": "https://openalex.org/fields/22",
-        "display_name": "Engineering"
-      },
-      "domain": {
-        "id": "https://openalex.org/domains/3",
-        "display_name": "Physical Sciences"
-      }
     }
   ],
   "is_super_system": false,
   "status": "active",
   "works_api_url": "https://api.openalex.org/works?filter=institutions.id:I78650965",
-  "updated_date": "2026-07-22T05:59:22",
+  "updated_date": "2026-07-23T06:00:47",
   "created_date": "2016-06-24T00:00:00"
 }

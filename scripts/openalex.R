@@ -91,6 +91,16 @@ openalex_mailto <- function() {
   if (nzchar(m)) m else "openalex@slub-dresden.de"
 }
 
+# Append `&api_key=<key>` when OPENALEX_API_KEY is set (the free key raises
+# the daily request budget; unset, requests still work via the polite pool).
+# One implementation shared by every URL builder below, so the encoding and
+# the presence check cannot drift between them.
+openalex_with_key <- function(url) {
+  key <- Sys.getenv("OPENALEX_API_KEY")
+  if (nzchar(key)) url <- paste0(url, "&api_key=", utils::URLencode(key, reserved = TRUE))
+  url
+}
+
 # Normalise an OpenAlex institution id to its bare short form, e.g.
 # "https://openalex.org/I78650965" -> "I78650965".
 openalex_bare <- function(x) {
@@ -104,11 +114,7 @@ openalex_bare <- function(x) {
 openalex_institution_url <- function(id) {
   url <- paste0("https://api.openalex.org/institutions/", openalex_bare(id),
                 "?mailto=", utils::URLencode(openalex_mailto(), reserved = TRUE))
-  key <- Sys.getenv("OPENALEX_API_KEY")
-  if (nzchar(key)) {
-    url <- paste0(url, "&api_key=", utils::URLencode(key, reserved = TRUE))
-  }
-  url
+  openalex_with_key(url)
 }
 
 # Fetch one institution entity as a parsed list. Returns NULL on any
@@ -149,15 +155,13 @@ openalex_hierarchy_children <- function(inst_id) {
   ids <- character(0)
   cursor <- "*"
   repeat {
-    url <- paste0(
+    url <- openalex_with_key(paste0(
       "https://api.openalex.org/institutions",
       "?filter=", utils::URLencode(paste0("lineage:", id), reserved = TRUE),
       "&per_page=200",
       "&cursor=", utils::URLencode(cursor, reserved = TRUE),
       "&select=id",
-      "&mailto=", utils::URLencode(openalex_mailto(), reserved = TRUE))
-    key <- Sys.getenv("OPENALEX_API_KEY")
-    if (nzchar(key)) url <- paste0(url, "&api_key=", utils::URLencode(key, reserved = TRUE))
+      "&mailto=", utils::URLencode(openalex_mailto(), reserved = TRUE)))
     txt <- openalex_get(url, paste0("hierarchy children ", id))
     if (is.null(txt)) return(NULL)
     obj <- tryCatch(fromJSON(txt, simplifyVector = FALSE), error = function(e) NULL)
@@ -165,13 +169,38 @@ openalex_hierarchy_children <- function(inst_id) {
       message("    hierarchy children ", id, ": unparsable response")
       return(NULL)
     }
-    page_ids <- vapply(obj$results, function(r) openalex_bare(as.character(r$id %||% NA)),
-                       character(1))
+    page_ids <- vapply(obj$results, function(r) {
+      if (is.null(r$id)) NA_character_ else openalex_bare(as.character(r$id))
+    }, character(1))
+    # A result without an id would otherwise enter the OR-list as the literal
+    # string "NA" once pasted into a filter -- a malformed query that silently
+    # narrows or corrupts the member set rather than failing the institution.
+    # Same fail-loud contract as openalex_group_reader()'s missing-key check.
+    if (any(is.na(page_ids))) {
+      message("    hierarchy children ", id, ": ", sum(is.na(page_ids)),
+              " result(s) lack an id")
+      return(NULL)
+    }
+    # A repeated id across pages means the cursor did not advance as expected
+    # -- there is no reading under which that is a legitimate hierarchy
+    # member appearing twice, so treat it the same as a malformed response
+    # rather than silently de-duplicating it away.
+    if (anyDuplicated(page_ids) > 0) {
+      message("    hierarchy children ", id, ": duplicate id(s) within one page, ",
+              "cursor pagination may not be advancing")
+      return(NULL)
+    }
+    dup_across_pages <- intersect(ids, page_ids)
+    if (length(dup_across_pages) > 0) {
+      message("    hierarchy children ", id, ": ", length(dup_across_pages),
+              " id(s) repeated across pages")
+      return(NULL)
+    }
     ids <- c(ids, page_ids)
     cursor <- obj$meta$next_cursor
     if (is.null(cursor) || length(obj$results) == 0) break
   }
-  unique(setdiff(ids, id))
+  setdiff(ids, id)
 }
 
 # --- works aggregation (group_by) ------------------------------------------
@@ -190,9 +219,7 @@ openalex_works_group_url <- function(filter, group_by, include_xpac = FALSE) {
     "&group_by=", utils::URLencode(group_by, reserved = TRUE),
     "&mailto=", utils::URLencode(openalex_mailto(), reserved = TRUE))
   if (include_xpac) url <- paste0(url, "&include_xpac=true")
-  key <- Sys.getenv("OPENALEX_API_KEY")
-  if (nzchar(key)) url <- paste0(url, "&api_key=", utils::URLencode(key, reserved = TRUE))
-  url
+  openalex_with_key(url)
 }
 
 # Run one grouped works query. Returns a data frame (key, count) or NULL on any
@@ -262,8 +289,7 @@ openalex_works_count <- function(filter, include_xpac = FALSE, what = "works cou
                 "&per_page=1",
                 "&mailto=", utils::URLencode(openalex_mailto(), reserved = TRUE))
   if (include_xpac) url <- paste0(url, "&include_xpac=true")
-  key <- Sys.getenv("OPENALEX_API_KEY")
-  if (nzchar(key)) url <- paste0(url, "&api_key=", utils::URLencode(key, reserved = TRUE))
+  url <- openalex_with_key(url)
   txt <- openalex_get(url, what)
   if (is.null(txt)) return(NA_integer_)
   tryCatch(as.integer(fromJSON(txt, simplifyVector = FALSE)$meta$count),
