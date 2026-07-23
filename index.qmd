@@ -9,11 +9,7 @@ meta <- read_meta()
 ```
 
 Open-access monitoring for the [TU9](https://www.tu9.de/) universities, built from [OpenAlex](https://openalex.org/) and snapshotted over time.
-The headline is the open-access share on the corresponding-author lens — the fraction of a university's corresponding-author output that is open access.
-That is the view which matches [OpenAPC](https://openapc.net/) and transformative-agreement accounting, and the one relevant to OA monitoring.
-
-Each university is shown five ways: as the single OpenAlex institution; grouped with every institution in its own OpenAlex/ROR `lineage`, independently of any curation; grouped with its affiliated organisations the way the [Leiden Ranking](https://open.leidenranking.com/) defines (e.g. with its university hospital); and that same Leiden member set restricted to CWTS Core sources under two readings — works with at least one Core-source location, and the narrower set of works whose primary venue is a Core source.
-See [Background](background.qmd) for method and sources and [Downloads](downloads.qmd) for the raw files.
+The headline is each university's open-access share on the *corresponding-author* lens — the basis also used for [OpenAPC](https://openapc.net/) and transformative-agreement reporting.
 
 Refreshed on a schedule and released under CC0.
 
@@ -34,12 +30,6 @@ cat(sprintf(
 alliance_summary_table(meta)
 ```
 
-Each row is one deduplicated OpenAlex query: all nine universities' relevant OpenAlex ids for that reading are OR-ed into a single `corresponding_institution_ids` filter, so a work whose corresponding author matches more than one member institution is counted once.
-Distinct CA works is that deduplicated count — it is *not* the sum of the nine per-institution CA-work counts shown on the [Institutions](institutions/index.qmd) page, which can double-count a work matching more than one member institution.
-CA OA share is the direct ratio of distinct open-access works to distinct works from that same deduplicated query; it is not a median, average, or weighted average of the nine institutional shares.
+Each reading deduplicates corresponding-author works across all nine universities, so a work associated with multiple members is counted once. Distinct CA works is the resulting alliance-wide count; CA OA share is the corresponding direct ratio, not an average of university shares.
 
-Consolidating adds the weight-1 Leiden `component` affiliates and can therefore only raise a university's count; three universities have no such affiliates and consolidate to themselves.
-The multi-institutional hierarchy reading adds OpenAlex/ROR's own descendant institutions instead, and can likewise only raise a university's count relative to the single-institution view — but it is a different member set; across the TU9 universities it exceeds the consolidated figure about as often as it falls short of it.
-The two Core-source readings both draw on the consolidated member set: *primary venue* is contained in *any location*, and both are contained in the consolidated view.
-
-The [Institutions](institutions/index.qmd) page breaks the same five readings down per university.
+Explore further: **[Institutions](institutions/index.qmd)** — results by university · **[Background](background.qmd)** — methodology, sources, and definitions · **[Downloads](downloads.qmd)** — the raw data files.
