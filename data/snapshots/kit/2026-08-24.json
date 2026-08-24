@@ -1,0 +1,1164 @@
+{
+  "id": "https://openalex.org/I102335020",
+  "ror": "https://ror.org/04t3en479",
+  "display_name": "Karlsruhe Institute of Technology",
+  "country_code": "DE",
+  "type": "education",
+  "type_id": "https://openalex.org/institution-types/education",
+  "lineage": [
+    "https://openalex.org/I102335020",
+    "https://openalex.org/I1305996414"
+  ],
+  "homepage_url": "https://www.kit.edu",
+  "image_url": "https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/Logo%20KIT.svg",
+  "image_thumbnail_url": "https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/Logo%20KIT.svg&width=300",
+  "display_name_acronyms": [
+    "KIT"
+  ],
+  "display_name_alternatives": [
+    "Das Karlsruher Institut für Technologie (KIT) – Die Forschungsuniversität in der Helmholtz-Gemeinschaft",
+    "Das Karlsruher Institut für Technologie (KIT) – Die Universität in der Helmholtz-Gemeinschaft",
+    "Karlsruhe Institute of Technology",
+    "Karlsruhe Institute of Technology (KIT)",
+    "Karlsruhe Institute of Technology - The Research University in the Helmholtz Association",
+    "Karlsruhe Institute of Technology - The University in the Helmholtz Association",
+    "Karlsruher Institut für Technologie"
+  ],
+  "repositories": [
+    {
+      "id": "https://openalex.org/S4306401992",
+      "display_name": "Repository KITopen (Karlsruhe Institute of Technology)",
+      "host_organization": "https://openalex.org/I102335020",
+      "host_organization_name": "Karlsruhe Institute of Technology",
+      "host_organization_lineage": [
+        "https://openalex.org/I102335020"
+      ]
+    },
+    {
+      "id": "https://openalex.org/S7407052948",
+      "display_name": "KITopen",
+      "host_organization": "https://openalex.org/I102335020",
+      "host_organization_name": "Karlsruhe Institute of Technology",
+      "host_organization_lineage": [
+        "https://openalex.org/I102335020"
+      ]
+    },
+    {
+      "id": "https://openalex.org/S7407052949",
+      "display_name": "Institute for Meteorology and Climate Research - Atmospheric Trace Gases and Remote Sensing",
+      "host_organization": "https://openalex.org/I102335020",
+      "host_organization_name": "Karlsruhe Institute of Technology",
+      "host_organization_lineage": [
+        "https://openalex.org/I102335020"
+      ]
+    },
+    {
+      "id": "https://openalex.org/S7407052950",
+      "display_name": "chemotion",
+      "host_organization": "https://openalex.org/I102335020",
+      "host_organization_name": "Karlsruhe Institute of Technology",
+      "host_organization_lineage": [
+        "https://openalex.org/I102335020"
+      ]
+    },
+    {
+      "id": "https://openalex.org/S7407052951",
+      "display_name": "RADAR4KIT",
+      "host_organization": "https://openalex.org/I102335020",
+      "host_organization_name": "Karlsruhe Institute of Technology",
+      "host_organization_lineage": [
+        "https://openalex.org/I102335020"
+      ]
+    },
+    {
+      "id": "https://openalex.org/S7407052976",
+      "display_name": "SupraBank",
+      "host_organization": "https://openalex.org/I102335020",
+      "host_organization_name": "Karlsruhe Institute of Technology",
+      "host_organization_lineage": [
+        "https://openalex.org/I102335020"
+      ]
+    },
+    {
+      "id": "https://openalex.org/S7407060125",
+      "display_name": "RADAR4ING",
+      "host_organization": "https://openalex.org/I102335020",
+      "host_organization_name": "Karlsruhe Institute of Technology",
+      "host_organization_lineage": [
+        "https://openalex.org/I102335020"
+      ]
+    }
+  ],
+  "works_count": 170167,
+  "cited_by_count": 11471377,
+  "summary_stats": {
+    "2yr_mean_citedness": 2.9254,
+    "h_index": 756,
+    "i10_index": 181575
+  },
+  "ids": {
+    "openalex": "https://openalex.org/I102335020",
+    "ror": "https://ror.org/04t3en479",
+    "grid": "grid.7892.4",
+    "wikipedia": "http://en.wikipedia.org/wiki/Karlsruhe_Institute_of_Technology",
+    "wikidata": "Q309988"
+  },
+  "geo": {
+    "city": "Karlsruhe",
+    "geonames_city_id": "2892794",
+    "region": "Baden-Wurttemberg",
+    "country_code": "DE",
+    "country": "Germany",
+    "latitude": 49.0094,
+    "longitude": 8.4044
+  },
+  "international": {},
+  "associated_institutions": [
+    {
+      "id": "https://openalex.org/I1305996414",
+      "ror": "https://ror.org/0281dp749",
+      "display_name": "Helmholtz Association of German Research Centres",
+      "country_code": "DE",
+      "type": "government",
+      "relationship": "parent"
+    },
+    {
+      "id": "https://openalex.org/I4210129763",
+      "ror": "https://ror.org/034rhsb33",
+      "display_name": "Helmholtz-Institute Ulm",
+      "country_code": "DE",
+      "type": "government",
+      "relationship": "child"
+    },
+    {
+      "id": "https://openalex.org/I4210144470",
+      "ror": "https://ror.org/040fv5d16",
+      "display_name": "DVGW-Forschungsstelle am Engler-Bunte-Institut des Karlsruher Instituts für Technologie",
+      "country_code": "DE",
+      "type": "facility",
+      "relationship": "child"
+    },
+    {
+      "id": "https://openalex.org/I4387153217",
+      "ror": "https://ror.org/02nx8n605",
+      "display_name": "TU9",
+      "country_code": "DE",
+      "type": "other",
+      "relationship": "related"
+    },
+    {
+      "id": "https://openalex.org/I4405252446",
+      "ror": "https://ror.org/033zfn006",
+      "display_name": "In-Service Aircraft for a Global Observing System",
+      "country_code": null,
+      "type": "other",
+      "relationship": "related"
+    }
+  ],
+  "counts_by_year": [
+    {
+      "year": 2032,
+      "works_count": 1,
+      "oa_works_count": 1,
+      "cited_by_count": 1
+    },
+    {
+      "year": 2026,
+      "works_count": 7949,
+      "oa_works_count": 7087,
+      "cited_by_count": 1574
+    },
+    {
+      "year": 2025,
+      "works_count": 14284,
+      "oa_works_count": 12595,
+      "cited_by_count": 18904
+    },
+    {
+      "year": 2024,
+      "works_count": 13630,
+      "oa_works_count": 11678,
+      "cited_by_count": 53179
+    },
+    {
+      "year": 2023,
+      "works_count": 11514,
+      "oa_works_count": 9535,
+      "cited_by_count": 78023
+    },
+    {
+      "year": 2022,
+      "works_count": 11112,
+      "oa_works_count": 9005,
+      "cited_by_count": 111476
+    },
+    {
+      "year": 2021,
+      "works_count": 9588,
+      "oa_works_count": 7659,
+      "cited_by_count": 136513
+    },
+    {
+      "year": 2020,
+      "works_count": 10152,
+      "oa_works_count": 8078,
+      "cited_by_count": 191173
+    },
+    {
+      "year": 2019,
+      "works_count": 9676,
+      "oa_works_count": 7114,
+      "cited_by_count": 190537
+    },
+    {
+      "year": 2018,
+      "works_count": 6585,
+      "oa_works_count": 3627,
+      "cited_by_count": 176434
+    },
+    {
+      "year": 2017,
+      "works_count": 5701,
+      "oa_works_count": 2680,
+      "cited_by_count": 189846
+    },
+    {
+      "year": 2016,
+      "works_count": 5978,
+      "oa_works_count": 2726,
+      "cited_by_count": 192526
+    },
+    {
+      "year": 2015,
+      "works_count": 5233,
+      "oa_works_count": 2059,
+      "cited_by_count": 170370
+    },
+    {
+      "year": 2014,
+      "works_count": 5131,
+      "oa_works_count": 1934,
+      "cited_by_count": 204957
+    },
+    {
+      "year": 2013,
+      "works_count": 5004,
+      "oa_works_count": 1776,
+      "cited_by_count": 189471
+    },
+    {
+      "year": 2012,
+      "works_count": 4614,
+      "oa_works_count": 1619,
+      "cited_by_count": 169735
+    },
+    {
+      "year": 2011,
+      "works_count": 4513,
+      "oa_works_count": 1389,
+      "cited_by_count": 165016
+    },
+    {
+      "year": 2010,
+      "works_count": 3952,
+      "oa_works_count": 1306,
+      "cited_by_count": 132377
+    }
+  ],
+  "roles": [
+    {
+      "role": "funder",
+      "id": "https://openalex.org/F4320311048",
+      "works_count": 5708
+    },
+    {
+      "role": "institution",
+      "id": "https://openalex.org/I102335020",
+      "works_count": 170167
+    }
+  ],
+  "topics": [
+    {
+      "id": "https://openalex.org/T10048",
+      "display_name": "Particle physics theoretical and experimental studies",
+      "count": 6181,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10015",
+      "display_name": "Genomics and Phylogenetic Studies",
+      "count": 4414,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1312",
+        "display_name": "Molecular Biology"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/13",
+        "display_name": "Biochemistry, Genetics and Molecular Biology"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/1",
+        "display_name": "Life Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10451",
+      "display_name": "Mycorrhizal Fungi and Plant Interactions",
+      "count": 4250,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1110",
+        "display_name": "Plant Science"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/11",
+        "display_name": "Agricultural and Biological Sciences"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/1",
+        "display_name": "Life Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10825",
+      "display_name": "Plant Pathogens and Fungal Diseases",
+      "count": 4209,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1307",
+        "display_name": "Cell Biology"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/13",
+        "display_name": "Biochemistry, Genetics and Molecular Biology"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/1",
+        "display_name": "Life Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10224",
+      "display_name": "Quantum Chromodynamics and Particle Interactions",
+      "count": 3849,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10527",
+      "display_name": "High-Energy Particle Collisions Research",
+      "count": 3213,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10075",
+      "display_name": "Atmospheric chemistry and aerosols",
+      "count": 3150,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1902",
+        "display_name": "Atmospheric Science"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/19",
+        "display_name": "Earth and Planetary Sciences"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11320",
+      "display_name": "Atmospheric Ozone and Climate",
+      "count": 2784,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1902",
+        "display_name": "Atmospheric Science"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/19",
+        "display_name": "Earth and Planetary Sciences"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10018",
+      "display_name": "Advancements in Battery Materials",
+      "count": 2781,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2208",
+        "display_name": "Electrical and Electronic Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11588",
+      "display_name": "Atmospheric and Environmental Gas Dynamics",
+      "count": 2619,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2306",
+        "display_name": "Global and Planetary Change"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/23",
+        "display_name": "Environmental Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10037",
+      "display_name": "Physics of Superconductivity and Magnetism",
+      "count": 2571,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3104",
+        "display_name": "Condensed Matter Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10281",
+      "display_name": "Advanced Battery Materials and Technologies",
+      "count": 2259,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2208",
+        "display_name": "Electrical and Electronic Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10029",
+      "display_name": "Climate variability and models",
+      "count": 2170,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2306",
+        "display_name": "Global and Planetary Change"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/23",
+        "display_name": "Environmental Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10466",
+      "display_name": "Meteorological Phenomena and Simulations",
+      "count": 2110,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1902",
+        "display_name": "Atmospheric Science"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/19",
+        "display_name": "Earth and Planetary Sciences"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12565",
+      "display_name": "Physics and Engineering Research Articles",
+      "count": 2040,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2206",
+        "display_name": "Computational Mechanics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10382",
+      "display_name": "Quantum and electron transport phenomena",
+      "count": 2009,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3107",
+        "display_name": "Atomic and Molecular Physics, and Optics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11090",
+      "display_name": "Dark Matter and Cosmic Phenomena",
+      "count": 1986,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10818",
+      "display_name": "Astrophysics and Cosmic Phenomena",
+      "count": 1760,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10192",
+      "display_name": "Catalytic Processes in Materials Science",
+      "count": 1737,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2505",
+        "display_name": "Materials Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/25",
+        "display_name": "Materials Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11242",
+      "display_name": "Nuclear Materials and Properties",
+      "count": 1734,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2505",
+        "display_name": "Materials Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/25",
+        "display_name": "Materials Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10597",
+      "display_name": "Nuclear reactor physics and engineering",
+      "count": 1678,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2202",
+        "display_name": "Aerospace Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10012",
+      "display_name": "Genetic diversity and population structure",
+      "count": 1665,
+      "score": 0.9997,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1311",
+        "display_name": "Genetics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/13",
+        "display_name": "Biochemistry, Genetics and Molecular Biology"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/1",
+        "display_name": "Life Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10347",
+      "display_name": "Atmospheric aerosols and clouds",
+      "count": 1664,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2306",
+        "display_name": "Global and Planetary Change"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/23",
+        "display_name": "Environmental Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10663",
+      "display_name": "Advanced Battery Technologies Research",
+      "count": 1579,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2203",
+        "display_name": "Automotive Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10592",
+      "display_name": "Fusion materials and technologies",
+      "count": 1573,
+      "score": 1,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2505",
+        "display_name": "Materials Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/25",
+        "display_name": "Materials Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    }
+  ],
+  "topic_share": [
+    {
+      "id": "https://openalex.org/T12565",
+      "display_name": "Physics and Engineering Research Articles",
+      "value": 0.0161,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2206",
+        "display_name": "Computational Mechanics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11090",
+      "display_name": "Dark Matter and Cosmic Phenomena",
+      "value": 0.0152,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10807",
+      "display_name": "Synthesis and characterization of novel inorganic/organometallic compounds",
+      "value": 0.0125,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1604",
+        "display_name": "Inorganic Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/16",
+        "display_name": "Chemistry"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12959",
+      "display_name": "Engineering and Materials Science Studies",
+      "value": 0.0124,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2210",
+        "display_name": "Mechanical Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11741",
+      "display_name": "Flexible and Reconfigurable Manufacturing Systems",
+      "value": 0.0123,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2209",
+        "display_name": "Industrial and Manufacturing Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10921",
+      "display_name": "Neutrino Physics Research",
+      "value": 0.0122,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10048",
+      "display_name": "Particle physics theoretical and experimental studies",
+      "value": 0.0117,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11320",
+      "display_name": "Atmospheric Ozone and Climate",
+      "value": 0.0114,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1902",
+        "display_name": "Atmospheric Science"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/19",
+        "display_name": "Earth and Planetary Sciences"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10075",
+      "display_name": "Atmospheric chemistry and aerosols",
+      "value": 0.0112,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1902",
+        "display_name": "Atmospheric Science"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/19",
+        "display_name": "Earth and Planetary Sciences"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T14481",
+      "display_name": "Renewable Energy and Sustainability",
+      "value": 0.0109,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2105",
+        "display_name": "Renewable Energy, Sustainability and the Environment"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/21",
+        "display_name": "Energy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11588",
+      "display_name": "Atmospheric and Environmental Gas Dynamics",
+      "value": 0.0109,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2306",
+        "display_name": "Global and Planetary Change"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/23",
+        "display_name": "Environmental Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11766",
+      "display_name": "Iron-based superconductors research",
+      "value": 0.0107,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2504",
+        "display_name": "Electronic, Optical and Magnetic Materials"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/25",
+        "display_name": "Materials Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12706",
+      "display_name": "Subcritical and Supercritical Water Processes",
+      "value": 0.0106,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2204",
+        "display_name": "Biomedical Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10451",
+      "display_name": "Mycorrhizal Fungi and Plant Interactions",
+      "value": 0.0105,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1110",
+        "display_name": "Plant Science"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/11",
+        "display_name": "Agricultural and Biological Sciences"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/1",
+        "display_name": "Life Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10347",
+      "display_name": "Atmospheric aerosols and clouds",
+      "value": 0.01,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2306",
+        "display_name": "Global and Planetary Change"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/23",
+        "display_name": "Environmental Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10527",
+      "display_name": "High-Energy Particle Collisions Research",
+      "value": 0.01,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10224",
+      "display_name": "Quantum Chromodynamics and Particle Interactions",
+      "value": 0.0097,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3106",
+        "display_name": "Nuclear and High Energy Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10281",
+      "display_name": "Advanced Battery Materials and Technologies",
+      "value": 0.0095,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2208",
+        "display_name": "Electrical and Electronic Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T11242",
+      "display_name": "Nuclear Materials and Properties",
+      "value": 0.0093,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2505",
+        "display_name": "Materials Chemistry"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/25",
+        "display_name": "Materials Science"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12208",
+      "display_name": "Occupational exposure and asthma",
+      "value": 0.0091,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2739",
+        "display_name": "Public Health, Environmental and Occupational Health"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/27",
+        "display_name": "Medicine"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/4",
+        "display_name": "Health Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T13359",
+      "display_name": "Sports Science and Education",
+      "value": 0.009,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1207",
+        "display_name": "History and Philosophy of Science"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/12",
+        "display_name": "Arts and Humanities"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/2",
+        "display_name": "Social Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T12491",
+      "display_name": "Superconductivity in MgB2 and Alloys",
+      "value": 0.0088,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3104",
+        "display_name": "Condensed Matter Physics"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/31",
+        "display_name": "Physics and Astronomy"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T14389",
+      "display_name": "Innovation, Technology, and Society",
+      "value": 0.0085,
+      "subfield": {
+        "id": "https://openalex.org/subfields/3312",
+        "display_name": "Sociology and Political Science"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/33",
+        "display_name": "Social Sciences"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/2",
+        "display_name": "Social Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T13031",
+      "display_name": "Civil and Structural Engineering Research",
+      "value": 0.0083,
+      "subfield": {
+        "id": "https://openalex.org/subfields/2205",
+        "display_name": "Civil and Structural Engineering"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/22",
+        "display_name": "Engineering"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    },
+    {
+      "id": "https://openalex.org/T10466",
+      "display_name": "Meteorological Phenomena and Simulations",
+      "value": 0.0082,
+      "subfield": {
+        "id": "https://openalex.org/subfields/1902",
+        "display_name": "Atmospheric Science"
+      },
+      "field": {
+        "id": "https://openalex.org/fields/19",
+        "display_name": "Earth and Planetary Sciences"
+      },
+      "domain": {
+        "id": "https://openalex.org/domains/3",
+        "display_name": "Physical Sciences"
+      }
+    }
+  ],
+  "is_super_system": false,
+  "status": "active",
+  "works_api_url": "https://api.openalex.org/works?filter=institutions.id:I102335020",
+  "updated_date": "2026-08-23T05:59:43",
+  "created_date": "2016-06-24T00:00:00"
+}
