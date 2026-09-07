@@ -1,127 +1,127 @@
 snapshot_date,tu9_slug,university_name,n_members,year,ca_works,ca_oa_works,ca_oa_share
-2026-08-31,kit,Karlsruhe Institute of Technology,4,2026,1337,1128,0.8437
-2026-08-31,kit,Karlsruhe Institute of Technology,4,2025,2041,1716,0.8408
-2026-08-31,kit,Karlsruhe Institute of Technology,4,2024,2283,1883,0.8248
-2026-08-31,kit,Karlsruhe Institute of Technology,4,2023,2424,1783,0.7356
-2026-08-31,kit,Karlsruhe Institute of Technology,4,2022,2465,1789,0.7258
-2026-08-31,kit,Karlsruhe Institute of Technology,4,2021,2554,1918,0.751
-2026-08-31,kit,Karlsruhe Institute of Technology,4,2020,2374,1654,0.6967
-2026-08-31,kit,Karlsruhe Institute of Technology,4,2019,2255,1373,0.6089
-2026-08-31,kit,Karlsruhe Institute of Technology,4,2018,2163,1001,0.4628
-2026-08-31,kit,Karlsruhe Institute of Technology,4,2017,2106,936,0.4444
-2026-08-31,kit,Karlsruhe Institute of Technology,4,2016,2118,901,0.4254
-2026-08-31,kit,Karlsruhe Institute of Technology,4,2015,1982,738,0.3724
-2026-08-31,kit,Karlsruhe Institute of Technology,4,2014,1841,629,0.3417
-2026-08-31,kit,Karlsruhe Institute of Technology,4,2013,1728,519,0.3003
-2026-08-31,leibniz-hannover,Leibniz University Hannover,1,2026,669,575,0.8595
-2026-08-31,leibniz-hannover,Leibniz University Hannover,1,2025,991,841,0.8486
-2026-08-31,leibniz-hannover,Leibniz University Hannover,1,2024,988,847,0.8573
-2026-08-31,leibniz-hannover,Leibniz University Hannover,1,2023,1065,800,0.7512
-2026-08-31,leibniz-hannover,Leibniz University Hannover,1,2022,1079,804,0.7451
-2026-08-31,leibniz-hannover,Leibniz University Hannover,1,2021,1126,805,0.7149
-2026-08-31,leibniz-hannover,Leibniz University Hannover,1,2020,1064,707,0.6645
-2026-08-31,leibniz-hannover,Leibniz University Hannover,1,2019,908,463,0.5099
-2026-08-31,leibniz-hannover,Leibniz University Hannover,1,2018,932,431,0.4624
-2026-08-31,leibniz-hannover,Leibniz University Hannover,1,2017,865,347,0.4012
-2026-08-31,leibniz-hannover,Leibniz University Hannover,1,2016,863,409,0.4739
-2026-08-31,leibniz-hannover,Leibniz University Hannover,1,2015,758,321,0.4235
-2026-08-31,leibniz-hannover,Leibniz University Hannover,1,2014,657,279,0.4247
-2026-08-31,leibniz-hannover,Leibniz University Hannover,1,2013,644,232,0.3602
-2026-08-31,rwth-aachen,RWTH Aachen University,5,2026,2214,1902,0.8591
-2026-08-31,rwth-aachen,RWTH Aachen University,5,2025,2860,2367,0.8276
-2026-08-31,rwth-aachen,RWTH Aachen University,5,2024,2895,2294,0.7924
-2026-08-31,rwth-aachen,RWTH Aachen University,5,2023,3082,2179,0.707
-2026-08-31,rwth-aachen,RWTH Aachen University,5,2022,3092,2152,0.696
-2026-08-31,rwth-aachen,RWTH Aachen University,5,2021,3187,2158,0.6771
-2026-08-31,rwth-aachen,RWTH Aachen University,5,2020,3123,1891,0.6055
-2026-08-31,rwth-aachen,RWTH Aachen University,5,2019,2926,1402,0.4792
-2026-08-31,rwth-aachen,RWTH Aachen University,5,2018,2858,1192,0.4171
-2026-08-31,rwth-aachen,RWTH Aachen University,5,2017,2652,994,0.3748
-2026-08-31,rwth-aachen,RWTH Aachen University,5,2016,2621,922,0.3518
-2026-08-31,rwth-aachen,RWTH Aachen University,5,2015,2469,891,0.3609
-2026-08-31,rwth-aachen,RWTH Aachen University,5,2014,2291,782,0.3413
-2026-08-31,rwth-aachen,RWTH Aachen University,5,2013,1960,619,0.3158
-2026-08-31,tu-berlin,Technische Universität Berlin,2,2026,694,596,0.8588
-2026-08-31,tu-berlin,Technische Universität Berlin,2,2025,1161,953,0.8208
-2026-08-31,tu-berlin,Technische Universität Berlin,2,2024,1184,951,0.8032
-2026-08-31,tu-berlin,Technische Universität Berlin,2,2023,1296,865,0.6674
-2026-08-31,tu-berlin,Technische Universität Berlin,2,2022,1344,921,0.6853
-2026-08-31,tu-berlin,Technische Universität Berlin,2,2021,1444,1005,0.696
-2026-08-31,tu-berlin,Technische Universität Berlin,2,2020,1399,954,0.6819
-2026-08-31,tu-berlin,Technische Universität Berlin,2,2019,1208,624,0.5166
-2026-08-31,tu-berlin,Technische Universität Berlin,2,2018,1313,545,0.4151
-2026-08-31,tu-berlin,Technische Universität Berlin,2,2017,1218,477,0.3916
-2026-08-31,tu-berlin,Technische Universität Berlin,2,2016,1203,451,0.3749
-2026-08-31,tu-berlin,Technische Universität Berlin,2,2015,1138,379,0.333
-2026-08-31,tu-berlin,Technische Universität Berlin,2,2014,1093,317,0.29
-2026-08-31,tu-berlin,Technische Universität Berlin,2,2013,914,256,0.2801
-2026-08-31,tu-braunschweig,Technische Universität Braunschweig,1,2026,479,414,0.8643
-2026-08-31,tu-braunschweig,Technische Universität Braunschweig,1,2025,738,639,0.8659
-2026-08-31,tu-braunschweig,Technische Universität Braunschweig,1,2024,703,591,0.8407
-2026-08-31,tu-braunschweig,Technische Universität Braunschweig,1,2023,767,607,0.7914
-2026-08-31,tu-braunschweig,Technische Universität Braunschweig,1,2022,774,575,0.7429
-2026-08-31,tu-braunschweig,Technische Universität Braunschweig,1,2021,875,620,0.7086
-2026-08-31,tu-braunschweig,Technische Universität Braunschweig,1,2020,813,554,0.6814
-2026-08-31,tu-braunschweig,Technische Universität Braunschweig,1,2019,743,369,0.4966
-2026-08-31,tu-braunschweig,Technische Universität Braunschweig,1,2018,722,314,0.4349
-2026-08-31,tu-braunschweig,Technische Universität Braunschweig,1,2017,736,241,0.3274
-2026-08-31,tu-braunschweig,Technische Universität Braunschweig,1,2016,662,274,0.4139
-2026-08-31,tu-braunschweig,Technische Universität Braunschweig,1,2015,545,198,0.3633
-2026-08-31,tu-braunschweig,Technische Universität Braunschweig,1,2014,573,191,0.3333
-2026-08-31,tu-braunschweig,Technische Universität Braunschweig,1,2013,538,138,0.2565
-2026-08-31,tu-darmstadt,Technische Universität Darmstadt,3,2026,643,504,0.7838
-2026-08-31,tu-darmstadt,Technische Universität Darmstadt,3,2025,1095,831,0.7589
-2026-08-31,tu-darmstadt,Technische Universität Darmstadt,3,2024,1081,816,0.7549
-2026-08-31,tu-darmstadt,Technische Universität Darmstadt,3,2023,1147,785,0.6844
-2026-08-31,tu-darmstadt,Technische Universität Darmstadt,3,2022,1192,812,0.6812
-2026-08-31,tu-darmstadt,Technische Universität Darmstadt,3,2021,1302,834,0.6406
-2026-08-31,tu-darmstadt,Technische Universität Darmstadt,3,2020,1245,778,0.6249
-2026-08-31,tu-darmstadt,Technische Universität Darmstadt,3,2019,1082,514,0.475
-2026-08-31,tu-darmstadt,Technische Universität Darmstadt,3,2018,1096,415,0.3786
-2026-08-31,tu-darmstadt,Technische Universität Darmstadt,3,2017,1044,381,0.3649
-2026-08-31,tu-darmstadt,Technische Universität Darmstadt,3,2016,1010,340,0.3366
-2026-08-31,tu-darmstadt,Technische Universität Darmstadt,3,2015,920,286,0.3109
-2026-08-31,tu-darmstadt,Technische Universität Darmstadt,3,2014,855,245,0.2865
-2026-08-31,tu-darmstadt,Technische Universität Darmstadt,3,2013,796,201,0.2525
-2026-08-31,tu-dresden,Technische Universität Dresden,16,2026,1314,1102,0.8387
-2026-08-31,tu-dresden,Technische Universität Dresden,16,2025,2172,1809,0.8329
-2026-08-31,tu-dresden,Technische Universität Dresden,16,2024,2160,1752,0.8111
-2026-08-31,tu-dresden,Technische Universität Dresden,16,2023,2423,1794,0.7404
-2026-08-31,tu-dresden,Technische Universität Dresden,16,2022,2465,1765,0.716
-2026-08-31,tu-dresden,Technische Universität Dresden,16,2021,2610,1926,0.7379
-2026-08-31,tu-dresden,Technische Universität Dresden,16,2020,2453,1645,0.6706
-2026-08-31,tu-dresden,Technische Universität Dresden,16,2019,2168,1126,0.5194
-2026-08-31,tu-dresden,Technische Universität Dresden,16,2018,2047,905,0.4421
-2026-08-31,tu-dresden,Technische Universität Dresden,16,2017,2177,870,0.3996
-2026-08-31,tu-dresden,Technische Universität Dresden,16,2016,2042,851,0.4167
-2026-08-31,tu-dresden,Technische Universität Dresden,16,2015,1875,692,0.3691
-2026-08-31,tu-dresden,Technische Universität Dresden,16,2014,1776,583,0.3283
-2026-08-31,tu-dresden,Technische Universität Dresden,16,2013,1571,482,0.3068
-2026-08-31,tu-munich,Technical University of Munich,4,2026,2322,1978,0.8519
-2026-08-31,tu-munich,Technical University of Munich,4,2025,3598,3059,0.8502
-2026-08-31,tu-munich,Technical University of Munich,4,2024,3672,3110,0.8469
-2026-08-31,tu-munich,Technical University of Munich,4,2023,3856,2797,0.7254
-2026-08-31,tu-munich,Technical University of Munich,4,2022,3904,2847,0.7293
-2026-08-31,tu-munich,Technical University of Munich,4,2021,4070,2920,0.7174
-2026-08-31,tu-munich,Technical University of Munich,4,2020,3725,2666,0.7157
-2026-08-31,tu-munich,Technical University of Munich,4,2019,3490,2170,0.6218
-2026-08-31,tu-munich,Technical University of Munich,4,2018,3410,1919,0.5628
-2026-08-31,tu-munich,Technical University of Munich,4,2017,3245,1698,0.5233
-2026-08-31,tu-munich,Technical University of Munich,4,2016,3064,1438,0.4693
-2026-08-31,tu-munich,Technical University of Munich,4,2015,2680,1135,0.4235
-2026-08-31,tu-munich,Technical University of Munich,4,2014,2451,937,0.3823
-2026-08-31,tu-munich,Technical University of Munich,4,2013,2307,832,0.3606
-2026-08-31,uni-stuttgart,University of Stuttgart,1,2026,743,614,0.8264
-2026-08-31,uni-stuttgart,University of Stuttgart,1,2025,1084,830,0.7657
-2026-08-31,uni-stuttgart,University of Stuttgart,1,2024,1138,896,0.7873
-2026-08-31,uni-stuttgart,University of Stuttgart,1,2023,1136,775,0.6822
-2026-08-31,uni-stuttgart,University of Stuttgart,1,2022,1197,806,0.6734
-2026-08-31,uni-stuttgart,University of Stuttgart,1,2021,1341,873,0.651
-2026-08-31,uni-stuttgart,University of Stuttgart,1,2020,1245,775,0.6225
-2026-08-31,uni-stuttgart,University of Stuttgart,1,2019,1124,496,0.4413
-2026-08-31,uni-stuttgart,University of Stuttgart,1,2018,1097,448,0.4084
-2026-08-31,uni-stuttgart,University of Stuttgart,1,2017,1049,399,0.3804
-2026-08-31,uni-stuttgart,University of Stuttgart,1,2016,1106,462,0.4177
-2026-08-31,uni-stuttgart,University of Stuttgart,1,2015,950,356,0.3747
-2026-08-31,uni-stuttgart,University of Stuttgart,1,2014,938,286,0.3049
-2026-08-31,uni-stuttgart,University of Stuttgart,1,2013,781,237,0.3035
+2026-09-07,kit,Karlsruhe Institute of Technology,4,2026,1362,1154,0.8473
+2026-09-07,kit,Karlsruhe Institute of Technology,4,2025,2041,1716,0.8408
+2026-09-07,kit,Karlsruhe Institute of Technology,4,2024,2283,1883,0.8248
+2026-09-07,kit,Karlsruhe Institute of Technology,4,2023,2424,1784,0.736
+2026-09-07,kit,Karlsruhe Institute of Technology,4,2022,2463,1787,0.7255
+2026-09-07,kit,Karlsruhe Institute of Technology,4,2021,2554,1919,0.7514
+2026-09-07,kit,Karlsruhe Institute of Technology,4,2020,2378,1658,0.6972
+2026-09-07,kit,Karlsruhe Institute of Technology,4,2019,2255,1375,0.6098
+2026-09-07,kit,Karlsruhe Institute of Technology,4,2018,2162,999,0.4621
+2026-09-07,kit,Karlsruhe Institute of Technology,4,2017,2106,936,0.4444
+2026-09-07,kit,Karlsruhe Institute of Technology,4,2016,2117,900,0.4251
+2026-09-07,kit,Karlsruhe Institute of Technology,4,2015,1982,737,0.3718
+2026-09-07,kit,Karlsruhe Institute of Technology,4,2014,1841,629,0.3417
+2026-09-07,kit,Karlsruhe Institute of Technology,4,2013,1727,518,0.2999
+2026-09-07,leibniz-hannover,Leibniz University Hannover,1,2026,687,593,0.8632
+2026-09-07,leibniz-hannover,Leibniz University Hannover,1,2025,991,841,0.8486
+2026-09-07,leibniz-hannover,Leibniz University Hannover,1,2024,988,847,0.8573
+2026-09-07,leibniz-hannover,Leibniz University Hannover,1,2023,1065,800,0.7512
+2026-09-07,leibniz-hannover,Leibniz University Hannover,1,2022,1079,805,0.7461
+2026-09-07,leibniz-hannover,Leibniz University Hannover,1,2021,1126,806,0.7158
+2026-09-07,leibniz-hannover,Leibniz University Hannover,1,2020,1063,706,0.6642
+2026-09-07,leibniz-hannover,Leibniz University Hannover,1,2019,908,463,0.5099
+2026-09-07,leibniz-hannover,Leibniz University Hannover,1,2018,931,432,0.464
+2026-09-07,leibniz-hannover,Leibniz University Hannover,1,2017,865,347,0.4012
+2026-09-07,leibniz-hannover,Leibniz University Hannover,1,2016,864,410,0.4745
+2026-09-07,leibniz-hannover,Leibniz University Hannover,1,2015,757,320,0.4227
+2026-09-07,leibniz-hannover,Leibniz University Hannover,1,2014,657,280,0.4262
+2026-09-07,leibniz-hannover,Leibniz University Hannover,1,2013,644,232,0.3602
+2026-09-07,rwth-aachen,RWTH Aachen University,5,2026,2271,1948,0.8578
+2026-09-07,rwth-aachen,RWTH Aachen University,5,2025,2859,2367,0.8279
+2026-09-07,rwth-aachen,RWTH Aachen University,5,2024,2894,2292,0.792
+2026-09-07,rwth-aachen,RWTH Aachen University,5,2023,3080,2187,0.7101
+2026-09-07,rwth-aachen,RWTH Aachen University,5,2022,3092,2155,0.697
+2026-09-07,rwth-aachen,RWTH Aachen University,5,2021,3188,2159,0.6772
+2026-09-07,rwth-aachen,RWTH Aachen University,5,2020,3124,1893,0.606
+2026-09-07,rwth-aachen,RWTH Aachen University,5,2019,2928,1403,0.4792
+2026-09-07,rwth-aachen,RWTH Aachen University,5,2018,2859,1193,0.4173
+2026-09-07,rwth-aachen,RWTH Aachen University,5,2017,2651,993,0.3746
+2026-09-07,rwth-aachen,RWTH Aachen University,5,2016,2622,923,0.352
+2026-09-07,rwth-aachen,RWTH Aachen University,5,2015,2469,891,0.3609
+2026-09-07,rwth-aachen,RWTH Aachen University,5,2014,2293,785,0.3423
+2026-09-07,rwth-aachen,RWTH Aachen University,5,2013,1961,619,0.3157
+2026-09-07,tu-berlin,Technische Universität Berlin,2,2026,718,616,0.8579
+2026-09-07,tu-berlin,Technische Universität Berlin,2,2025,1161,953,0.8208
+2026-09-07,tu-berlin,Technische Universität Berlin,2,2024,1184,951,0.8032
+2026-09-07,tu-berlin,Technische Universität Berlin,2,2023,1296,865,0.6674
+2026-09-07,tu-berlin,Technische Universität Berlin,2,2022,1342,919,0.6848
+2026-09-07,tu-berlin,Technische Universität Berlin,2,2021,1443,1004,0.6958
+2026-09-07,tu-berlin,Technische Universität Berlin,2,2020,1399,953,0.6812
+2026-09-07,tu-berlin,Technische Universität Berlin,2,2019,1210,625,0.5165
+2026-09-07,tu-berlin,Technische Universität Berlin,2,2018,1312,543,0.4139
+2026-09-07,tu-berlin,Technische Universität Berlin,2,2017,1218,478,0.3924
+2026-09-07,tu-berlin,Technische Universität Berlin,2,2016,1205,452,0.3751
+2026-09-07,tu-berlin,Technische Universität Berlin,2,2015,1137,378,0.3325
+2026-09-07,tu-berlin,Technische Universität Berlin,2,2014,1093,316,0.2891
+2026-09-07,tu-berlin,Technische Universität Berlin,2,2013,916,258,0.2817
+2026-09-07,tu-braunschweig,Technische Universität Braunschweig,1,2026,485,419,0.8639
+2026-09-07,tu-braunschweig,Technische Universität Braunschweig,1,2025,738,639,0.8659
+2026-09-07,tu-braunschweig,Technische Universität Braunschweig,1,2024,702,590,0.8405
+2026-09-07,tu-braunschweig,Technische Universität Braunschweig,1,2023,766,607,0.7924
+2026-09-07,tu-braunschweig,Technische Universität Braunschweig,1,2022,773,574,0.7426
+2026-09-07,tu-braunschweig,Technische Universität Braunschweig,1,2021,875,620,0.7086
+2026-09-07,tu-braunschweig,Technische Universität Braunschweig,1,2020,812,553,0.681
+2026-09-07,tu-braunschweig,Technische Universität Braunschweig,1,2019,743,369,0.4966
+2026-09-07,tu-braunschweig,Technische Universität Braunschweig,1,2018,722,314,0.4349
+2026-09-07,tu-braunschweig,Technische Universität Braunschweig,1,2017,737,240,0.3256
+2026-09-07,tu-braunschweig,Technische Universität Braunschweig,1,2016,664,276,0.4157
+2026-09-07,tu-braunschweig,Technische Universität Braunschweig,1,2015,545,198,0.3633
+2026-09-07,tu-braunschweig,Technische Universität Braunschweig,1,2014,573,191,0.3333
+2026-09-07,tu-braunschweig,Technische Universität Braunschweig,1,2013,540,140,0.2593
+2026-09-07,tu-darmstadt,Technische Universität Darmstadt,3,2026,668,526,0.7874
+2026-09-07,tu-darmstadt,Technische Universität Darmstadt,3,2025,1095,831,0.7589
+2026-09-07,tu-darmstadt,Technische Universität Darmstadt,3,2024,1081,816,0.7549
+2026-09-07,tu-darmstadt,Technische Universität Darmstadt,3,2023,1148,785,0.6838
+2026-09-07,tu-darmstadt,Technische Universität Darmstadt,3,2022,1196,815,0.6814
+2026-09-07,tu-darmstadt,Technische Universität Darmstadt,3,2021,1302,834,0.6406
+2026-09-07,tu-darmstadt,Technische Universität Darmstadt,3,2020,1244,777,0.6246
+2026-09-07,tu-darmstadt,Technische Universität Darmstadt,3,2019,1082,514,0.475
+2026-09-07,tu-darmstadt,Technische Universität Darmstadt,3,2018,1096,415,0.3786
+2026-09-07,tu-darmstadt,Technische Universität Darmstadt,3,2017,1044,381,0.3649
+2026-09-07,tu-darmstadt,Technische Universität Darmstadt,3,2016,1011,342,0.3383
+2026-09-07,tu-darmstadt,Technische Universität Darmstadt,3,2015,918,284,0.3094
+2026-09-07,tu-darmstadt,Technische Universität Darmstadt,3,2014,854,244,0.2857
+2026-09-07,tu-darmstadt,Technische Universität Darmstadt,3,2013,796,201,0.2525
+2026-09-07,tu-dresden,Technische Universität Dresden,16,2026,1345,1129,0.8394
+2026-09-07,tu-dresden,Technische Universität Dresden,16,2025,2172,1809,0.8329
+2026-09-07,tu-dresden,Technische Universität Dresden,16,2024,2159,1751,0.811
+2026-09-07,tu-dresden,Technische Universität Dresden,16,2023,2421,1795,0.7414
+2026-09-07,tu-dresden,Technische Universität Dresden,16,2022,2464,1764,0.7159
+2026-09-07,tu-dresden,Technische Universität Dresden,16,2021,2612,1926,0.73740000000000006
+2026-09-07,tu-dresden,Technische Universität Dresden,16,2020,2453,1646,0.671
+2026-09-07,tu-dresden,Technische Universität Dresden,16,2019,2168,1128,0.5203
+2026-09-07,tu-dresden,Technische Universität Dresden,16,2018,2047,905,0.4421
+2026-09-07,tu-dresden,Technische Universität Dresden,16,2017,2178,870,0.3994
+2026-09-07,tu-dresden,Technische Universität Dresden,16,2016,2041,849,0.416
+2026-09-07,tu-dresden,Technische Universität Dresden,16,2015,1879,696,0.3704
+2026-09-07,tu-dresden,Technische Universität Dresden,16,2014,1775,581,0.3273
+2026-09-07,tu-dresden,Technische Universität Dresden,16,2013,1570,482,0.307
+2026-09-07,tu-munich,Technical University of Munich,4,2026,2399,2044,0.852
+2026-09-07,tu-munich,Technical University of Munich,4,2025,3598,3059,0.8502
+2026-09-07,tu-munich,Technical University of Munich,4,2024,3672,3110,0.8469
+2026-09-07,tu-munich,Technical University of Munich,4,2023,3855,2796,0.7253
+2026-09-07,tu-munich,Technical University of Munich,4,2022,3903,2847,0.7294
+2026-09-07,tu-munich,Technical University of Munich,4,2021,4069,2920,0.7176
+2026-09-07,tu-munich,Technical University of Munich,4,2020,3726,2668,0.716
+2026-09-07,tu-munich,Technical University of Munich,4,2019,3491,2170,0.6216
+2026-09-07,tu-munich,Technical University of Munich,4,2018,3412,1921,0.563
+2026-09-07,tu-munich,Technical University of Munich,4,2017,3245,1698,0.5233
+2026-09-07,tu-munich,Technical University of Munich,4,2016,3065,1439,0.4695
+2026-09-07,tu-munich,Technical University of Munich,4,2015,2684,1140,0.4247
+2026-09-07,tu-munich,Technical University of Munich,4,2014,2450,936,0.382
+2026-09-07,tu-munich,Technical University of Munich,4,2013,2306,831,0.3604
+2026-09-07,uni-stuttgart,University of Stuttgart,1,2026,771,639,0.8288
+2026-09-07,uni-stuttgart,University of Stuttgart,1,2025,1084,830,0.7657
+2026-09-07,uni-stuttgart,University of Stuttgart,1,2024,1138,896,0.7873
+2026-09-07,uni-stuttgart,University of Stuttgart,1,2023,1136,775,0.6822
+2026-09-07,uni-stuttgart,University of Stuttgart,1,2022,1197,806,0.6734
+2026-09-07,uni-stuttgart,University of Stuttgart,1,2021,1344,876,0.6518
+2026-09-07,uni-stuttgart,University of Stuttgart,1,2020,1249,779,0.6237
+2026-09-07,uni-stuttgart,University of Stuttgart,1,2019,1125,497,0.4418
+2026-09-07,uni-stuttgart,University of Stuttgart,1,2018,1096,448,0.4088
+2026-09-07,uni-stuttgart,University of Stuttgart,1,2017,1050,398,0.379
+2026-09-07,uni-stuttgart,University of Stuttgart,1,2016,1106,463,0.4186
+2026-09-07,uni-stuttgart,University of Stuttgart,1,2015,951,356,0.3743
+2026-09-07,uni-stuttgart,University of Stuttgart,1,2014,938,286,0.3049
+2026-09-07,uni-stuttgart,University of Stuttgart,1,2013,781,236,0.3022
